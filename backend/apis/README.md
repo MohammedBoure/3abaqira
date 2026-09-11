@@ -35,7 +35,8 @@ backend/apis/
 ├── kitchen.py          # Daycare cafeteria procurement & bread logs (/api/kitchen)
 ├── competitions.py     # Competition events, participant registrations & receipts (/api/competitions)
 ├── payroll.py          # HR monthly payroll runs, automated compensation & vouchers (/api/payroll)
-├── system.py           # System telemetry, infrastructure overview & archive status (/api/system)
+├── audit.py            # System audit trail logs, before/after diffs & telemetry (/api/audit)
+├── system.py           # System telemetry, metadata configuration & archive status (/api/system)
 └── README.md           # This documentation file
 ```
 
@@ -70,7 +71,8 @@ backend/apis/
 | [kitchen.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/kitchen.py) | REST router for daycare cafeteria procurement, daily bread logs, food provisions orders, and executive kitchen KPI dashboards. |
 | [competitions.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/competitions.py) | REST router for competition events, candidate registrations (`CMP-BRANCH-YYYY-XXXXX`), payment status handling, and participant rosters. |
 | [payroll.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/payroll.py) | REST router for HR monthly payroll runs, automated compensation calculation, allowances/deductions adjustments, and disbursement vouchers (`/api/payroll`). |
-| [system.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/system.py) | REST router providing health telemetry, multi-branch summary overview, and historical archive view mode status. |
+| [audit.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/audit.py) | REST router for system audit trail logs, before/after change diffs, record history, and modification telemetry (`/api/audit`). |
+| [system.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/system.py) | REST router providing health telemetry, multi-branch summary overview, application metadata configuration, and historical archive view mode status. |
 
 ---
 

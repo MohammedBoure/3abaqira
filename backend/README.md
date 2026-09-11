@@ -36,7 +36,8 @@ backend/
 │   ├── kitchen.py            # Daycare cafeteria procurement & bread logs
 │   ├── competitions.py       # Competition events, registrations & receipts
 │   ├── payroll.py            # HR monthly payroll runs, automated compensation & vouchers
-│   └── system.py             # System telemetry & infrastructure overview
+│   ├── audit.py              # System audit trail logs, before/after diffs & telemetry
+│   └── system.py             # System telemetry, metadata configuration & archive overview
 └── database/                 # Unified database connectivity, pooling, migrations & managers
     ├── README.md             # Database layer overview and FastAPI usage
     ├── __init__.py           # Dynamic manager registry & FastAPI dependencies
@@ -64,6 +65,7 @@ backend/
     ├── competition_manager.py # Data manager for competitions & candidate registrations
     ├── employee_manager.py   # Data manager for faculty coaches and operational staff
     ├── payroll_manager.py    # Data manager for monthly payroll runs & disbursement ledger
+    ├── audit_log_manager.py  # Data manager for audit logs trail & AppMetadata store
     └── base/                 # Core database infrastructure (Connection, Schema, Backup, Archive)
 ```
 

@@ -24,7 +24,7 @@ import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, HTTPBearer, HTTPAuthorizationCredentials
 
-from backend.database import Database, get_database, UserManager
+from backend.database import Database, get_database, UserManager, active_user_id
 
 logger = logging.getLogger("ABAQIRA_SYS")
 
@@ -205,6 +205,9 @@ def get_current_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="User account is deactivated. Contact system administrator.",
         )
+
+    # Bind active user to request context for audit logging
+    active_user_id.set(user.get("username") or str(user.get("user_id")))
 
     return user
 

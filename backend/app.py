@@ -94,6 +94,8 @@ def root():
             "kitchen": "/api/kitchen",
             "competitions": "/api/competitions",
             "payroll": "/api/payroll",
+            "audit": "/api/audit",
+            "metadata": "/api/system/metadata",
             "system_overview": "/api/system/overview",
         },
     }

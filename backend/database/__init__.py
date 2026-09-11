@@ -72,6 +72,7 @@ _MANAGER_EXPORTS = {
     "PayrollManager": ("payroll_manager", "PayrollManager"),
     "PayrollItemManager": ("payroll_manager", "PayrollItemManager"),
     "AuditLogManager": ("audit_log_manager", "AuditLogManager"),
+    "AppMetadataManager": ("audit_log_manager", "AppMetadataManager"),
 }
 
 

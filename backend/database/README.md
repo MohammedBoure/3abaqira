@@ -52,6 +52,7 @@ backend/database/
 | [competition_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/competition_manager.py) | Data Access Managers for `competitions` events, candidate registrations (`CMP-BRANCH-YYYY-XXXXX`), daily drawer revenue synchronization, and participant rosters. |
 | [employee_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/employee_manager.py) | Data Access Manager for `employees` faculty coaches, administrative directors, and operational staff. |
 | [payroll_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/payroll_manager.py) | Data Access Managers for `payroll_runs` cycles and `payroll_items` line items, automated batch compensation calculation, departmental rollups, and payment voucher issuance. |
+| [audit_log_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/audit_log_manager.py) | Data Access Managers for `audit_logs` system modifications trail and `AppMetadata` centralized key-value configuration store. |
 
 
 ## FastAPI Integration Pattern
