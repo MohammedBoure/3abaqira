@@ -4,42 +4,43 @@ import { StatCounterCard } from '../common/StatCounterCard';
 import { MOCK_METRICS } from '../../mock/mockData';
 
 export function MetricGrid({ metrics = MOCK_METRICS }) {
+  const m = metrics || MOCK_METRICS;
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
       <StatCounterCard
-        title={metrics.totalStudents.labelAr}
-        value={metrics.totalStudents.value}
-        change={metrics.totalStudents.change}
-        subtext={metrics.totalStudents.subtextAr}
+        title={m?.totalStudents?.labelAr || 'إجمالي المسجلين النشطين'}
+        value={m?.totalStudents?.value ?? 273}
+        change={m?.totalStudents?.change || ''}
+        subtext={m?.totalStudents?.subtextAr || ''}
         icon={Users}
-        accentColor="blue"
+        accentColor="navy"
       />
 
       <StatCounterCard
-        title={metrics.liveCashDrawer.labelAr}
-        value={metrics.liveCashDrawer.value}
-        change={metrics.liveCashDrawer.change}
-        subtext={metrics.liveCashDrawer.subtextAr}
+        title={m?.liveCashDrawer?.labelAr || 'سيولة الصندوق اليومي'}
+        value={m?.liveCashDrawer?.value ?? '184,500 دج'}
+        change={m?.liveCashDrawer?.change || ''}
+        subtext={m?.liveCashDrawer?.subtextAr || ''}
         icon={Wallet}
-        accentColor="cyan"
+        accentColor="emerald"
       />
 
       <StatCounterCard
-        title={metrics.activePrograms.labelAr}
-        value={metrics.activePrograms.value}
-        change={metrics.activePrograms.change}
-        subtext={metrics.activePrograms.subtextAr}
+        title={m?.activePrograms?.labelAr || m?.collectionRate?.labelAr || 'البرامج والأفواج النشطة'}
+        value={m?.activePrograms?.value ?? m?.collectionRate?.value ?? 9}
+        change={m?.activePrograms?.change || m?.collectionRate?.change || ''}
+        subtext={m?.activePrograms?.subtextAr || m?.collectionRate?.subtextAr || ''}
         icon={BookOpen}
-        accentColor="indigo"
+        accentColor="navy"
       />
 
       <StatCounterCard
-        title={metrics.kitchenSupplyStatus.labelAr}
-        value={metrics.kitchenSupplyStatus.value}
-        change={metrics.kitchenSupplyStatus.change}
-        subtext={metrics.kitchenSupplyStatus.subtextAr}
+        title={m?.kitchenSupplyStatus?.labelAr || 'حالة تموين المطبخ والمخبزة'}
+        value={m?.kitchenSupplyStatus?.value ?? '100% منتظم'}
+        change={m?.kitchenSupplyStatus?.change || ''}
+        subtext={m?.kitchenSupplyStatus?.subtextAr || ''}
         icon={UtensilsCrossed}
-        accentColor="cyan"
+        accentColor="slate"
       />
     </div>
   );

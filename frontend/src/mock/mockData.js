@@ -30,6 +30,14 @@ export const MOCK_METRICS = {
     isPositive: true,
     subtextAr: 'مطابق ومغلق مع إيصالات الخزينة',
   },
+  activePrograms: {
+    value: 9,
+    labelAr: 'البرامج والأفواج النشطة',
+    labelEn: 'Active Programs & Cohorts',
+    change: '5 مسارات رئيسية',
+    isPositive: true,
+    subtextAr: 'السوروبان، الروضة، الروبوتيك...',
+  },
   collectionRate: {
     value: '84.6%',
     labelAr: 'نسبة تحصيل الأقساط والمستحقات',
