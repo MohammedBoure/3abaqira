@@ -32,6 +32,7 @@ backend/apis/
 ├── handovers.py        # Cash safe remittances & drawer drop vouchers (/api/cash-handovers)
 ├── expenses.py         # Operational expenses & categories taxonomy (/api/expenses)
 ├── budgets.py          # Budget allocations & variance reporting (/api/budget-variances)
+├── kitchen.py          # Daycare cafeteria procurement & bread logs (/api/kitchen)
 ├── system.py           # System telemetry, infrastructure overview & archive status (/api/system)
 └── README.md           # This documentation file
 ```
@@ -64,6 +65,7 @@ backend/apis/
 | [handovers.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/handovers.py) | REST router for cash safe remittances, drawer drops, voucher sequencing, and confirmation lifecycle updates. |
 | [expenses.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/expenses.py) | REST router for expense categories, operational expense vouchers, daily drawer balance integration, and category summary analytics. |
 | [budgets.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/budgets.py) | REST router for monthly category budget targets, multiplier factors, actual expense syncing, and budget variance reporting. |
+| [kitchen.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/kitchen.py) | REST router for daycare cafeteria procurement, daily bread logs, food provisions orders, and executive kitchen KPI dashboards. |
 | [system.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/system.py) | REST router providing health telemetry, multi-branch summary overview, and historical archive view mode status. |
 
 ---

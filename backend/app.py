@@ -91,6 +91,7 @@ def root():
             "cash_handovers": "/api/cash-handovers",
             "expenses": "/api/expenses",
             "budget_variances": "/api/budget-variances",
+            "kitchen": "/api/kitchen",
             "system_overview": "/api/system/overview",
         },
     }

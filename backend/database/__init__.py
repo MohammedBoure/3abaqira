@@ -62,6 +62,8 @@ _MANAGER_EXPORTS = {
     "ExpenseCategoryManager": ("expense_manager", "ExpenseCategoryManager"),
     "ExpenseManager": ("expense_manager", "ExpenseManager"),
     "BudgetVarianceManager": ("budget_variance_manager", "BudgetVarianceManager"),
+    "DailyBreadLogManager": ("kitchen_procurement_manager", "DailyBreadLogManager"),
+    "ProvisionsOrderManager": ("kitchen_procurement_manager", "ProvisionsOrderManager"),
     "KitchenProcurementManager": ("kitchen_procurement_manager", "KitchenProcurementManager"),
     
     # Competitions & HR Payroll

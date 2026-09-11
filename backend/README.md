@@ -33,6 +33,7 @@ backend/
 │   ├── handovers.py          # Cash safe remittances & drawer drop vouchers
 │   ├── expenses.py           # Operational expenses & categories taxonomy
 │   ├── budgets.py            # Budget targets & variance reporting
+│   ├── kitchen.py            # Daycare cafeteria procurement & bread logs
 │   └── system.py             # System telemetry & infrastructure overview
 └── database/                 # Unified database connectivity, pooling, migrations & managers
     ├── README.md             # Database layer overview and FastAPI usage
@@ -57,6 +58,7 @@ backend/
     ├── cash_handover_manager.py # Data manager for cash safe remittances & safe drops
     ├── expense_manager.py    # Data manager for expense categories & operational expenses
     ├── budget_variance_manager.py # Data manager for budget variances & live actuals
+    ├── kitchen_procurement_manager.py # Data manager for kitchen provisions & bread logs
     └── base/                 # Core database infrastructure (Connection, Schema, Backup, Archive)
 ```
 
