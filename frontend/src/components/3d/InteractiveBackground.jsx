@@ -1,6 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
+/**
+ * ==============================================================================
+ * AMBIENT ARCHITECTURAL 3D BACKGROUND (LIGHT MODE / SUBTLE AESTHETIC)
+ * ==============================================================================
+ * Renders an understated, low-contrast geometric structure that rests quietly in
+ * the background without distracting user focus or competing with content.
+ * Responds with delicate, subtle parallax to mouse motion.
+ * ==============================================================================
+ */
 export function InteractiveBackground() {
   const containerRef = useRef(null);
 
@@ -8,18 +17,18 @@ export function InteractiveBackground() {
     const container = containerRef.current;
     if (!container) return;
 
-    // 1. Scene, Camera & Renderer
+    // 1. Scene, Camera & Soft Atmospheric Fog
     const scene = new THREE.Scene();
-    // Deep void midnight fog for atmospheric depth
-    scene.fog = new THREE.FogExp2(0x030712, 0.0018);
+    // Soft slate-gray atmospheric fog for light mode depth
+    scene.fog = new THREE.FogExp2(0xf8fafc, 0.0025);
 
     const camera = new THREE.PerspectiveCamera(
-      60,
+      55,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.z = 80;
+    camera.position.z = 85;
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -28,85 +37,82 @@ export function InteractiveBackground() {
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x030712, 1);
+    renderer.setClearColor(0xf8fafc, 1);
     container.appendChild(renderer.domElement);
 
-    // 2. Lighting System (Primary Blues & Electric Cyan)
-    const ambientLight = new THREE.AmbientLight(0x0a192f, 2.5);
+    // 2. Soft, Natural Lighting System (No harsh glares)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
     scene.add(ambientLight);
 
-    const pointLight1 = new THREE.PointLight(0x2563eb, 3, 200);
-    pointLight1.position.set(40, 30, 40);
-    scene.add(pointLight1);
+    const softDirectionalLight = new THREE.DirectionalLight(0x93c5fd, 0.6);
+    softDirectionalLight.position.set(30, 40, 50);
+    scene.add(softDirectionalLight);
 
-    const pointLight2 = new THREE.PointLight(0x06b6d4, 2.5, 200);
-    pointLight2.position.set(-40, -30, 30);
-    scene.add(pointLight2);
+    const softFillLight = new THREE.DirectionalLight(0xe2e8f0, 0.5);
+    softFillLight.position.set(-30, -30, 20);
+    scene.add(softFillLight);
 
-    // 3. Central Interactive Floating 3D Geometric Crystal (Icosahedron & Wireframe)
-    const crystalGroup = new THREE.Group();
+    // 3. Understated 3D Architectural Geometric Element
+    const sculptureGroup = new THREE.Group();
 
-    // Solid inner faceted polyhedron with deep blue specular material
-    const innerGeom = new THREE.IcosahedronGeometry(18, 1);
-    const innerMat = new THREE.MeshPhysicalMaterial({
-      color: 0x0f274a,
-      emissive: 0x1e3a8a,
-      emissiveIntensity: 0.35,
-      roughness: 0.2,
-      metalness: 0.8,
-      clearcoat: 0.9,
-      clearcoatRoughness: 0.1,
+    // Solid inner frosted polyhedron (very low opacity, delicate slate-blue)
+    const innerGeom = new THREE.IcosahedronGeometry(17, 1);
+    const innerMat = new THREE.MeshStandardMaterial({
+      color: 0xe2e8f0,
+      roughness: 0.7,
+      metalness: 0.1,
       wireframe: false,
       transparent: true,
-      opacity: 0.75,
+      opacity: 0.14,
     });
     const innerMesh = new THREE.Mesh(innerGeom, innerMat);
-    crystalGroup.add(innerMesh);
+    sculptureGroup.add(innerMesh);
 
-    // Outer luminous wireframe lattice
-    const wireGeom = new THREE.IcosahedronGeometry(18.2, 1);
+    // Delicate wireframe lattice (soft slate)
+    const wireGeom = new THREE.IcosahedronGeometry(17.15, 1);
     const wireMat = new THREE.MeshBasicMaterial({
-      color: 0x60a5fa,
+      color: 0x94a3b8,
       wireframe: true,
       transparent: true,
-      opacity: 0.35,
+      opacity: 0.22,
     });
     const wireMesh = new THREE.Mesh(wireGeom, wireMat);
-    crystalGroup.add(wireMesh);
+    sculptureGroup.add(wireMesh);
 
-    // Outer orbital geometric ring
-    const ringGeom = new THREE.TorusGeometry(26, 0.3, 16, 100);
+    // Thin outer orbital ring (faint watermark accent)
+    const ringGeom = new THREE.TorusGeometry(25, 0.15, 16, 90);
     const ringMat = new THREE.MeshBasicMaterial({
-      color: 0x06b6d4,
+      color: 0x64748b,
       transparent: true,
-      opacity: 0.45,
+      opacity: 0.18,
     });
     const ringMesh = new THREE.Mesh(ringGeom, ringMat);
-    ringMesh.rotation.x = Math.PI / 3;
-    crystalGroup.add(ringMesh);
+    ringMesh.rotation.x = Math.PI / 3.2;
+    sculptureGroup.add(ringMesh);
 
-    scene.add(crystalGroup);
-    crystalGroup.position.set(32, 0, -10);
+    scene.add(sculptureGroup);
+    // Placed gracefully toward the upper right / background corner
+    sculptureGroup.position.set(32, 4, -12);
 
-    // 4. Luminous 3D Particle Starfield
-    const particleCount = 1200;
+    // 4. Subtle Ambient Floating Micro-Particles
+    const particleCount = 280;
     const particleGeometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
 
-    const bluePalette = [
-      new THREE.Color(0x3b82f6), // Sapphire
-      new THREE.Color(0x60a5fa), // Azure
-      new THREE.Color(0x06b6d4), // Cyan
-      new THREE.Color(0x1d4ed8), // Royal
+    const lightPalette = [
+      new THREE.Color(0x94a3b8), // Soft slate
+      new THREE.Color(0x60a5fa), // Muted sky blue
+      new THREE.Color(0xcbd5e1), // Light cool gray
+      new THREE.Color(0x2563eb), // Classic subtle blue
     ];
 
     for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 350;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 250;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+      positions[i * 3] = (Math.random() - 0.5) * 340;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 240;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 180;
 
-      const chosenColor = bluePalette[Math.floor(Math.random() * bluePalette.length)];
+      const chosenColor = lightPalette[Math.floor(Math.random() * lightPalette.length)];
       colors[i * 3] = chosenColor.r;
       colors[i * 3 + 1] = chosenColor.g;
       colors[i * 3 + 2] = chosenColor.b;
@@ -116,31 +122,30 @@ export function InteractiveBackground() {
     particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const particleMaterial = new THREE.PointsMaterial({
-      size: 1.4,
+      size: 1.1,
       vertexColors: true,
       transparent: true,
-      opacity: 0.85,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.22,
+      blending: THREE.NormalBlending,
     });
 
     const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
     scene.add(particleSystem);
 
-    // 5. Smooth Mouse Tracking with Exponential Decay Lerping
+    // 5. Very Gentle, Smooth Mouse Lerping (Non-distracting)
     let targetMouseX = 0;
     let targetMouseY = 0;
     let currentMouseX = 0;
     let currentMouseY = 0;
 
     const onMouseMove = (event) => {
-      // Normalize cursor coordinates from -1 to 1
       targetMouseX = (event.clientX / window.innerWidth) * 2 - 1;
       targetMouseY = -(event.clientY / window.innerHeight) * 2 + 1;
     };
 
     window.addEventListener('mousemove', onMouseMove, { passive: true });
 
-    // 6. Responsive Viewport Resizing
+    // 6. Viewport Resizing
     const onWindowResize = () => {
       if (!renderer || !camera) return;
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -150,7 +155,7 @@ export function InteractiveBackground() {
 
     window.addEventListener('resize', onWindowResize);
 
-    // 7. Animation & Render Loop
+    // 7. Animation Loop (Serene, Slow Motion)
     let animationFrameId;
     let clock = new THREE.Clock();
 
@@ -159,32 +164,32 @@ export function InteractiveBackground() {
       const delta = clock.getDelta();
       const elapsedTime = clock.getElapsedTime();
 
-      // Fluid exponential lerping for buttery-smooth mouse tracking
-      currentMouseX += (targetMouseX - currentMouseX) * 0.045;
-      currentMouseY += (targetMouseY - currentMouseY) * 0.045;
+      // Soft damping interpolation
+      currentMouseX += (targetMouseX - currentMouseX) * 0.025;
+      currentMouseY += (targetMouseY - currentMouseY) * 0.025;
 
-      // Camera subtle parallax tilt based on mouse position
-      camera.position.x = currentMouseX * 14;
-      camera.position.y = currentMouseY * 10;
+      // Restrained camera parallax tilt (does not throw off page reading)
+      camera.position.x = currentMouseX * 5;
+      camera.position.y = currentMouseY * 3.5;
       camera.lookAt(scene.position);
 
-      // Rotating the 3D crystal with continuous motion + mouse responsiveness
-      crystalGroup.rotation.y += 0.35 * delta;
-      crystalGroup.rotation.x = Math.sin(elapsedTime * 0.4) * 0.2 + currentMouseY * 0.5;
-      crystalGroup.rotation.z = Math.cos(elapsedTime * 0.3) * 0.2 + currentMouseX * 0.5;
+      // Slow, relaxing continuous rotation
+      sculptureGroup.rotation.y += 0.12 * delta;
+      sculptureGroup.rotation.x = Math.sin(elapsedTime * 0.2) * 0.1 + currentMouseY * 0.18;
+      sculptureGroup.rotation.z = Math.cos(elapsedTime * 0.15) * 0.1 + currentMouseX * 0.18;
 
-      ringMesh.rotation.z += 0.5 * delta;
+      ringMesh.rotation.z += 0.18 * delta;
 
-      // Particle system gentle wave drift
-      particleSystem.rotation.y = elapsedTime * 0.02 + currentMouseX * 0.15;
-      particleSystem.rotation.x = currentMouseY * 0.1;
+      // Micro-particles gentle drift
+      particleSystem.rotation.y = elapsedTime * 0.008 + currentMouseX * 0.04;
+      particleSystem.rotation.x = currentMouseY * 0.03;
 
       renderer.render(scene, camera);
     };
 
     animate();
 
-    // 8. Cleanup on Unmount
+    // 8. Cleanup
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('mousemove', onMouseMove);

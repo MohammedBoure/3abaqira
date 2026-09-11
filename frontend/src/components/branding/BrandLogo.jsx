@@ -33,8 +33,8 @@ export function BrandLogo({
 
   return (
     <div className={`flex items-center gap-3 select-none group cursor-pointer ${className}`}>
-      {/* 3D Glassmorphic Emblem Container */}
-      <div className="relative flex items-center justify-center p-1.5 rounded-xl bg-gradient-to-br from-blue-500/20 via-blue-600/10 to-cyan-500/10 border border-blue-400/30 backdrop-blur-md shadow-lg shadow-blue-500/10 transition-all duration-300 group-hover:scale-105 group-hover:border-blue-400/60 group-hover:shadow-cyan-glow">
+      {/* Emblem Container */}
+      <div className="relative flex items-center justify-center p-1.5 rounded-xl bg-blue-50/90 border border-blue-200 shadow-xs transition-all duration-300 group-hover:scale-105 group-hover:border-blue-400 group-hover:bg-blue-100/70">
         <img
           src={logoConfig.iconPath}
           alt="3abaqira Logo Emblem"
@@ -46,14 +46,14 @@ export function BrandLogo({
       {variant !== 'icon' && (
         <div className={`flex flex-col ${variant === 'stacked' ? 'items-center text-center' : 'items-start'}`}>
           <div className="flex items-center gap-1.5">
-            <span className={`font-display font-extrabold tracking-wider text-white ${currentSize.textTitle} bg-gradient-to-r from-white via-blue-100 to-blue-300 bg-clip-text text-transparent`}>
+            <span className={`font-display font-extrabold tracking-wider text-slate-900 ${currentSize.textTitle}`}>
               {logoConfig.nameLatin}
             </span>
-            <span className="px-1.5 py-0.5 text-[9px] font-semibold tracking-widest text-cyan-300 bg-cyan-950/60 border border-cyan-500/30 rounded-md uppercase">
+            <span className="px-1.5 py-0.5 text-[9px] font-semibold tracking-widest text-blue-700 bg-blue-50 border border-blue-200 rounded-md uppercase">
               Pro
             </span>
           </div>
-          <span className={`font-arabic text-blue-300/80 font-medium ${currentSize.textSub} line-clamp-1`}>
+          <span className={`font-arabic text-slate-500 font-medium ${currentSize.textSub} line-clamp-1`}>
             {logoConfig.nameArabic}
           </span>
         </div>

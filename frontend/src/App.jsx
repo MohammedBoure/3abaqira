@@ -7,7 +7,7 @@ import { MockDataGrid } from './components/dashboard/MockDataGrid';
 import { CashDrawerOverview } from './components/dashboard/CashDrawerOverview';
 import { ProgramsOverview } from './components/dashboard/ProgramsOverview';
 import { StudentRegistrationModal, CashDrawerModal } from './components/dashboard/PreviewModals';
-import { Database, ShieldCheck, Cpu, Sparkles, Layers } from 'lucide-react';
+import { Database, Cpu } from 'lucide-react';
 
 export function App() {
   const [selectedBranch, setSelectedBranch] = useState('CENTER');
@@ -28,11 +28,11 @@ export function App() {
   }, [currentLang]);
 
   return (
-    <div className="relative min-h-screen text-slate-100 flex flex-col font-arabic">
-      {/* 1. Interactive 3D WebGL Background Engine */}
+    <div className="relative min-h-screen text-slate-800 flex flex-col font-arabic">
+      {/* 1. Subtle Ambient 3D WebGL Background Engine */}
       <InteractiveBackground />
 
-      {/* 2. Frosted Glass Navigation Bar */}
+      {/* 2. Top Navigation Bar */}
       <Navbar
         selectedBranch={selectedBranch}
         onSelectBranch={setSelectedBranch}
@@ -79,27 +79,27 @@ export function App() {
         onClose={() => setIsDrawerModalOpen(false)}
       />
 
-      {/* 5. Modern Glassmorphic Footer */}
-      <footer className="border-t border-blue-400/15 bg-[#0a192f]/60 backdrop-blur-xl mt-12 py-6 text-xs text-blue-300/70">
+      {/* 5. Professional Classic Footer */}
+      <footer className="border-t border-slate-200 bg-white/80 backdrop-blur-md mt-12 py-6 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-            <span className="font-medium text-white">
+            <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
+            <span className="font-semibold text-slate-800">
               منصة إدارة العباقرة الموحدة (3abaqira Enterprise)
             </span>
             <span>—</span>
-            <span>النموذج المرئي التفاعلي المتقدم ثلاثي الأبعاد</span>
+            <span>النموذج المرئي المهني الكلاسيكي</span>
           </div>
 
           <div className="flex items-center gap-4 text-[11px] font-mono">
-            <span className="flex items-center gap-1.5 text-emerald-400">
+            <span className="flex items-center gap-1.5 text-emerald-700 font-medium">
               <Database className="w-3.5 h-3.5" />
               MySQL Engine (abaqira)
             </span>
             <span>•</span>
-            <span className="flex items-center gap-1.5 text-cyan-300">
+            <span className="flex items-center gap-1.5 text-blue-700 font-medium">
               <Cpu className="w-3.5 h-3.5" />
-              Three.js WebGL Interactive
+              Three.js WebGL Ambient
             </span>
           </div>
         </div>

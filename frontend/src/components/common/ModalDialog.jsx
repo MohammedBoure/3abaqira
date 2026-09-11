@@ -28,39 +28,39 @@ export function ModalDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-      {/* Dark Frosted Backdrop */}
+      {/* Dark Translucent Backdrop */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-primary-void/75 backdrop-blur-md transition-opacity duration-300"
+        className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity duration-200"
         aria-hidden="true"
       />
 
-      {/* Glassmorphic Modal Surface */}
+      {/* Modal Surface */}
       <div
         className={`
           relative w-full ${maxWidth} rounded-2xl
-          bg-[#0a192f]/90 backdrop-blur-2xl
-          border border-blue-400/35
-          shadow-[0_20px_60px_0_rgba(2,6,23,0.8),0_0_40px_rgba(37,99,235,0.2)]
+          bg-white/95 backdrop-blur-xl
+          border border-slate-200
+          shadow-2xl
           p-6 sm:p-8 z-10 my-8
-          transition-all duration-300 transform scale-100
+          transition-all duration-250 transform scale-100
         `}
       >
         {/* Header */}
-        <div className="flex items-start justify-between pb-4 border-b border-blue-400/15">
+        <div className="flex items-start justify-between pb-4 border-b border-slate-200">
           <div>
-            <h3 className="text-xl font-bold font-display text-white tracking-wide">
+            <h3 className="text-xl font-bold font-display text-slate-900 tracking-wide">
               {title}
             </h3>
             {subtitle && (
-              <p className="text-xs text-blue-300/80 mt-1 font-medium">
+              <p className="text-xs text-slate-500 mt-1 font-medium">
                 {subtitle}
               </p>
             )}
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-blue-600/20 border border-transparent hover:border-blue-400/30 transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -72,7 +72,7 @@ export function ModalDialog({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-blue-400/15">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
           <GlassButton variant="secondary" size="sm" onClick={onClose}>
             إغلاق المعاينة
           </GlassButton>

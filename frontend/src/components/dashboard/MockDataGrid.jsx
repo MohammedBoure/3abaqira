@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Search, Filter, Eye, Printer, ArrowUpDown, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Search, Eye, Printer, ChevronRight, ChevronLeft } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
 import { StatusBadge } from '../common/StatusBadge';
-import { GlassButton } from '../common/GlassButton';
 import { MOCK_STUDENTS_ROSTER } from '../../mock/mockData';
 
 export function MockDataGrid({ selectedBranch = 'ALL' }) {
@@ -25,12 +24,12 @@ export function MockDataGrid({ selectedBranch = 'ALL' }) {
   return (
     <GlassCard className="p-0 overflow-hidden">
       {/* Table Header Controls */}
-      <div className="p-5 sm:p-6 border-b border-blue-400/15 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-5 sm:p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg sm:text-xl font-bold font-display text-white">
+          <h2 className="text-lg sm:text-xl font-bold font-display text-slate-900">
             سجل الطلاب والاشتراكات الموحد
           </h2>
-          <p className="text-xs text-blue-300/80 mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             عرض حي لقوائم المسجلين بالأكاديمية والروضة مع تتبع الأقساط والوضعيات المالية
           </p>
         </div>
@@ -38,7 +37,7 @@ export function MockDataGrid({ selectedBranch = 'ALL' }) {
         {/* Filter Controls */}
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Status Filter Buttons */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-blue-950/60 border border-blue-500/25">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 border border-slate-200">
             {['ALL', 'PAID', 'PARTIAL', 'OVERDUE'].map((st) => (
               <button
                 key={st}
@@ -46,8 +45,8 @@ export function MockDataGrid({ selectedBranch = 'ALL' }) {
                 className={`
                   px-2.5 py-1 text-xs font-semibold rounded-lg transition-all
                   ${statusFilter === st
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-blue-300 hover:text-white hover:bg-blue-900/40'}
+                    ? 'bg-blue-700 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'}
                 `}
               >
                 {st === 'ALL' ? 'الكل' : st === 'PAID' ? 'مسدد' : st === 'PARTIAL' ? 'جزئي' : 'متأخر'}
@@ -57,13 +56,13 @@ export function MockDataGrid({ selectedBranch = 'ALL' }) {
 
           {/* Table Search */}
           <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute inset-y-0 start-2.5 my-auto text-blue-300/60" />
+            <Search className="w-3.5 h-3.5 absolute inset-y-0 start-2.5 my-auto text-slate-400" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="تصفية بالاسم أو الرمز..."
-              className="h-8 ps-8 pe-3 text-xs rounded-lg glass-input text-white placeholder-blue-300/50 w-44 sm:w-56"
+              className="h-8 ps-8 pe-3 text-xs rounded-lg glass-input text-slate-900 placeholder-slate-400 w-44 sm:w-56"
             />
           </div>
         </div>
@@ -73,7 +72,7 @@ export function MockDataGrid({ selectedBranch = 'ALL' }) {
       <div className="overflow-x-auto">
         <table className="w-full text-start text-xs sm:text-sm">
           <thead>
-            <tr className="border-b border-blue-400/20 bg-blue-950/40 text-blue-200 font-semibold">
+            <tr className="border-b border-slate-200 bg-slate-50 text-slate-700 font-semibold">
               <th className="py-3.5 px-4 text-start font-mono">الرمز (Code)</th>
               <th className="py-3.5 px-4 text-start">اسم التلميذ / الطالب</th>
               <th className="py-3.5 px-4 text-start">البرنامج والفوج</th>
@@ -83,33 +82,33 @@ export function MockDataGrid({ selectedBranch = 'ALL' }) {
               <th className="py-3.5 px-4 text-center">إجراءات</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-blue-400/10">
+          <tbody className="divide-y divide-slate-100">
             {filteredStudents.length > 0 ? (
               filteredStudents.map((st) => (
                 <tr
                   key={st.id}
-                  className="hover:bg-blue-900/25 transition-colors group"
+                  className="hover:bg-blue-50/40 transition-colors group"
                 >
-                  <td className="py-3 px-4 font-mono text-cyan-300 font-semibold">
+                  <td className="py-3 px-4 font-mono text-blue-700 font-semibold">
                     {st.studentCode}
                   </td>
                   <td className="py-3 px-4">
-                    <div className="font-bold text-white group-hover:text-blue-200 transition-colors">
+                    <div className="font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
                       {st.fullNameAr}
                     </div>
-                    <div className="text-[11px] text-slate-400 font-latin">
+                    <div className="text-[11px] text-slate-500 font-latin">
                       {st.fullNameFr}
                     </div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="font-medium text-blue-100">{st.program}</div>
-                    <div className="text-[11px] text-blue-300/70">{st.level}</div>
+                    <div className="font-medium text-slate-800">{st.program}</div>
+                    <div className="text-[11px] text-slate-500">{st.level}</div>
                   </td>
-                  <td className="py-3 px-4 text-blue-200/90 font-medium">
+                  <td className="py-3 px-4 text-slate-700 font-medium">
                     {st.coachName}
                   </td>
                   <td className="py-3 px-4 font-mono">
-                    <span className="text-emerald-400 font-bold">{st.amountPaid}</span>
+                    <span className="text-emerald-700 font-bold">{st.amountPaid}</span>
                     <span className="text-slate-400 text-xs"> / {st.amountDue}</span>
                   </td>
                   <td className="py-3 px-4 text-center">
@@ -119,13 +118,13 @@ export function MockDataGrid({ selectedBranch = 'ALL' }) {
                     <div className="flex items-center justify-center gap-1.5">
                       <button
                         title="معاينة الملف"
-                        className="p-1.5 rounded-lg text-blue-300 hover:text-white hover:bg-blue-600/30 transition-colors"
+                        className="p-1.5 rounded-lg text-slate-500 hover:text-blue-700 hover:bg-blue-50 transition-colors"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
                       <button
                         title="طباعة الوصل"
-                        className="p-1.5 rounded-lg text-blue-300 hover:text-white hover:bg-blue-600/30 transition-colors"
+                        className="p-1.5 rounded-lg text-slate-500 hover:text-blue-700 hover:bg-blue-50 transition-colors"
                       >
                         <Printer className="w-4 h-4" />
                       </button>
@@ -135,7 +134,7 @@ export function MockDataGrid({ selectedBranch = 'ALL' }) {
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="py-12 text-center text-blue-300/60 font-medium">
+                <td colSpan="7" className="py-12 text-center text-slate-400 font-medium">
                   لا توجد نتائج مطابقة لخيارات التصفية المحددة.
                 </td>
               </tr>
@@ -145,19 +144,19 @@ export function MockDataGrid({ selectedBranch = 'ALL' }) {
       </div>
 
       {/* Table Pagination Footer */}
-      <div className="p-4 border-t border-blue-400/15 flex items-center justify-between text-xs text-blue-300/80 bg-blue-950/20">
+      <div className="p-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 bg-slate-50">
         <div>
-          عرض <span className="font-bold text-white">{filteredStudents.length}</span> من أصل{' '}
-          <span className="font-bold text-white">{MOCK_STUDENTS_ROSTER.length}</span> طالب مسجل
+          عرض <span className="font-bold text-slate-900">{filteredStudents.length}</span> من أصل{' '}
+          <span className="font-bold text-slate-900">{MOCK_STUDENTS_ROSTER.length}</span> طالب مسجل
         </div>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 rounded-lg bg-blue-900/40 border border-blue-400/20 text-blue-200 hover:text-white hover:bg-blue-800/60 disabled:opacity-40">
+          <button className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-40">
             <ChevronRight className="w-4 h-4" />
           </button>
-          <span className="px-2 py-0.5 font-mono text-cyan-300 bg-blue-950 rounded border border-blue-500/30">
+          <span className="px-2 py-0.5 font-mono text-blue-700 bg-white rounded border border-slate-200 font-semibold">
             1 / 1
           </span>
-          <button className="p-1.5 rounded-lg bg-blue-900/40 border border-blue-400/20 text-blue-200 hover:text-white hover:bg-blue-800/60 disabled:opacity-40">
+          <button className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-40">
             <ChevronLeft className="w-4 h-4" />
           </button>
         </div>

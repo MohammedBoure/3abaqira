@@ -11,45 +11,44 @@ export function GlassButton({
 }) {
   const sizeClasses = {
     sm: 'px-3 py-1.5 text-xs gap-1.5 rounded-lg',
-    md: 'px-4 py-2.5 text-sm gap-2 rounded-xl',
-    lg: 'px-6 py-3 text-base gap-2.5 rounded-xl',
+    md: 'px-4 py-2 text-sm gap-2 rounded-xl',
+    lg: 'px-6 py-2.5 text-base gap-2.5 rounded-xl',
   };
 
   const variantClasses = {
     primary: `
-      bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800
+      bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700
       text-white font-medium
-      border border-blue-400/35
-      shadow-[0_4px_16px_rgba(37,99,235,0.35)]
-      hover:from-blue-500 hover:to-blue-700
-      hover:shadow-[0_6px_24px_rgba(37,99,235,0.55)]
-      hover:border-blue-300/60
+      border border-blue-800/20
+      shadow-[0_2px_8px_rgba(29,78,216,0.2)]
+      hover:from-blue-600 hover:to-blue-800
+      hover:shadow-[0_4px_14px_rgba(29,78,216,0.3)]
       hover:-translate-y-0.5
       active:translate-y-0
     `,
     secondary: `
-      bg-[#0f274a]/60 text-blue-100 font-medium
-      border border-blue-400/25
-      backdrop-blur-md
-      hover:bg-[#1e3a8a]/60 hover:text-white
-      hover:border-blue-400/50 hover:shadow-[0_4px_16px_rgba(59,130,246,0.2)]
+      bg-white text-slate-700 font-medium
+      border border-slate-300
+      shadow-xs
+      hover:bg-slate-50 hover:text-slate-900
+      hover:border-slate-400
       hover:-translate-y-0.5
       active:translate-y-0
     `,
     cyan: `
-      bg-gradient-to-r from-cyan-600 to-blue-600
+      bg-gradient-to-r from-sky-600 to-blue-600
       text-white font-medium
-      border border-cyan-400/40
-      shadow-[0_4px_16px_rgba(6,182,212,0.35)]
-      hover:from-cyan-500 hover:to-blue-500
-      hover:shadow-[0_6px_24px_rgba(6,182,212,0.55)]
+      border border-sky-700/20
+      shadow-[0_2px_8px_rgba(2,132,199,0.2)]
+      hover:from-sky-500 hover:to-blue-700
+      hover:shadow-[0_4px_14px_rgba(2,132,199,0.3)]
       hover:-translate-y-0.5
       active:translate-y-0
     `,
     ghost: `
-      bg-transparent text-blue-200 font-medium
-      hover:bg-blue-600/15 hover:text-white
-      border border-transparent hover:border-blue-400/20
+      bg-transparent text-slate-600 font-medium
+      hover:bg-slate-100 hover:text-slate-900
+      border border-transparent hover:border-slate-200
     `,
   };
 
@@ -66,7 +65,7 @@ export function GlassButton({
       `}
       {...props}
     >
-      {Icon && <Icon className="w-4 h-4 transition-transform group-hover:scale-110" />}
+      {Icon && <Icon className="w-4 h-4 transition-transform group-hover:scale-105" />}
       <span>{children}</span>
     </button>
   );
