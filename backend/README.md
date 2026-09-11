@@ -31,6 +31,8 @@ backend/
 │   ├── registers.py          # Daily cash drawers, balances & reconciliation
 │   ├── payments.py           # Student fee payments & receipt voucher generation
 │   ├── handovers.py          # Cash safe remittances & drawer drop vouchers
+│   ├── expenses.py           # Operational expenses & categories taxonomy
+│   ├── budgets.py            # Budget targets & variance reporting
 │   └── system.py             # System telemetry & infrastructure overview
 └── database/                 # Unified database connectivity, pooling, migrations & managers
     ├── README.md             # Database layer overview and FastAPI usage
@@ -53,6 +55,8 @@ backend/
     ├── cash_register_manager.py # Data manager for daily cash registers & drawer audits
     ├── payment_manager.py    # Data manager for payments, receipts & drawer synchronization
     ├── cash_handover_manager.py # Data manager for cash safe remittances & safe drops
+    ├── expense_manager.py    # Data manager for expense categories & operational expenses
+    ├── budget_variance_manager.py # Data manager for budget variances & live actuals
     └── base/                 # Core database infrastructure (Connection, Schema, Backup, Archive)
 ```
 

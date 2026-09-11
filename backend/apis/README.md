@@ -30,6 +30,8 @@ backend/apis/
 ├── registers.py        # Daily cash drawers, balances & reconciliation (/api/cash-registers)
 ├── payments.py         # Tuition fee payments, receipts & cashier intakes (/api/payments)
 ├── handovers.py        # Cash safe remittances & drawer drop vouchers (/api/cash-handovers)
+├── expenses.py         # Operational expenses & categories taxonomy (/api/expenses)
+├── budgets.py          # Budget allocations & variance reporting (/api/budget-variances)
 ├── system.py           # System telemetry, infrastructure overview & archive status (/api/system)
 └── README.md           # This documentation file
 ```
@@ -60,6 +62,8 @@ backend/apis/
 | [registers.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/registers.py) | REST router for daily cash drawers, opening balances, transaction tracking, and end-of-day closing reconciliation. |
 | [payments.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/payments.py) | REST router for student fee payments, receipt voucher generation, collection summaries, and voiding workflows. |
 | [handovers.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/handovers.py) | REST router for cash safe remittances, drawer drops, voucher sequencing, and confirmation lifecycle updates. |
+| [expenses.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/expenses.py) | REST router for expense categories, operational expense vouchers, daily drawer balance integration, and category summary analytics. |
+| [budgets.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/budgets.py) | REST router for monthly category budget targets, multiplier factors, actual expense syncing, and budget variance reporting. |
 | [system.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/system.py) | REST router providing health telemetry, multi-branch summary overview, and historical archive view mode status. |
 
 ---

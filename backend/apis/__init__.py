@@ -31,6 +31,8 @@ from .invoices import router as invoices_router
 from .registers import router as registers_router
 from .payments import router as payments_router
 from .handovers import router as handovers_router
+from .expenses import router as expenses_router
+from .budgets import router as budgets_router
 from .system import router as system_router, system_health_check
 
 # Master API Router mounted under '/api'
@@ -55,6 +57,8 @@ api_router.include_router(invoices_router)
 api_router.include_router(registers_router)
 api_router.include_router(payments_router)
 api_router.include_router(handovers_router)
+api_router.include_router(expenses_router)
+api_router.include_router(budgets_router)
 api_router.include_router(system_router)
 
 # Top-level direct health check alias: GET /api/health
@@ -87,5 +91,7 @@ __all__ = [
     "registers_router",
     "payments_router",
     "handovers_router",
+    "expenses_router",
+    "budgets_router",
     "system_router",
 ]

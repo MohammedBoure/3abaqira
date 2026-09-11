@@ -89,6 +89,8 @@ def root():
             "cash_registers": "/api/cash-registers",
             "payments": "/api/payments",
             "cash_handovers": "/api/cash-handovers",
+            "expenses": "/api/expenses",
+            "budget_variances": "/api/budget-variances",
             "system_overview": "/api/system/overview",
         },
     }

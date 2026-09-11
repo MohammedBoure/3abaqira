@@ -46,6 +46,8 @@ backend/database/
 | [cash_register_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/cash_register_manager.py) | Data Access Manager for `daily_cash_registers`, tracking cash drawer opening balances, live revenue/expense/remittance totals, and closing discrepancies. |
 | [payment_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/payment_manager.py) | Data Access Manager for `payments` receipts (الوصل), automated voucher numbers, two-way invoice crediting, and cash drawer synchronization. |
 | [cash_handover_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/cash_handover_manager.py) | Data Access Manager for `cash_handovers` remittances (التسليم), safe drops, physical voucher sequencing, and drawer remittance balance updates. |
+| [expense_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/expense_manager.py) | Data Access Managers for `expense_categories` and `expenses` records, voucher sequencing (`EXP-BRANCH-YYYY-XXXXX`), daily drawer expense sync, and budget variance actuals updates. |
+| [budget_variance_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/budget_variance_manager.py) | Data Access Manager for `budget_variances`, setting monthly category budgets, variable multiplier factors, actual expense syncing, and variance reporting (favorable / unfavorable). |
 
 
 ## FastAPI Integration Pattern

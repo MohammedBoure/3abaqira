@@ -59,6 +59,7 @@ _MANAGER_EXPORTS = {
     "CashHandoverManager": ("cash_handover_manager", "CashHandoverManager"),
     
     # Expenses & Kitchen Supplies
+    "ExpenseCategoryManager": ("expense_manager", "ExpenseCategoryManager"),
     "ExpenseManager": ("expense_manager", "ExpenseManager"),
     "BudgetVarianceManager": ("budget_variance_manager", "BudgetVarianceManager"),
     "KitchenProcurementManager": ("kitchen_procurement_manager", "KitchenProcurementManager"),
