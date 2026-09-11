@@ -43,6 +43,9 @@ backend/database/
 | [attendance_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/attendance_manager.py) | Data Access Manager for `completed_sessions` and `student_attendance` per-session marking, points scoring, and logs. |
 | [enrollment_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/enrollment_manager.py) | Data Access Manager for `student_enrollments` cohorts, tuition fee matrices, sibling/cash discounts, headcount sync, and invoice scheduling. |
 | [invoice_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/invoice_manager.py) | Data Access Manager for `invoices` tranches, scheduled due dates, payment credits, overdue scanning, waivers, and financial analytics. |
+| [cash_register_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/cash_register_manager.py) | Data Access Manager for `daily_cash_registers`, tracking cash drawer opening balances, live revenue/expense/remittance totals, and closing discrepancies. |
+| [payment_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/payment_manager.py) | Data Access Manager for `payments` receipts (الوصل), automated voucher numbers, two-way invoice crediting, and cash drawer synchronization. |
+| [cash_handover_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/cash_handover_manager.py) | Data Access Manager for `cash_handovers` remittances (التسليم), safe drops, physical voucher sequencing, and drawer remittance balance updates. |
 
 
 ## FastAPI Integration Pattern

@@ -28,6 +28,9 @@ backend/
 │   ├── sessions.py           # Conducted session logs & student attendance
 │   ├── enrollments.py        # Student course enrollments & multi-tier tuition pricing
 │   ├── invoices.py           # Multi-tier invoices, installment tranches & payment credits
+│   ├── registers.py          # Daily cash drawers, balances & reconciliation
+│   ├── payments.py           # Student fee payments & receipt voucher generation
+│   ├── handovers.py          # Cash safe remittances & drawer drop vouchers
 │   └── system.py             # System telemetry & infrastructure overview
 └── database/                 # Unified database connectivity, pooling, migrations & managers
     ├── README.md             # Database layer overview and FastAPI usage
@@ -47,6 +50,9 @@ backend/
     ├── attendance_manager.py # Data manager for conducted sessions & student attendance
     ├── enrollment_manager.py # Data manager for student enrollments & invoice scheduling
     ├── invoice_manager.py    # Data manager for multi-tier invoices & payment crediting
+    ├── cash_register_manager.py # Data manager for daily cash registers & drawer audits
+    ├── payment_manager.py    # Data manager for payments, receipts & drawer synchronization
+    ├── cash_handover_manager.py # Data manager for cash safe remittances & safe drops
     └── base/                 # Core database infrastructure (Connection, Schema, Backup, Archive)
 ```
 

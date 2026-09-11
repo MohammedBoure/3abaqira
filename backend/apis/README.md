@@ -27,6 +27,9 @@ backend/apis/
 ├── sessions.py         # Conducted session logs & student attendance (/api/sessions)
 ├── enrollments.py      # Student course enrollments & multi-tier tuition pricing (/api/enrollments)
 ├── invoices.py         # Multi-tier invoices, installment tranches & payment credits (/api/invoices)
+├── registers.py        # Daily cash drawers, balances & reconciliation (/api/cash-registers)
+├── payments.py         # Tuition fee payments, receipts & cashier intakes (/api/payments)
+├── handovers.py        # Cash safe remittances & drawer drop vouchers (/api/cash-handovers)
 ├── system.py           # System telemetry, infrastructure overview & archive status (/api/system)
 └── README.md           # This documentation file
 ```
@@ -54,6 +57,9 @@ backend/apis/
 | [sessions.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/sessions.py) | REST router for conducted session logs, batch student attendance, performance points scoring, and attendance tracking. |
 | [enrollments.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/enrollments.py) | REST router for student enrollments, fee calculation matrices, discounts, cohort roster inspection, and installment schedule generation. |
 | [invoices.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/invoices.py) | REST router for multi-tier invoice installment tranches, due date scheduling, payment crediting, debt overdue scanning, and financial KPI analytics. |
+| [registers.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/registers.py) | REST router for daily cash drawers, opening balances, transaction tracking, and end-of-day closing reconciliation. |
+| [payments.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/payments.py) | REST router for student fee payments, receipt voucher generation, collection summaries, and voiding workflows. |
+| [handovers.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/handovers.py) | REST router for cash safe remittances, drawer drops, voucher sequencing, and confirmation lifecycle updates. |
 | [system.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/system.py) | REST router providing health telemetry, multi-branch summary overview, and historical archive view mode status. |
 
 ---

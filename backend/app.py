@@ -86,6 +86,9 @@ def root():
             "sessions": "/api/sessions",
             "enrollments": "/api/enrollments",
             "invoices": "/api/invoices",
+            "cash_registers": "/api/cash-registers",
+            "payments": "/api/payments",
+            "cash_handovers": "/api/cash-handovers",
             "system_overview": "/api/system/overview",
         },
     }
