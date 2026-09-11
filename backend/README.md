@@ -20,6 +20,9 @@ backend/
 │   ├── classrooms.py         # Classroom capacity & floor assignment
 │   ├── guardians.py          # Guardians & parents master directory
 │   ├── students.py           # Bilingual student directory & guardian linkages
+│   ├── programs.py           # Educational programs & catalog
+│   ├── levels.py             # Curriculum stages & sequence ordering
+│   ├── pricing_plans.py      # Multi-tier pricing matrices & fee computation
 │   └── system.py             # System telemetry & infrastructure overview
 └── database/                 # Unified database connectivity, pooling, migrations & managers
     ├── README.md             # Database layer overview and FastAPI usage
@@ -31,6 +34,9 @@ backend/
     ├── user_manager.py       # Data manager for user authentication & credentials
     ├── guardian_manager.py   # Data manager for guardians and parent contacts
     ├── student_manager.py    # Data manager for bilingual students & guardian linkages
+    ├── program_manager.py    # Data manager for educational programs & billing models
+    ├── level_manager.py      # Data manager for curriculum levels & stage ordering
+    ├── pricing_manager.py    # Data manager for multi-tier pricing matrices & discounts
     └── base/                 # Core database infrastructure (Connection, Schema, Backup, Archive)
 ```
 

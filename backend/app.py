@@ -78,6 +78,9 @@ def root():
             "classrooms": "/api/classrooms",
             "guardians": "/api/guardians",
             "students": "/api/students",
+            "programs": "/api/programs",
+            "levels": "/api/levels",
+            "pricing_plans": "/api/pricing-plans",
             "system_overview": "/api/system/overview",
         },
     }

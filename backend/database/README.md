@@ -35,6 +35,9 @@ backend/database/
 | [user_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/user_manager.py) | Data Access Manager for the `users` authentication table, supporting secure credential verification, role-based retrieval, and password management. |
 | [guardian_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/guardian_manager.py) | Data Access Manager for the `guardians` parent directory, contact search, and student linkage queries. |
 | [student_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/student_manager.py) | Data Access Manager for the bilingual `students` directory, code generation, and `student_guardians` junction table. |
+| [program_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/program_manager.py) | Data Access Manager for the `programs` table, managing educational offerings and billing models. |
+| [level_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/level_manager.py) | Data Access Manager for curriculum `levels`, sequence ordering, age cohorts, and visual color tags. |
+| [pricing_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/pricing_manager.py) | Data Access Manager for `pricing_plans` matrices, installment structures, and discount simulations. |
 
 
 ## FastAPI Integration Pattern
