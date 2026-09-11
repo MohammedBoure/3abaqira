@@ -28,6 +28,11 @@ backend/database/
 |---------------|---------|
 | [base/](file:///C:/Users/moham/Desktop/3abaqira/backend/database/base) | Core infrastructure containing connection pooling, schema migrations, backup/restore managers, and archive viewing. |
 | [__init__.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/__init__.py) | Package entry point re-exporting `Database`, dynamic domain manager loader (`_MANAGER_EXPORTS`), and FastAPI dependencies (`get_db`, `get_database`). |
+| [branch_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/branch_manager.py) | Data Access Manager for the `branches` table, supporting multi-tenant branch CRUD and status toggles. |
+| [academic_year_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/academic_year_manager.py) | Data Access Manager for the `academic_years` table, supporting fiscal year setup and atomic active cycle switching. |
+| [classroom_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/classroom_manager.py) | Data Access Manager for the `classrooms` table, managing room capacities, floor allocations, and branch room rosters. |
+| [infrastructure_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/infrastructure_manager.py) | Facade manager consolidating multi-branch infrastructure overview and room capacity analytics. |
+
 
 ## FastAPI Integration Pattern
 

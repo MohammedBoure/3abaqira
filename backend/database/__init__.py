@@ -35,6 +35,9 @@ _MANAGER_EXPORTS = {
     "UserManager": ("user_manager", "UserManager"),
     "EmployeeManager": ("employee_manager", "EmployeeManager"),
     "BranchManager": ("branch_manager", "BranchManager"),
+    "AcademicYearManager": ("academic_year_manager", "AcademicYearManager"),
+    "ClassroomManager": ("classroom_manager", "ClassroomManager"),
+    "InfrastructureManager": ("infrastructure_manager", "InfrastructureManager"),
     
     # Students, Guardians & Groups
     "StudentManager": ("student_manager", "StudentManager"),
