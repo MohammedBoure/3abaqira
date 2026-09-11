@@ -10,4 +10,6 @@ This directory contains complete technical documentation and specifications extr
 | [rawda_structure.md](file:///C:/Users/moham/Desktop/3abaqira/docs/rawda_structure.md) | Exhaustive structural specification of the Kindergarten & Daycare workbook (`rawda.xlsx`), detailing all 8 worksheets, child billing, cash drawer reconciliation, expense categories, and kitchen provisions. |
 | [database_schema_reference.md](file:///C:/Users/moham/Desktop/3abaqira/docs/database_schema_reference.md) | Complete 3NF relational database architecture (SQL DDL, ER diagram, foreign keys, constraints, and migration plan) unifying both Academy and Kindergarten operations. |
 | [data_dictionary.md](file:///C:/Users/moham/Desktop/3abaqira/docs/data_dictionary.md) | Bilingual (Arabic / English) data dictionary mapping every Excel column header to its normalized SQL entity, attribute name, data type, and business validation rules. |
+| [schema.sql](file:///C:/Users/moham/Desktop/3abaqira/docs/schema.sql) | Production-ready PostgreSQL DDL script containing 30 normalized tables, automated integrity triggers, performance indexes, financial views, and bootstrap seed data. |
 | [excel_files/](file:///C:/Users/moham/Desktop/3abaqira/docs/excel_files) | Subdirectory housing the source legacy Excel workbooks (`center.xlsx` and `rawda.xlsx`). |
+
