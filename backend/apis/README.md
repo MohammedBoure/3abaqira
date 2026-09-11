@@ -17,6 +17,8 @@ backend/apis/
 ├── branches.py         # Multi-tenant branch operations (/api/branches)
 ├── academic_years.py   # Academic cycle management (/api/academic-years)
 ├── classrooms.py       # Classroom capacities and floor allocations (/api/classrooms)
+├── guardians.py        # Guardians & parents master directory (/api/guardians)
+├── students.py         # Bilingual student directory & guardian linkages (/api/students)
 ├── system.py           # System telemetry, infrastructure overview & archive status (/api/system)
 └── README.md           # This documentation file
 ```
@@ -34,6 +36,8 @@ backend/apis/
 | [branches.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/branches.py) | REST router for managing multi-tenant branch locations (`CENTER`, `RAWDA`, etc.) and associated branch classrooms. |
 | [academic_years.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/academic_years.py) | REST router for academic cycle management, date bound validations, and atomic active cycle switching. |
 | [classrooms.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/classrooms.py) | REST router for classroom records, student capacities, and floor allocation. |
+| [guardians.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/guardians.py) | REST router for guardian / parent profiles, contact details, and student ward associations. |
+| [students.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/students.py) | REST router for bilingual student profiles, auto-generated student codes, medical registry, and guardian pickup permissions. |
 | [system.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/system.py) | REST router providing health telemetry, multi-branch summary overview, and historical archive view mode status. |
 
 ---

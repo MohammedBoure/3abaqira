@@ -18,6 +18,8 @@ backend/
 │   ├── branches.py           # Multi-tenant branch operations
 │   ├── academic_years.py     # Academic cycle management
 │   ├── classrooms.py         # Classroom capacity & floor assignment
+│   ├── guardians.py          # Guardians & parents master directory
+│   ├── students.py           # Bilingual student directory & guardian linkages
 │   └── system.py             # System telemetry & infrastructure overview
 └── database/                 # Unified database connectivity, pooling, migrations & managers
     ├── README.md             # Database layer overview and FastAPI usage
@@ -27,6 +29,8 @@ backend/
     ├── classroom_manager.py  # Data manager for classrooms and capacities
     ├── infrastructure_manager.py # Consolidated facade for organizational infrastructure
     ├── user_manager.py       # Data manager for user authentication & credentials
+    ├── guardian_manager.py   # Data manager for guardians and parent contacts
+    ├── student_manager.py    # Data manager for bilingual students & guardian linkages
     └── base/                 # Core database infrastructure (Connection, Schema, Backup, Archive)
 ```
 

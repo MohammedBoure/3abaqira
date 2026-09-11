@@ -33,6 +33,8 @@ backend/database/
 | [classroom_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/classroom_manager.py) | Data Access Manager for the `classrooms` table, managing room capacities, floor allocations, and branch room rosters. |
 | [infrastructure_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/infrastructure_manager.py) | Facade manager consolidating multi-branch infrastructure overview and room capacity analytics. |
 | [user_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/user_manager.py) | Data Access Manager for the `users` authentication table, supporting secure credential verification, role-based retrieval, and password management. |
+| [guardian_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/guardian_manager.py) | Data Access Manager for the `guardians` parent directory, contact search, and student linkage queries. |
+| [student_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/student_manager.py) | Data Access Manager for the bilingual `students` directory, code generation, and `student_guardians` junction table. |
 
 
 ## FastAPI Integration Pattern

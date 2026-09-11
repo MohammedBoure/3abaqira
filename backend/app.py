@@ -76,6 +76,8 @@ def root():
             "branches": "/api/branches",
             "academic_years": "/api/academic-years",
             "classrooms": "/api/classrooms",
+            "guardians": "/api/guardians",
+            "students": "/api/students",
             "system_overview": "/api/system/overview",
         },
     }
