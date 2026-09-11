@@ -2,14 +2,16 @@
 
 This directory contains the client-side user interface and interactive web experience for the **3abaqira Enterprise Management Platform** (أكاديمية وروضة الأطفال العباقرة).
 
-## Architecture: Visual Prototype & Design Model
+## Architecture: High-Density Enterprise & Excel-Compatible Model
 
-In accordance with [docs/frontend_plan.md](file:///C:/Users/moham/Desktop/3abaqira/docs/frontend_plan.md), this implementation provides a **high-fidelity visual model and interactive prototype**:
-- **Non-Practical Scope**: Focuses on modern UI/UX aesthetics, spatial composition, and motion physics without computational business logic.
-- **Decoupled from Backend**: Operates independently with zero API bindings or live database queries during this visual evaluation phase.
-- **Primary Color Identity**: Sophisticated deep blue palette (`#030712`, `#0A192F`, `#0F274A`, `#2563EB`, `#3B82F6`, `#06B6D4`).
-- **Interactive 3D Background**: Real-time Three.js WebGL background with smooth exponential mouse damping (lerping), floating geometric polyhedron, and luminous starfield particles.
-- **Swappable Typography & Logo**: Abstract CSS tokens (`--font-family-latin`, `--font-family-arabic`) and an isolated `<BrandLogo />` component for seamless 1-click updates.
+In accordance with user design directives and enterprise management requirements:
+- **Full-Width Screen Exploitation**: Edge-to-edge responsive layout eliminating unnecessary side margins, maximizing data visible per square inch.
+- **Sharp Architectural Theme**: Complete departure from bubbly, rounded cartoon aesthetics; uses crisp `rounded-none`, technical borders (`border-slate-300`), and tabular figures.
+- **Anti-AI-Spectrum Design**: Strict avoidance of neon gradients, glowing purple/cyan badges, or fake AI sparkles in favor of classy, comfortable executive blues, slates, and forest greens.
+- **Excel-Compatible Data Grid**: 26-column spreadsheet interface with sticky/frozen panes, column chooser with presets, active cell outline with keyboard arrow navigation, real-time formula aggregation status ribbon, CSV export, and clipboard TSV copy.
+- **Modular Interface Templates**: Ready workspace switcher for Excel Grid, Executive Analytics & Statistics, Treasury & Daily Drawer, Academic Cohorts, HR/Payroll, and Cafeteria Provisions.
+- **Interactive 3D Background**: Ambient, understated Three.js WebGL architectural wireframe with subtle mouse parallax.
+- **Swappable Typography & Logo**: Abstract CSS tokens and isolated `<BrandLogo />` component.
 
 ## Directory Contents
 
@@ -22,6 +24,7 @@ In accordance with [docs/frontend_plan.md](file:///C:/Users/moham/Desktop/3abaqi
 | [postcss.config.js](file:///C:/Users/moham/Desktop/3abaqira/frontend/postcss.config.js) | PostCSS plugins configuring Tailwind CSS and Autoprefixer. |
 | [src/](file:///C:/Users/moham/Desktop/3abaqira/frontend/src) | Application source code containing components, mock data, styles, and root App container. |
 | [public/](file:///C:/Users/moham/Desktop/3abaqira/frontend/public) | Static assets including branding placeholder SVGs (`logo-icon-placeholder.svg`, `logo-full-placeholder.svg`). |
+
 
 ## Running the Frontend
 

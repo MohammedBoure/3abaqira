@@ -7,44 +7,42 @@ export function StatCounterCard({
   change,
   subtext,
   icon: Icon,
-  trend = 'positive',
-  accentColor = 'blue', // 'blue' | 'cyan' | 'indigo'
+  accentColor = 'navy', // 'navy' | 'emerald' | 'amber' | 'slate'
 }) {
   const accentStyles = {
-    blue: 'bg-blue-50 border-blue-200 text-blue-700',
-    cyan: 'bg-sky-50 border-sky-200 text-sky-700',
-    indigo: 'bg-indigo-50 border-indigo-200 text-indigo-700',
+    navy: 'border-s-4 border-s-blue-900 bg-white',
+    emerald: 'border-s-4 border-s-emerald-700 bg-white',
+    amber: 'border-s-4 border-s-amber-600 bg-white',
+    slate: 'border-s-4 border-s-slate-700 bg-white',
   };
 
   return (
-    <GlassCard className="relative overflow-hidden group">
+    <GlassCard className={`p-4 rounded-none shadow-none ${accentStyles[accentColor] || accentStyles.navy}`}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
             {title}
-          </p>
-          <h3 className="text-2xl lg:text-3xl font-bold font-display text-slate-900 tracking-tight">
+          </span>
+          <div className="text-2xl font-bold font-display text-slate-900 tracking-tight font-mono">
             {value}
-          </h3>
+          </div>
         </div>
 
-        {/* Icon Frame */}
         {Icon && (
-          <div className={`p-3 rounded-xl border shadow-xs transition-transform duration-250 group-hover:scale-105 ${accentStyles[accentColor] || accentStyles.blue}`}>
-            <Icon className="w-5 h-5" />
+          <div className="p-2 border border-slate-200 bg-slate-50 text-slate-700">
+            <Icon className="w-4 h-4" />
           </div>
         )}
       </div>
 
-      {/* Trend & Subtext footer */}
-      <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+      <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
         {change && (
-          <span className="inline-flex items-center gap-1 font-semibold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200">
+          <span className="font-semibold px-1.5 py-0.5 text-[11px] bg-slate-100 text-slate-800 border border-slate-200 font-mono">
             {change}
           </span>
         )}
         {subtext && (
-          <span className="text-slate-500 font-medium line-clamp-1">
+          <span className="text-slate-500 text-[11px] font-medium truncate max-w-[200px]">
             {subtext}
           </span>
         )}
@@ -52,3 +50,4 @@ export function StatCounterCard({
     </GlassCard>
   );
 }
+

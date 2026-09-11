@@ -2,53 +2,51 @@ import React from 'react';
 
 export function GlassButton({
   children,
-  variant = 'primary', // 'primary' | 'secondary' | 'cyan' | 'ghost'
-  size = 'md',        // 'sm' | 'md' | 'lg'
+  variant = 'primary', // 'primary' | 'secondary' | 'danger' | 'ghost'
+  size = 'md',        // 'xs' | 'sm' | 'md' | 'lg'
   icon: Icon,
   className = '',
   disabled = false,
   ...props
 }) {
   const sizeClasses = {
-    sm: 'px-3 py-1.5 text-xs gap-1.5 rounded-lg',
-    md: 'px-4 py-2 text-sm gap-2 rounded-xl',
-    lg: 'px-6 py-2.5 text-base gap-2.5 rounded-xl',
+    xs: 'px-2 py-1 text-[11px] gap-1',
+    sm: 'px-2.5 py-1.5 text-xs gap-1.5',
+    md: 'px-3.5 py-2 text-xs gap-2',
+    lg: 'px-5 py-2.5 text-sm gap-2.5',
   };
 
   const variantClasses = {
     primary: `
-      bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700
-      text-white font-medium
-      border border-blue-800/20
-      shadow-[0_2px_8px_rgba(29,78,216,0.2)]
-      hover:from-blue-600 hover:to-blue-800
-      hover:shadow-[0_4px_14px_rgba(29,78,216,0.3)]
-      hover:-translate-y-0.5
-      active:translate-y-0
+      bg-blue-900 text-white font-medium
+      border border-slate-900
+      hover:bg-blue-800
+      active:bg-blue-950
+      shadow-xs
     `,
     secondary: `
-      bg-white text-slate-700 font-medium
+      bg-white text-slate-800 font-medium
       border border-slate-300
+      hover:bg-slate-50 hover:text-slate-950 hover:border-slate-400
+      active:bg-slate-100
       shadow-xs
-      hover:bg-slate-50 hover:text-slate-900
-      hover:border-slate-400
-      hover:-translate-y-0.5
-      active:translate-y-0
     `,
-    cyan: `
-      bg-gradient-to-r from-sky-600 to-blue-600
-      text-white font-medium
-      border border-sky-700/20
-      shadow-[0_2px_8px_rgba(2,132,199,0.2)]
-      hover:from-sky-500 hover:to-blue-700
-      hover:shadow-[0_4px_14px_rgba(2,132,199,0.3)]
-      hover:-translate-y-0.5
-      active:translate-y-0
+    accent: `
+      bg-slate-900 text-white font-medium
+      border border-black
+      hover:bg-slate-800
+      shadow-xs
+    `,
+    danger: `
+      bg-rose-800 text-white font-medium
+      border border-rose-950
+      hover:bg-rose-700
+      shadow-xs
     `,
     ghost: `
-      bg-transparent text-slate-600 font-medium
-      hover:bg-slate-100 hover:text-slate-900
-      border border-transparent hover:border-slate-200
+      bg-transparent text-slate-700 font-medium
+      hover:bg-slate-100 hover:text-slate-950
+      border border-transparent hover:border-slate-300
     `,
   };
 
@@ -57,16 +55,17 @@ export function GlassButton({
       disabled={disabled}
       className={`
         inline-flex items-center justify-center
-        transition-all duration-200 select-none
-        disabled:opacity-50 disabled:pointer-events-none
+        rounded-none transition-colors duration-150 select-none
+        disabled:opacity-40 disabled:pointer-events-none
         ${sizeClasses[size] || sizeClasses.md}
         ${variantClasses[variant] || variantClasses.primary}
         ${className}
       `}
       {...props}
     >
-      {Icon && <Icon className="w-4 h-4 transition-transform group-hover:scale-105" />}
+      {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}
       <span>{children}</span>
     </button>
   );
 }
+

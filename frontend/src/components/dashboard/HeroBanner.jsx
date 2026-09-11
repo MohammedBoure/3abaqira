@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, UserPlus, Receipt, ShieldCheck } from 'lucide-react';
+import { UserPlus, Receipt, ShieldCheck, Database, Calendar } from 'lucide-react';
 import { GlassButton } from '../common/GlassButton';
 
 export function HeroBanner({ onOpenStudentModal, onOpenDrawerModal }) {
@@ -11,43 +11,44 @@ export function HeroBanner({ onOpenStudentModal, onOpenDrawerModal }) {
   });
 
   return (
-    <div className="relative rounded-3xl p-6 sm:p-8 overflow-hidden bg-white/90 border border-slate-200/90 backdrop-blur-md shadow-sm">
-      {/* Subtle ambient gradient highlights */}
-      <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute right-10 top-0 w-80 h-80 bg-slate-100/60 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div className="relative rounded-none p-4 sm:p-5 bg-white border border-slate-300 shadow-xs">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           {/* Top meta tags */}
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
-              <Sparkles className="w-3.5 h-3.5 text-blue-700" />
-              <span>السنة الأكاديمية النشطة: 2025-2026</span>
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-semibold bg-blue-50 text-blue-900 border border-blue-300">
+              <Calendar className="w-3 h-3 text-blue-800" />
+              <span>السنة الأكاديمية: 2025-2026</span>
             </span>
 
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-semibold bg-emerald-50 text-emerald-900 border border-emerald-300">
+              <ShieldCheck className="w-3 h-3 text-emerald-700" />
               <span>قاعدة البيانات: MySQL (abaqira)</span>
+            </span>
+
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-mono text-slate-600 bg-slate-100 border border-slate-200">
+              {currentDate}
             </span>
           </div>
 
           {/* Heading */}
-          <h1 className="text-2xl sm:text-4xl font-extrabold font-display text-slate-900 tracking-tight leading-tight">
-            لوحة قيادة إدارة المؤسسة الموحدة
+          <h1 className="text-xl sm:text-2xl font-bold font-display text-slate-900 tracking-tight leading-tight">
+            منظومة إدارة العباقرة الموحدة (Enterprise Management)
           </h1>
 
-          <p className="mt-2 text-sm sm:text-base text-slate-600 font-normal max-w-2xl leading-relaxed">
-            {currentDate} — المنظومة الإدارية المتكاملة لأكاديمية وروضة الأطفال العباقرة، بواجهة مهنية كلاسيكية وعنصر بصري ثلاثي الأبعاد هادئ.
+          <p className="mt-1 text-xs sm:text-sm text-slate-600 font-normal max-w-3xl leading-relaxed">
+            المنصة المركزية لإدارة الأكاديمية والروضة — استغلال كامل لواجهة العمل وتكامل شامل مع بنية Excel لسهولة الترحيل والتشغيل الميداني.
           </p>
         </div>
 
         {/* Quick Action CTA Buttons */}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2">
           <GlassButton
             onClick={onOpenStudentModal}
             variant="primary"
-            size="md"
+            size="sm"
             icon={UserPlus}
+            className="h-8 text-xs font-semibold"
           >
             تسجيل طالب جديد
           </GlassButton>
@@ -55,8 +56,9 @@ export function HeroBanner({ onOpenStudentModal, onOpenDrawerModal }) {
           <GlassButton
             onClick={onOpenDrawerModal}
             variant="secondary"
-            size="md"
+            size="sm"
             icon={Receipt}
+            className="h-8 text-xs font-semibold"
           >
             مطابقة الصندوق اليومي
           </GlassButton>
@@ -65,3 +67,4 @@ export function HeroBanner({ onOpenStudentModal, onOpenDrawerModal }) {
     </div>
   );
 }
+

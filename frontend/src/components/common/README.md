@@ -1,11 +1,12 @@
-# Common UI Components
+# Common UI Components (`frontend/src/components/common/`)
 
-This directory contains reusable, glassmorphic UI primitives designed for the modern blue visual system.
+This directory contains reusable, sharp enterprise UI primitives engineered for high-density, professional management workflows.
 
 ## Files
 
-- **`GlassButton.jsx`**: Glassmorphic styled interactive button with primary, secondary, and ghost variants, icon support, and glowing hover states.
-- **`GlassCard.jsx`**: Reusable container card with backdrop blur, subtle blue border, and hover elevation effects.
-- **`ModalDialog.jsx`**: Glassmorphic modal overlay with accessible backdrop dismissal, header title, and action footer.
-- **`StatCounterCard.jsx`**: Dashboard metric KPI card displaying title, numerical value, trend indicator, and glowing accent icon.
-- **`StatusBadge.jsx`**: Colored status pill badge indicating operational statuses (active, pending, completed, overdue, etc.).
+- **`GlassButton.jsx`**: Sharp interactive button (`rounded-none`) with purposeful variants (primary deep navy, secondary crisp slate, danger rose, ghost), icon integration, and tactile active states.
+- **`GlassCard.jsx`**: Crisp enterprise container card with architectural borders (`border-slate-300`, `rounded-none`), top accent indicator, and subtle shadow.
+- **`ModalDialog.jsx`**: Sharp modal dialog overlay with slate backdrop, accessible dismissal, title ribbon, and action controls.
+- **`StatCounterCard.jsx`**: High-density metric tile with sharp borders, colored indicator border-strip, monospaced tabular figures, and percentage delta badges.
+- **`StatusBadge.jsx`**: Sharp rectangular status badge (`rounded-none`, border-tinted) indicating operational and financial statuses (PAID, PARTIAL, OVERDUE, ACTIVE, APPROVED, PENDING).
+
