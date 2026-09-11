@@ -93,10 +93,11 @@ logger = logging.getLogger("ABAQIRA_SYS")
 
 # ─── Table Dependency Order (For Backups & Restores) ─────────────────────────
 TABLE_IMPORT_ORDER = [
-    # Core Infrastructure
+    # Core Infrastructure & Auth
     'branches',
     'academic_years',
     'classrooms',
+    'users',
     
     # Students & Guardians
     'guardians',

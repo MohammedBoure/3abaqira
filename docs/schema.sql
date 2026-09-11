@@ -48,6 +48,7 @@ DROP TABLE IF EXISTS programs CASCADE;
 DROP TABLE IF EXISTS student_guardians CASCADE;
 DROP TABLE IF EXISTS students CASCADE;
 DROP TABLE IF EXISTS guardians CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS classrooms CASCADE;
 DROP TABLE IF EXISTS academic_years CASCADE;
 DROP TABLE IF EXISTS branches CASCADE;
@@ -92,6 +93,21 @@ CREATE TABLE classrooms (
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (branch_id, name)
+);
+
+-- 4. System Users & RBAC Authentication (مستخدمو النظام والمصادقة)
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    branch_id VARCHAR(20) REFERENCES branches(branch_id) ON DELETE SET NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    full_name VARCHAR(150) NOT NULL,
+    email VARCHAR(100),
+    role VARCHAR(50) NOT NULL DEFAULT 'STAFF' CHECK (role IN ('SUPER_ADMIN', 'ADMIN', 'DIRECTOR', 'TEACHER', 'STAFF', 'ACCOUNTANT')),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    last_login TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- =====================================================================================

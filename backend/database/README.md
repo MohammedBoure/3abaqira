@@ -32,6 +32,7 @@ backend/database/
 | [academic_year_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/academic_year_manager.py) | Data Access Manager for the `academic_years` table, supporting fiscal year setup and atomic active cycle switching. |
 | [classroom_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/classroom_manager.py) | Data Access Manager for the `classrooms` table, managing room capacities, floor allocations, and branch room rosters. |
 | [infrastructure_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/infrastructure_manager.py) | Facade manager consolidating multi-branch infrastructure overview and room capacity analytics. |
+| [user_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/user_manager.py) | Data Access Manager for the `users` authentication table, supporting secure credential verification, role-based retrieval, and password management. |
 
 
 ## FastAPI Integration Pattern

@@ -46,6 +46,21 @@ CORE_INFRASTRUCTURE_TABLE_QUERIES = [
         created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
         UNIQUE (branch_id, name)
     );
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS users (
+        user_id SERIAL PRIMARY KEY,
+        branch_id VARCHAR(20) REFERENCES branches(branch_id) ON DELETE SET NULL,
+        username VARCHAR(50) NOT NULL UNIQUE,
+        password_hash VARCHAR(255) NOT NULL,
+        full_name VARCHAR(150) NOT NULL,
+        email VARCHAR(100),
+        role VARCHAR(50) NOT NULL DEFAULT 'STAFF' CHECK (role IN ('SUPER_ADMIN', 'ADMIN', 'DIRECTOR', 'TEACHER', 'STAFF', 'ACCOUNTANT')),
+        is_active BOOLEAN NOT NULL DEFAULT TRUE,
+        last_login TIMESTAMPTZ,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
     """
 ]
 
@@ -597,6 +612,11 @@ SEED_CATALOG_QUERIES = [
     ('CENTER', 'SUMMER_CLUB', 'النادي الصيفي', 'Summer Club Camp', 'INSTALLMENT_PLAN', 'Seasonal summer camp activities with 2 installments'),
     ('RAWDA', 'DAYCARE', 'الروضة والحضانة اليومية', 'Daycare & Kindergarten', 'MONTHLY_RECURRING', 'Full-service daycare, nursery cohorts, and cafeteria')
     ON CONFLICT (branch_id, code) DO NOTHING;
+    """,
+    """
+    INSERT INTO users (username, password_hash, full_name, email, role, is_active) VALUES
+    ('admin', '$2b$12$/Csvd5vNnBFI2pt7JgWaeOfG6SenzjGvv4ssWtSAwo7bkl2yIt2Re', 'System Administrator', 'admin@3abaqira.dz', 'SUPER_ADMIN', TRUE)
+    ON CONFLICT (username) DO NOTHING;
     """
 ]
 

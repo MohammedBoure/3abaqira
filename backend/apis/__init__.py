@@ -1,0 +1,52 @@
+"""
+backend/apis/__init__.py
+------------------------
+Unified REST API Routing Gateway for 3abaqira Enterprise Platform.
+Aggregates all modular domain sub-routers:
+  - /api/auth           -> Authentication, JWT Token lifecycle, Swagger login
+  - /api/users          -> User account administration & RBAC permissions
+  - /api/branches       -> Multi-tenant operational branches
+  - /api/academic-years -> Fiscal academic cycles and active period toggling
+  - /api/classrooms     -> Lecture halls, room capacity, floor assignments
+  - /api/system         -> Service telemetry, system overview, and archive modes
+"""
+
+from fastapi import APIRouter
+
+from .auth import router as auth_router
+from .users import router as users_router
+from .branches import router as branches_router
+from .academic_years import router as academic_years_router
+from .classrooms import router as classrooms_router
+from .system import router as system_router, system_health_check
+
+# Master API Router mounted under '/api'
+api_router = APIRouter(prefix="/api")
+
+# Mount Sub-Routers
+api_router.include_router(auth_router)
+api_router.include_router(users_router)
+api_router.include_router(branches_router)
+api_router.include_router(academic_years_router)
+api_router.include_router(classrooms_router)
+api_router.include_router(system_router)
+
+# Top-level direct health check alias: GET /api/health
+api_router.add_api_route(
+    "/health",
+    system_health_check,
+    methods=["GET"],
+    tags=["System Health"],
+    summary="Direct Health Check",
+    description="Convenience shortcut for GET /api/system/health.",
+)
+
+__all__ = [
+    "api_router",
+    "auth_router",
+    "users_router",
+    "branches_router",
+    "academic_years_router",
+    "classrooms_router",
+    "system_router",
+]
