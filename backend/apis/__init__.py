@@ -26,6 +26,8 @@ from .pricing_plans import router as pricing_plans_router
 from .groups import router as groups_router
 from .schedules import router as schedules_router
 from .sessions import router as sessions_router
+from .enrollments import router as enrollments_router
+from .invoices import router as invoices_router
 from .system import router as system_router, system_health_check
 
 # Master API Router mounted under '/api'
@@ -45,6 +47,8 @@ api_router.include_router(pricing_plans_router)
 api_router.include_router(groups_router)
 api_router.include_router(schedules_router)
 api_router.include_router(sessions_router)
+api_router.include_router(enrollments_router)
+api_router.include_router(invoices_router)
 api_router.include_router(system_router)
 
 # Top-level direct health check alias: GET /api/health
@@ -72,5 +76,7 @@ __all__ = [
     "groups_router",
     "schedules_router",
     "sessions_router",
+    "enrollments_router",
+    "invoices_router",
     "system_router",
 ]

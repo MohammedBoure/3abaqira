@@ -255,7 +255,13 @@ def require_role(*allowed_roles: str) -> Callable:
         def create_branch(...):
             ...
     """
-    normalized_roles = {r.upper() for r in allowed_roles}
+    flat_roles = []
+    for r in allowed_roles:
+        if isinstance(r, (list, tuple, set)):
+            flat_roles.extend(r)
+        else:
+            flat_roles.append(r)
+    normalized_roles = {str(r).upper() for r in flat_roles}
     normalized_roles.add("SUPER_ADMIN")  # Super admin is always authorized
 
     def role_checker(

@@ -25,6 +25,8 @@ backend/apis/
 ├── groups.py           # Student groups, cohorts & class rosters (/api/groups)
 ├── schedules.py        # Weekly timetable slots & clash detection (/api/schedules)
 ├── sessions.py         # Conducted session logs & student attendance (/api/sessions)
+├── enrollments.py      # Student course enrollments & multi-tier tuition pricing (/api/enrollments)
+├── invoices.py         # Multi-tier invoices, installment tranches & payment credits (/api/invoices)
 ├── system.py           # System telemetry, infrastructure overview & archive status (/api/system)
 └── README.md           # This documentation file
 ```
@@ -50,6 +52,8 @@ backend/apis/
 | [groups.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/groups.py) | REST router for study groups, cohorts, capacity monitoring, and teacher assignments. |
 | [schedules.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/schedules.py) | REST router for weekly group timetable slots, recurrence rules, and classroom conflict / clash prevention. |
 | [sessions.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/sessions.py) | REST router for conducted session logs, batch student attendance, performance points scoring, and attendance tracking. |
+| [enrollments.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/enrollments.py) | REST router for student enrollments, fee calculation matrices, discounts, cohort roster inspection, and installment schedule generation. |
+| [invoices.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/invoices.py) | REST router for multi-tier invoice installment tranches, due date scheduling, payment crediting, debt overdue scanning, and financial KPI analytics. |
 | [system.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/system.py) | REST router providing health telemetry, multi-branch summary overview, and historical archive view mode status. |
 
 ---

@@ -26,6 +26,8 @@ backend/
 │   ├── groups.py             # Student groups, cohorts & class rosters
 │   ├── schedules.py          # Weekly timetable slots & clash detection
 │   ├── sessions.py           # Conducted session logs & student attendance
+│   ├── enrollments.py        # Student course enrollments & multi-tier tuition pricing
+│   ├── invoices.py           # Multi-tier invoices, installment tranches & payment credits
 │   └── system.py             # System telemetry & infrastructure overview
 └── database/                 # Unified database connectivity, pooling, migrations & managers
     ├── README.md             # Database layer overview and FastAPI usage
@@ -43,6 +45,8 @@ backend/
     ├── group_manager.py      # Data manager for student groups and active headcounts
     ├── schedule_manager.py   # Data manager for weekly group timetables & clash checks
     ├── attendance_manager.py # Data manager for conducted sessions & student attendance
+    ├── enrollment_manager.py # Data manager for student enrollments & invoice scheduling
+    ├── invoice_manager.py    # Data manager for multi-tier invoices & payment crediting
     └── base/                 # Core database infrastructure (Connection, Schema, Backup, Archive)
 ```
 

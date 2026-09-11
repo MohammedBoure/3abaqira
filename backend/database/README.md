@@ -41,6 +41,8 @@ backend/database/
 | [group_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/group_manager.py) | Data Access Manager for `groups` cohorts, capacities, and active student enrollment headcounts. |
 | [schedule_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/schedule_manager.py) | Data Access Manager for `group_schedules` weekly timetable slots, room occupancy, and collision/clash checks. |
 | [attendance_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/attendance_manager.py) | Data Access Manager for `completed_sessions` and `student_attendance` per-session marking, points scoring, and logs. |
+| [enrollment_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/enrollment_manager.py) | Data Access Manager for `student_enrollments` cohorts, tuition fee matrices, sibling/cash discounts, headcount sync, and invoice scheduling. |
+| [invoice_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/invoice_manager.py) | Data Access Manager for `invoices` tranches, scheduled due dates, payment credits, overdue scanning, waivers, and financial analytics. |
 
 
 ## FastAPI Integration Pattern

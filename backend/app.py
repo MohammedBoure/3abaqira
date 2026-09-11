@@ -84,6 +84,8 @@ def root():
             "groups": "/api/groups",
             "schedules": "/api/schedules",
             "sessions": "/api/sessions",
+            "enrollments": "/api/enrollments",
+            "invoices": "/api/invoices",
             "system_overview": "/api/system/overview",
         },
     }
