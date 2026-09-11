@@ -34,6 +34,7 @@ from .handovers import router as handovers_router
 from .expenses import router as expenses_router
 from .budgets import router as budgets_router
 from .kitchen import router as kitchen_router
+from .competitions import router as competitions_router
 from .system import router as system_router, system_health_check
 
 # Master API Router mounted under '/api'
@@ -61,6 +62,7 @@ api_router.include_router(handovers_router)
 api_router.include_router(expenses_router)
 api_router.include_router(budgets_router)
 api_router.include_router(kitchen_router)
+api_router.include_router(competitions_router)
 api_router.include_router(system_router)
 
 # Top-level direct health check alias: GET /api/health
@@ -96,5 +98,6 @@ __all__ = [
     "expenses_router",
     "budgets_router",
     "kitchen_router",
+    "competitions_router",
     "system_router",
 ]

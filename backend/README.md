@@ -34,6 +34,7 @@ backend/
 │   ├── expenses.py           # Operational expenses & categories taxonomy
 │   ├── budgets.py            # Budget targets & variance reporting
 │   ├── kitchen.py            # Daycare cafeteria procurement & bread logs
+│   ├── competitions.py       # Competition events, registrations & receipts
 │   └── system.py             # System telemetry & infrastructure overview
 └── database/                 # Unified database connectivity, pooling, migrations & managers
     ├── README.md             # Database layer overview and FastAPI usage
@@ -59,6 +60,7 @@ backend/
     ├── expense_manager.py    # Data manager for expense categories & operational expenses
     ├── budget_variance_manager.py # Data manager for budget variances & live actuals
     ├── kitchen_procurement_manager.py # Data manager for kitchen provisions & bread logs
+    ├── competition_manager.py # Data manager for competitions & candidate registrations
     └── base/                 # Core database infrastructure (Connection, Schema, Backup, Archive)
 ```
 
