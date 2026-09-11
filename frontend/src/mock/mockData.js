@@ -523,3 +523,385 @@ export const MOCK_ANALYTICS_DATA = {
   ],
 };
 
+/**
+ * ==============================================================================
+ * ACADEMIC YEARS DATASET (Matches backend/apis/academic_years.py)
+ * ==============================================================================
+ */
+export const MOCK_ACADEMIC_YEARS = [
+  {
+    year_id: 1,
+    name: '2025-2026',
+    start_date: '2025-09-01',
+    end_date: '2026-07-31',
+    is_current: true,
+    status: 'ACTIVE',
+    total_students: 273,
+    active_cohorts: 9,
+    collection_rate: '84.6%',
+    descriptionAr: 'الموسم الدراسي الحالي النشط — جميع السجلات والاشتراكات مربوطة به',
+  },
+  {
+    year_id: 2,
+    name: '2024-2025',
+    start_date: '2024-09-01',
+    end_date: '2025-07-31',
+    is_current: false,
+    status: 'ARCHIVED',
+    total_students: 245,
+    active_cohorts: 8,
+    collection_rate: '98.2%',
+    descriptionAr: 'الموسم السابق المؤرشف — مغلق محاسبياً مع ترحيل الأرصدة',
+  },
+  {
+    year_id: 3,
+    name: '2023-2024',
+    start_date: '2023-09-01',
+    end_date: '2024-07-31',
+    is_current: false,
+    status: 'ARCHIVED',
+    total_students: 210,
+    active_cohorts: 7,
+    collection_rate: '99.5%',
+    descriptionAr: 'مؤرشف في قاعدة البيانات التاريخية',
+  },
+  {
+    year_id: 4,
+    name: '2026-2027',
+    start_date: '2026-09-01',
+    end_date: '2027-07-31',
+    is_current: false,
+    status: 'UPCOMING',
+    total_students: 0,
+    active_cohorts: 0,
+    collection_rate: '0.0%',
+    descriptionAr: 'الموسم القادم قيد الإعداد وجاهز لاستقبال التسجيلات المسبقة',
+  },
+];
+
+/**
+ * ==============================================================================
+ * AUDIT TRAIL DATASET (Matches backend/apis/audit.py)
+ * ==============================================================================
+ */
+export const MOCK_AUDIT_STATS = {
+  total_events: 14892,
+  today_events: 148,
+  action_breakdown: {
+    insert: 24,
+    update: 68,
+    delete: 8,
+  },
+  top_tables: [
+    { table: 'payments', count: 5820, percent: 39, labelAr: 'المدفوعات والإيصالات' },
+    { table: 'students', count: 4310, percent: 29, labelAr: 'ملفات المسجلين' },
+    { table: 'cash_drawer', count: 2150, percent: 14, labelAr: 'حركات الصندوق اليومي' },
+    { table: 'payroll_runs', count: 1420, percent: 10, labelAr: 'سجلات الأجور' },
+    { table: 'other', count: 1192, percent: 8, labelAr: 'الفروع والأنظمة' },
+  ],
+  top_actors: [
+    { username: 'admin_mohammed', role: 'SUPER_ADMIN', count: 6840, labelAr: 'محمد بوري' },
+    { username: 'accountant_sarah', role: 'ACCOUNTANT', count: 4210, labelAr: 'سارة منصوري' },
+    { username: 'director_amira', role: 'DIRECTOR', count: 3120, labelAr: 'أميرة بوعبد الله' },
+    { username: 'system_auto', role: 'AUTOMATION', count: 722, labelAr: 'خادم المزامنة التلقائي' },
+  ],
+};
+
+export const MOCK_AUDIT_LOGS = [
+  {
+    audit_id: 1042,
+    timestamp: '2026-09-12 00:32:15',
+    table_name: 'payments',
+    record_id: 8421,
+    action: 'INSERT',
+    performed_by: 'accountant_sarah',
+    actor_name: 'سارة منصوري',
+    actor_role: 'ACCOUNTANT',
+    ip_address: '192.168.1.20',
+    summary: 'تسجيل إيصال سداد قسط رقم #REC-8421 بقيمة 8,500 دج للطالب بن علي ريان (فرع المركز)',
+    old_values: null,
+    new_values: {
+      invoice_id: 8421,
+      student_id: 101,
+      student_name: 'بن علي ريان',
+      amount: 8500,
+      payment_mode: 'CASH',
+      month: 'فيفري 2026',
+      receipt_code: 'REC-8421',
+    },
+  },
+  {
+    audit_id: 1041,
+    timestamp: '2026-09-11 22:14:02',
+    table_name: 'students',
+    record_id: 104,
+    action: 'UPDATE',
+    performed_by: 'director_amira',
+    actor_name: 'أميرة بوعبد الله',
+    actor_role: 'DIRECTOR',
+    ip_address: '192.168.1.18',
+    summary: 'تحديث رقم هاتف ولي الأمر وتبديل فوج الطالبة بلقاسم مريم إلى سوروبان B2',
+    old_values: {
+      phone: '0555123456',
+      group_id: 'SOROBAN_A1',
+      group_name: 'سوروبان الفوج أ1',
+    },
+    new_values: {
+      phone: '0555987654',
+      group_id: 'SOROBAN_B2',
+      group_name: 'سوروبان الفوج ب2',
+    },
+  },
+  {
+    audit_id: 1040,
+    timestamp: '2026-09-11 20:05:40',
+    table_name: 'cash_drawer',
+    record_id: 512,
+    action: 'INSERT',
+    performed_by: 'admin_mohammed',
+    actor_name: 'محمد بوري',
+    actor_role: 'SUPER_ADMIN',
+    ip_address: '192.168.1.14',
+    summary: 'ترحيل فائض سيولة الصندوق المسائي إلى الخزينة المركزية بقيمة 45,000 دج',
+    old_values: null,
+    new_values: {
+      voucher_id: 512,
+      movement_type: 'SAFE_DEPOSIT',
+      amount: 45000,
+      source_drawer: 'DRAWER_MAIN',
+      authorized_by: 'admin_mohammed',
+    },
+  },
+  {
+    audit_id: 1039,
+    timestamp: '2026-09-11 17:30:19',
+    table_name: 'payroll_runs',
+    record_id: 88,
+    action: 'UPDATE',
+    performed_by: 'accountant_sarah',
+    actor_name: 'سارة منصوري',
+    actor_role: 'ACCOUNTANT',
+    ip_address: '192.168.1.20',
+    summary: 'تعديل علاوة الساعات الإضافية للمدربة فاطمة الزهراء لشهر فيفري',
+    old_values: {
+      overtime_hours: 4,
+      bonus_dzd: 3000,
+      net_salary: 43000,
+    },
+    new_values: {
+      overtime_hours: 8,
+      bonus_dzd: 6000,
+      net_salary: 46000,
+    },
+  },
+  {
+    audit_id: 1038,
+    timestamp: '2026-09-11 15:45:00',
+    table_name: 'academic_years',
+    record_id: 1,
+    action: 'UPDATE',
+    performed_by: 'admin_mohammed',
+    actor_name: 'محمد بوري',
+    actor_role: 'SUPER_ADMIN',
+    ip_address: '192.168.1.14',
+    summary: 'تحديث تاريخ نهاية الموسم الدراسي 2025-2026 إلى 31-07-2026 لتغطية المخيم الصيفي',
+    old_values: {
+      end_date: '2026-06-30',
+    },
+    new_values: {
+      end_date: '2026-07-31',
+    },
+  },
+  {
+    audit_id: 1037,
+    timestamp: '2026-09-11 11:18:22',
+    table_name: 'students',
+    record_id: 199,
+    action: 'DELETE',
+    performed_by: 'admin_mohammed',
+    actor_name: 'محمد بوري',
+    actor_role: 'SUPER_ADMIN',
+    ip_address: '192.168.1.14',
+    summary: 'حذف بطاقة تسجيل مسودة مكررة بالخطأ قبل ترسيم المستحقات المالية',
+    old_values: {
+      student_id: 199,
+      student_name: 'بن عيسى عادل',
+      status: 'DRAFT_UNPAID',
+    },
+    new_values: null,
+  },
+  {
+    audit_id: 1036,
+    timestamp: '2026-09-10 16:40:11',
+    table_name: 'branches',
+    record_id: 2,
+    action: 'UPDATE',
+    performed_by: 'admin_mohammed',
+    actor_name: 'محمد بوري',
+    actor_role: 'SUPER_ADMIN',
+    ip_address: '192.168.1.14',
+    summary: 'تحديث هاتف الاستقبال الرسمي لفرع روضة وحضانة الأطفال العباقرة',
+    old_values: {
+      phone: '+213 23 55 10 02',
+    },
+    new_values: {
+      phone: '+213 23 55 10 99',
+    },
+  },
+];
+
+/**
+ * ==============================================================================
+ * AUTHENTICATION & USERS DATASET (Matches backend/apis/auth.py)
+ * ==============================================================================
+ */
+export const MOCK_CURRENT_USER = {
+  user_id: 1,
+  username: 'mohammed_admin',
+  full_name: 'محمد بوري',
+  email: 'mohammed@3abaqira.dz',
+  role: 'SUPER_ADMIN',
+  branch_id: 'ALL',
+  is_active: true,
+  last_login: '2026-09-12 00:35:12',
+  token_type: 'bearer',
+  expires_in_seconds: 86400,
+  permissions: ['ALL_PERMISSIONS', 'USER_MANAGEMENT', 'FINANCIAL_SIGNOFF', 'AUDIT_INSPECT'],
+};
+
+export const MOCK_AUTH_USERS = [
+  {
+    user_id: 1,
+    username: 'mohammed_admin',
+    full_name: 'محمد بوري',
+    email: 'mohammed@3abaqira.dz',
+    role: 'SUPER_ADMIN',
+    role_label_ar: 'مدير النظام الشامل (Super Admin)',
+    branch_id: 'ALL',
+    branch_name_ar: 'كافة المقرات والفروع',
+    is_active: true,
+    last_login: '2026-09-12 00:35:12',
+    created_at: '2024-09-01',
+  },
+  {
+    user_id: 2,
+    username: 'amira_director',
+    full_name: 'أميرة بوعبد الله',
+    email: 'amira@3abaqira.dz',
+    role: 'DIRECTOR',
+    role_label_ar: 'مديرة المركز الأكاديمي',
+    branch_id: 'CENTER',
+    branch_name_ar: 'المركز الأكاديمي',
+    is_active: true,
+    last_login: '2026-09-11 18:22:40',
+    created_at: '2024-09-05',
+  },
+  {
+    user_id: 3,
+    username: 'sarah_finance',
+    full_name: 'سارة منصوري',
+    email: 'sarah.finance@3abaqira.dz',
+    role: 'ACCOUNTANT',
+    role_label_ar: 'المسؤولة المالية والخزينة',
+    branch_id: 'ALL',
+    branch_name_ar: 'كافة المقرات والفروع',
+    is_active: true,
+    last_login: '2026-09-11 20:45:00',
+    created_at: '2024-09-10',
+  },
+  {
+    user_id: 4,
+    username: 'karim_rawda',
+    full_name: 'كريم بن سعدة',
+    email: 'karim@3abaqira.dz',
+    role: 'DIRECTOR',
+    role_label_ar: 'مدير الروضة والحضانة',
+    branch_id: 'RAWDA',
+    branch_name_ar: 'روضة وحضانة العباقرة',
+    is_active: true,
+    last_login: '2026-09-11 16:15:30',
+    created_at: '2024-10-01',
+  },
+  {
+    user_id: 5,
+    username: 'fatima_trainer',
+    full_name: 'فاطمة الزهراء قدور',
+    email: 'fatima.soroban@3abaqira.dz',
+    role: 'TEACHER',
+    role_label_ar: 'مدربة سوروبان رئيسية',
+    branch_id: 'CENTER',
+    branch_name_ar: 'المركز الأكاديمي',
+    is_active: true,
+    last_login: '2026-09-10 14:00:10',
+    created_at: '2024-10-15',
+  },
+  {
+    user_id: 6,
+    username: 'nour_educator',
+    full_name: 'نور الهدى بلخير',
+    email: 'nour.rawda@3abaqira.dz',
+    role: 'TEACHER',
+    role_label_ar: 'مربية تحضيري وتمهيدي',
+    branch_id: 'RAWDA',
+    branch_name_ar: 'روضة وحضانة العباقرة',
+    is_active: true,
+    last_login: '2026-09-11 08:30:19',
+    created_at: '2024-11-01',
+  },
+];
+
+/**
+ * ==============================================================================
+ * BRANCHES & FACILITIES DATASET (Matches backend/apis/branches.py)
+ * ==============================================================================
+ */
+export const MOCK_BRANCHES_DETAILED = [
+  {
+    branch_id: 'CENTER',
+    name_ar: 'أكاديمية الأطفال العباقرة - المركز الأكاديمي',
+    name_en: '3abaqira Academy - Academic Center',
+    branch_type: 'ACADEMY',
+    phone: '+213 23 55 10 01',
+    email: 'center@3abaqira.dz',
+    address: 'حي النصر، الشارع الرئيسي، المبنى A، الجزائر العاصمة',
+    is_active: true,
+    founded_year: '2021',
+    total_capacity: 180,
+    enrolled_count: 158,
+    staff_count: 12,
+    classrooms_count: 6,
+    classrooms: [
+      { id: 'C101', name: 'قاعة الخوارزمي (سوروبان المستوى 1 و 2)', floor: 'الطابق الأرضي', capacity: 25, current: 22, equipment: 'سبورة تفاعلية + 25 معداد ياباني + مكيف', is_active: true },
+      { id: 'C102', name: 'مخبر الروبوتيك والذكاء الاصطناعي', floor: 'الطابق الأول', capacity: 18, current: 16, equipment: '12 حقيبة روبوتيك + 8 حواسيب محمولة', is_active: true },
+      { id: 'C103', name: 'قاعة ابن الهيثم (اللغات الحية)', floor: 'الطابق الأول', capacity: 20, current: 18, equipment: 'نظام سمعي بصري + شاشة ذكية', is_active: true },
+      { id: 'C104', name: 'قاعة الإمام مالك (حفظ القرآن والمتون)', floor: 'الطابق الثاني', capacity: 25, current: 24, equipment: 'مكتبة قرآنية + مصاحف ترتيل', is_active: true },
+      { id: 'C105', name: 'قاعة الدعم والتقوية الرياضية', floor: 'الطابق الثاني', capacity: 22, current: 19, equipment: 'سبورات بيضاء مزدوجة + مكيف', is_active: true },
+      { id: 'C106', name: 'قاعة الأنشطة والتفكير الإبداعي', floor: 'الطابق الأرضي', capacity: 20, current: 15, equipment: 'ألعاب ذكاء + شطرنج + طاولات دائرية', is_active: true },
+    ],
+  },
+  {
+    branch_id: 'RAWDA',
+    name_ar: 'روضة وحضانة الأطفال العباقرة النموذجية',
+    name_en: '3abaqira Kindergarten & Model Daycare',
+    branch_type: 'DAYCARE',
+    phone: '+213 23 55 10 02',
+    email: 'rawda@3abaqira.dz',
+    address: 'حي السلام، فيلا رقم 14، بجوار الحديقة العامة، الجزائر العاصمة',
+    is_active: true,
+    founded_year: '2022',
+    total_capacity: 140,
+    enrolled_count: 115,
+    staff_count: 14,
+    classrooms_count: 6,
+    classrooms: [
+      { id: 'R101', name: 'فوج العصافير (حضانة صغار - من 3 أشهر إلى سنتين)', floor: 'الطابق الأرضي', capacity: 15, current: 14, equipment: 'أسرة أمان للأطفال + منطقة رضاعة معقمة', is_active: true },
+      { id: 'R102', name: 'فوج البراعم (تمهيدي أول - 3 سنوات)', floor: 'الطابق الأرضي', capacity: 22, current: 20, equipment: 'طاولات أركان بيداغوجية + أرضية مبطنة', is_active: true },
+      { id: 'R103', name: 'فوج النجوم (تمهيدي ثانٍ - 4 سنوات)', floor: 'الطابق الأول', capacity: 25, current: 23, equipment: 'شاشة عروض تعليمية + أركان استكشاف', is_active: true },
+      { id: 'R104', name: 'فوج العباقرة الصغار (تحضيري معتمد - 5 سنوات)', floor: 'الطابق الأول', capacity: 28, current: 26, equipment: 'سبورة كتابة تمهيدية + مكتبة قصص', is_active: true },
+      { id: 'R105', name: 'المطعم البيداغوجي وقاعة الإطعام', floor: 'الطابق الأرضي', capacity: 50, current: 45, equipment: 'طاولات طعام صحية + مطبخ ستانلس ستيل معقم', is_active: true },
+      { id: 'R106', name: 'فضاء اللعب الحركي وقاعة النوم الهادئ', floor: 'الطابق الأول', capacity: 30, current: 28, equipment: 'مراتب مريحة فردية + تهوية طبيعية متجددة', is_active: true },
+    ],
+  },
+];
+
+

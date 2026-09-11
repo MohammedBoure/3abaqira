@@ -13,6 +13,9 @@ import {
   PanelLeftClose,
   PanelRightClose,
   Sparkles,
+  CalendarRange,
+  ShieldAlert,
+  KeyRound,
 } from 'lucide-react';
 import { MOCK_BRANCHES } from '../../mock/mockData';
 
@@ -33,9 +36,18 @@ export function Sidebar({
     { id: 'provisions', labelAr: 'تموين ومطعم الروضة', icon: UtensilsCrossed, tag: 'Daily' },
   ];
 
+  const apiModules = [
+    { id: 'academic-years', labelAr: 'المواسم الأكاديمية (Years)', icon: CalendarRange, tag: 'Fiscal' },
+    { id: 'branches', labelAr: 'المقرات والقاعات (Branches)', icon: Building2, tag: '2 Sites' },
+    { id: 'audit-trail', labelAr: 'سجل الرقابة (Audit Trail)', icon: ShieldAlert, tag: 'Logs' },
+    { id: 'auth-security', labelAr: 'الهوية والأمان (Auth/Sec)', icon: KeyRound, tag: 'JWT' },
+  ];
+
+  const allItems = [...navModules, ...apiModules];
+
   if (isCollapsed) {
     return (
-      <aside className="w-12 border-e border-slate-200 bg-slate-50/90 flex flex-col items-center py-3 flex-shrink-0 z-30 select-none">
+      <aside className="w-12 border-e border-slate-200 bg-slate-50/90 flex flex-col items-center py-3 flex-shrink-0 z-30 select-none overflow-y-auto">
         <button
           onClick={onToggleCollapse}
           className="icon-button mb-4 text-blue-900"
@@ -47,7 +59,7 @@ export function Sidebar({
         </button>
 
         <div className="flex flex-col gap-1.5 w-full items-center">
-          {navModules.map((item) => {
+          {allItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeView === item.id;
             return (
@@ -125,6 +137,30 @@ export function Sidebar({
           <span className="eyebrow px-2 block mb-1.5">MODULES & SHEETS</span>
           <nav className="space-y-0.5">
             {navModules.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeView === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => onSelectView(item.id)}
+                  className={`nav-item ${isActive ? 'nav-active' : ''}`}
+                >
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-900' : 'text-slate-500'}`} />
+                  <span className="truncate flex-1">{item.labelAr}</span>
+                  <span className={`tag ${isActive ? 'tag-blue' : ''} text-[9px] font-mono py-0`}>
+                    {item.tag}
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* System & Backend APIs Section */}
+        <div>
+          <span className="eyebrow px-2 block mb-1.5">SYSTEM APIS & CONTROL</span>
+          <nav className="space-y-0.5">
+            {apiModules.map((item) => {
               const Icon = item.icon;
               const isActive = activeView === item.id;
               return (

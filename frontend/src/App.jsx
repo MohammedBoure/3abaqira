@@ -10,12 +10,29 @@ import { CashDrawerOverview } from './components/dashboard/CashDrawerOverview';
 import { ProgramsOverview } from './components/dashboard/ProgramsOverview';
 import { PayrollOverview } from './components/dashboard/PayrollOverview';
 import { ProvisionsOverview } from './components/dashboard/ProvisionsOverview';
+import { AcademicYearsView } from './components/dashboard/AcademicYearsView';
+import { BranchesView } from './components/dashboard/BranchesView';
+import { AuditLogsView } from './components/dashboard/AuditLogsView';
+import { AuthSecurityView } from './components/dashboard/AuthSecurityView';
 import { StudentRegistrationModal, CashDrawerModal } from './components/dashboard/PreviewModals';
-import { Database, Cpu, Table, BarChart3, Coins, Users, UtensilsCrossed, GraduationCap } from 'lucide-react';
+import {
+  Database,
+  Cpu,
+  Table,
+  BarChart3,
+  Coins,
+  Users,
+  UtensilsCrossed,
+  GraduationCap,
+  CalendarRange,
+  Building2,
+  ShieldAlert,
+  KeyRound,
+} from 'lucide-react';
 
 export function App() {
   const [selectedBranch, setSelectedBranch] = useState('ALL');
-  const [activeView, setActiveView] = useState('excel-grid'); // 'excel-grid' | 'analytics' | 'treasury' | 'programs' | 'payroll' | 'provisions'
+  const [activeView, setActiveView] = useState('excel-grid');
   const [currentLang, setCurrentLang] = useState('ar');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
@@ -58,6 +75,22 @@ export function App() {
       title: 'تموين ومطعم الروضة (Provisions & Kitchen Supplies)',
       eyebrow: 'LOGISTICS & INVENTORY',
     },
+    'academic-years': {
+      title: 'إدارة المواسم والسنوات الأكاديمية (Academic Cycles & Fiscal Years)',
+      eyebrow: 'FISCAL CYCLES / backend/apis/academic_years.py',
+    },
+    'branches': {
+      title: 'إدارة الفروع والمقرات والقاعات الدراسية (Campuses & Facilities)',
+      eyebrow: 'MULTI-TENANT CAMPUSES / backend/apis/branches.py',
+    },
+    'audit-trail': {
+      title: 'سجل الرقابة والتتبع الأمني للنظام (System Audit Trail & Diffs)',
+      eyebrow: 'AUDIT & COMPLIANCE / backend/apis/audit.py',
+    },
+    'auth-security': {
+      title: 'إدارة الهوية، الصلاحيات والأمان (Authentication & Security)',
+      eyebrow: 'SECURITY & JWT / backend/apis/auth.py',
+    },
   };
 
   return (
@@ -91,22 +124,24 @@ export function App() {
         />
 
         {/* Board Heading with Margin View Switcher */}
-        <div className="px-3 sm:px-4 pt-2.5 pb-2 border-b border-slate-200/80 bg-white/70 backdrop-blur-xs flex flex-col md:flex-row md:items-center justify-between gap-2 flex-shrink-0 z-10 select-none">
+        <div className="px-3 sm:px-4 pt-2 pb-2 border-b border-slate-200/80 bg-white/70 backdrop-blur-xs flex flex-col md:flex-row md:items-center justify-between gap-2 flex-shrink-0 z-10 select-none">
           <div>
             <div className="eyebrow flex items-center gap-1.5">
               <span>3ABAQIRA SPATIAL</span>
               <span>/</span>
               <span className="text-blue-900 font-bold">{viewHeaders[activeView]?.eyebrow || 'MODULE'}</span>
             </div>
-            <h1 className="text-sm sm:text-base font-bold font-serif text-slate-900 tracking-tight mt-0.5">
+            <h1 className="text-xs sm:text-sm font-bold font-serif text-slate-900 tracking-tight mt-0.5">
               {viewHeaders[activeView]?.title || 'منظومة إدارة العباقرة'}
             </h1>
           </div>
 
+          {/* Quick Segmented Switcher */}
           <div className="view-switch overflow-x-auto max-w-full">
             <button
               onClick={() => setActiveView('excel-grid')}
               className={activeView === 'excel-grid' ? 'active' : ''}
+              title="سجل الجداول والطلاب"
             >
               <Table className="w-3.5 h-3.5" />
               <span>جداول البيانات (Excel)</span>
@@ -114,6 +149,7 @@ export function App() {
             <button
               onClick={() => setActiveView('analytics')}
               className={activeView === 'analytics' ? 'active' : ''}
+              title="مؤشرات الأداء"
             >
               <BarChart3 className="w-3.5 h-3.5" />
               <span>التحليلات</span>
@@ -121,30 +157,42 @@ export function App() {
             <button
               onClick={() => setActiveView('treasury')}
               className={activeView === 'treasury' ? 'active' : ''}
+              title="الصندوق والخزينة"
             >
               <Coins className="w-3.5 h-3.5" />
               <span>الخزينة</span>
             </button>
             <button
-              onClick={() => setActiveView('programs')}
-              className={activeView === 'programs' ? 'active' : ''}
+              onClick={() => setActiveView('academic-years')}
+              className={activeView === 'academic-years' ? 'active' : ''}
+              title="مواسم وسنوات النظام"
             >
-              <GraduationCap className="w-3.5 h-3.5" />
-              <span>البرامج</span>
+              <CalendarRange className="w-3.5 h-3.5" />
+              <span>المواسم الأكاديمية</span>
             </button>
             <button
-              onClick={() => setActiveView('payroll')}
-              className={activeView === 'payroll' ? 'active' : ''}
+              onClick={() => setActiveView('branches')}
+              className={activeView === 'branches' ? 'active' : ''}
+              title="الفروع والمقرات"
             >
-              <Users className="w-3.5 h-3.5" />
-              <span>الأجور</span>
+              <Building2 className="w-3.5 h-3.5" />
+              <span>الفروع</span>
             </button>
             <button
-              onClick={() => setActiveView('provisions')}
-              className={activeView === 'provisions' ? 'active' : ''}
+              onClick={() => setActiveView('audit-trail')}
+              className={activeView === 'audit-trail' ? 'active' : ''}
+              title="سجل الرقابة والتتبع"
             >
-              <UtensilsCrossed className="w-3.5 h-3.5" />
-              <span>التموين</span>
+              <ShieldAlert className="w-3.5 h-3.5" />
+              <span>الرقابة (Audit)</span>
+            </button>
+            <button
+              onClick={() => setActiveView('auth-security')}
+              className={activeView === 'auth-security' ? 'active' : ''}
+              title="الهوية والأمان"
+            >
+              <KeyRound className="w-3.5 h-3.5" />
+              <span>الأمان (Auth)</span>
             </button>
           </div>
         </div>
@@ -199,6 +247,29 @@ export function App() {
           {/* View 6: Kitchen & Provisions Template */}
           {activeView === 'provisions' && (
             <ProvisionsOverview />
+          )}
+
+          {/* View 7: Academic Cycles & Years (backend/apis/academic_years.py) */}
+          {activeView === 'academic-years' && (
+            <AcademicYearsView />
+          )}
+
+          {/* View 8: Multi-Tenant Branches & Facilities (backend/apis/branches.py) */}
+          {activeView === 'branches' && (
+            <BranchesView
+              selectedBranch={selectedBranch}
+              onSelectBranch={setSelectedBranch}
+            />
+          )}
+
+          {/* View 9: System Audit Trail & Diffs (backend/apis/audit.py) */}
+          {activeView === 'audit-trail' && (
+            <AuditLogsView />
+          )}
+
+          {/* View 10: Authentication & Security (backend/apis/auth.py) */}
+          {activeView === 'auth-security' && (
+            <AuthSecurityView />
           )}
         </main>
 

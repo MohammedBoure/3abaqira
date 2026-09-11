@@ -12,6 +12,10 @@ This directory contains the operational dashboard views, spreadsheet grids, and 
 - **`ProgramsOverview.jsx`**: Academic catalog and cohort capacity meters across Soroban, Daycare, Robotics, Quran, and Foreign Languages.
 - **`PayrollOverview.jsx`**: Ready template interface for HR, staff, and coach payroll calculations (base pay, session rates, gross wages, deductions, and net payout signoff).
 - **`ProvisionsOverview.jsx`**: Ready template interface for Daycare kitchen procurement, daily bread logs, meat and protein orders, and supplier receipts.
+- **`AcademicYearsView.jsx`**: Formal management interface for `backend/apis/academic_years.py` featuring active cycle spotlights, academic cycle date-range grids, atomic cycle activation (`/set-current`), cycle creation modal, and enrollment continuity metrics.
+- **`BranchesView.jsx`**: Formal multi-tenant campus interface for `backend/apis/branches.py` featuring branch profiles (Center vs. Rawda), operational status toggle (`/status`), classroom allocations grid (`/classrooms`), room capacity/occupancy bars, and branch/room creation dialogs.
+- **`AuditLogsView.jsx`**: Formal compliance interface for `backend/apis/audit.py` featuring system audit trail grids, event telemetry counters (INSERT/UPDATE/DELETE), filter ribbon (by table, action, actor, date), interactive before-and-after diff inspection modal, and manual audit recording form.
+- **`AuthSecurityView.jsx`**: Formal security interface for `backend/apis/auth.py` featuring current authenticated profile (`/me`), active JWT bearer token telemetry and expiry countdown, password change form (`/change-password`), staff user accounts directory, and RBAC role permissions matrix.
 - **`PreviewModals.jsx`**: Sharp modal dialogs for new student enrollment and daily cash register reconciliation audits.
 - **`MockDataGrid.jsx`**: Standard table preview component.
 

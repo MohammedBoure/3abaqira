@@ -29,6 +29,10 @@ export function Navbar({
     'programs': 'دليل البرامج والمستويات الأكاديمية',
     'payroll': 'سجل الأجور والرواتب',
     'provisions': 'تموين ومطعم الروضة',
+    'academic-years': 'المواسم والسنوات الأكاديمية (Academic Cycles)',
+    'branches': 'إدارة الفروع والمقرات والقاعات (Branches)',
+    'audit-trail': 'سجل الرقابة والتتبع الأمني (Audit Trail)',
+    'auth-security': 'إدارة الهوية والصلاحيات والأمان (Auth & Security)',
   };
 
   return (
