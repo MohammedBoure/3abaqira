@@ -80,7 +80,7 @@ class SchemaInitializer:
             CREATE TABLE IF NOT EXISTS AppMetadata (
                 meta_key VARCHAR(100) PRIMARY KEY,
                 meta_value TEXT NOT NULL,
-                updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
             """
         )
@@ -109,7 +109,9 @@ class SchemaInitializer:
     def _run_queries(self, cursor, queries: list, label: str, ignore_errors: bool = False) -> None:
         """Executes a list of queries sequentially with clean logging and cross-dialect adaptation."""
         logger.info(f"Executing {label} ({len(queries)} queries)...")
-        is_sqlite = (getattr(self._cm, "db_type", "sqlite") == "sqlite")
+        db_type = getattr(self._cm, "db_type", "sqlite")
+        is_sqlite = (db_type == "sqlite")
+        is_mysql = (db_type == "mysql")
 
         for query in queries:
             clean_q = query.strip()
@@ -127,6 +129,17 @@ class SchemaInitializer:
                         pass
                     clean_q = re.sub(r'CREATE\s+OR\s+REPLACE\s+VIEW', 'CREATE VIEW', clean_q, flags=re.IGNORECASE)
                 clean_q = clean_q.replace("ILIKE", "LIKE")
+
+            elif is_mysql:
+                clean_q = clean_q.replace("TIMESTAMPTZ", "DATETIME")
+                clean_q = clean_q.replace("JSONB", "JSON")
+                clean_q = clean_q.replace("ILIKE", "LIKE")
+                clean_q = clean_q.replace("BIGSERIAL PRIMARY KEY", "SERIAL PRIMARY KEY")
+                clean_q = re.sub(r'DEFAULT\s+CURRENT_DATE', '', clean_q, flags=re.IGNORECASE)
+                clean_q = re.sub(r'CREATE\s+INDEX\s+IF\s+NOT\s+EXISTS', 'CREATE INDEX', clean_q, flags=re.IGNORECASE)
+                if re.search(r'ON\s+CONFLICT\s*\([^)]*\)\s*DO\s*NOTHING', clean_q, re.IGNORECASE):
+                    clean_q = re.sub(r'ON\s+CONFLICT\s*\([^)]*\)\s*DO\s*NOTHING;?', '', clean_q, flags=re.IGNORECASE)
+                    clean_q = re.sub(r'^(\s*)INSERT\s+INTO\b', r'\1INSERT IGNORE INTO', clean_q, flags=re.IGNORECASE)
 
             try:
                 cursor.execute(clean_q)

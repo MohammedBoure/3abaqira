@@ -579,7 +579,7 @@ AUDIT_TABLE_QUERIES = [
     CREATE TABLE IF NOT EXISTS AppMetadata (
         meta_key VARCHAR(100) PRIMARY KEY,
         meta_value TEXT NOT NULL,
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
     """
 ]

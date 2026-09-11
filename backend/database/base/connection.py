@@ -12,6 +12,7 @@ import re
 import sqlite3
 import logging
 import urllib.parse
+from typing import Optional, Any, Dict
 from contextlib import contextmanager
 try:
     from dotenv import load_dotenv
@@ -99,10 +100,158 @@ class SQLiteCompatConnection:
 
 
 # =============================================================================
-# CENTRAL CONNECTION MANAGER
+# MYSQL COMPATIBILITY WRAPPERS
 # =============================================================================
 
-from typing import Optional, Any
+class MySQLCompatCursor:
+    """
+    Wraps mysql.connector cursor to provide cross-dialect compatibility:
+    - Maps ILIKE -> LIKE (MySQL UTF-8 collation is case-insensitive by default)
+    - Translates ON CONFLICT clauses (DO NOTHING -> INSERT IGNORE, DO UPDATE SET -> ON DUPLICATE KEY UPDATE)
+    - Emulates the RETURNING clause for INSERT and UPDATE statements
+    - Replaces PostgreSQL TIMESTAMPTZ keywords with DATETIME
+    """
+    _pk_cache: Dict[str, str] = {}
+
+    def __init__(self, cur, conn=None):
+        self._cur = cur
+        self._conn = conn
+
+    def _get_primary_key(self, table_name: str) -> str:
+        clean_table = table_name.strip('`" ')
+        if clean_table in MySQLCompatCursor._pk_cache:
+            return MySQLCompatCursor._pk_cache[clean_table]
+        try:
+            self._cur.execute(f"SHOW KEYS FROM `{clean_table}` WHERE Key_name = 'PRIMARY';")
+            row = self._cur.fetchone()
+            pk = row[4] if row else f"{clean_table.rstrip('s')}_id"
+        except Exception:
+            pk = f"{clean_table.rstrip('s')}_id"
+        MySQLCompatCursor._pk_cache[clean_table] = pk
+        return pk
+
+    def _adapt_sql(self, sql: str) -> str:
+        cleaned = sql.replace("ILIKE", "LIKE")
+        cleaned = cleaned.replace("TIMESTAMPTZ", "DATETIME")
+        if re.search(r'ON\s+CONFLICT\s*\([^)]*\)\s*DO\s*NOTHING', cleaned, re.IGNORECASE):
+            cleaned = re.sub(r'ON\s+CONFLICT\s*\([^)]*\)\s*DO\s*NOTHING;?', '', cleaned, flags=re.IGNORECASE)
+            cleaned = re.sub(r'^(\s*)INSERT\s+INTO\b', r'\1INSERT IGNORE INTO', cleaned, flags=re.IGNORECASE)
+        elif re.search(r'ON\s+CONFLICT\s*\([^)]*\)\s*DO\s*UPDATE\s+SET', cleaned, re.IGNORECASE):
+            cleaned = re.sub(r'ON\s+CONFLICT\s*\([^)]*\)\s*DO\s*UPDATE\s+SET', 'ON DUPLICATE KEY UPDATE', cleaned, flags=re.IGNORECASE)
+            cleaned = re.sub(r'EXCLUDED\.(\w+)', r'VALUES(\1)', cleaned, flags=re.IGNORECASE)
+        return cleaned
+
+    def execute(self, sql: str, params: Optional[Any] = None):
+        cleaned_sql = self._adapt_sql(sql)
+        ret_match = re.search(r'\s+RETURNING\s+(.*?)(?:;|\s*$)', cleaned_sql, re.IGNORECASE)
+        if not ret_match:
+            if params is not None:
+                return self._cur.execute(cleaned_sql, params)
+            return self._cur.execute(cleaned_sql)
+
+        ret_clause = ret_match.group(1).strip()
+        sql_without_ret = cleaned_sql[:ret_match.start()].strip()
+        if not sql_without_ret.endswith(';'):
+            sql_without_ret += ';'
+
+        if params is not None:
+            self._cur.execute(sql_without_ret, params)
+        else:
+            self._cur.execute(sql_without_ret)
+
+        # Emulate RETURNING for INSERT
+        ins_match = re.search(r'^\s*INSERT\s+(?:IGNORE\s+)?INTO\s+([`"\w]+)', sql_without_ret, re.IGNORECASE)
+        if ins_match:
+            table_name = ins_match.group(1).strip('`"')
+            last_id = self._cur.lastrowid
+            pk_col = self._get_primary_key(table_name)
+            if last_id:
+                select_sql = f"SELECT {ret_clause} FROM `{table_name}` WHERE `{pk_col}` = %s;"
+                return self._cur.execute(select_sql, (last_id,))
+            else:
+                cols_match = re.search(r'\(([^)]+)\)\s*VALUES', sql_without_ret, re.IGNORECASE)
+                if cols_match and params and pk_col:
+                    cols = [c.strip().strip('`"') for c in cols_match.group(1).split(',')]
+                    if pk_col in cols:
+                        idx = cols.index(pk_col)
+                        pk_val = params[idx]
+                        select_sql = f"SELECT {ret_clause} FROM `{table_name}` WHERE `{pk_col}` = %s;"
+                        return self._cur.execute(select_sql, (pk_val,))
+            return
+
+        # Emulate RETURNING for UPDATE
+        upd_match = re.search(r'^\s*UPDATE\s+([`"\w]+)', sql_without_ret, re.IGNORECASE)
+        where_match = re.search(r'\s+WHERE\s+(.*?)(?:;|\s*$)', sql_without_ret, re.IGNORECASE)
+        if upd_match and where_match:
+            table_name = upd_match.group(1).strip('`"')
+            where_clause = where_match.group(1).strip()
+            before_where = sql_without_ret[:where_match.start()]
+            set_placeholders = len(re.findall(r'(?<!%)(?:%%)*%s', before_where))
+            where_params = params[set_placeholders:] if params else ()
+            select_sql = f"SELECT {ret_clause} FROM `{table_name}` WHERE {where_clause};"
+            return self._cur.execute(select_sql, where_params)
+
+    def executemany(self, sql: str, seq_of_params):
+        cleaned_sql = self._adapt_sql(sql)
+        return self._cur.executemany(cleaned_sql, seq_of_params)
+
+    def fetchone(self):
+        return self._cur.fetchone()
+
+    def fetchall(self):
+        return self._cur.fetchall()
+
+    def fetchmany(self, size: Optional[int] = None):
+        return self._cur.fetchmany(size) if size else self._cur.fetchmany()
+
+    @property
+    def description(self):
+        return self._cur.description
+
+    @property
+    def rowcount(self):
+        return self._cur.rowcount
+
+    @property
+    def lastrowid(self):
+        return self._cur.lastrowid
+
+    def close(self):
+        self._cur.close()
+
+    def __getattr__(self, name):
+        return getattr(self._cur, name)
+
+
+class MySQLCompatConnection:
+    """
+    Wraps mysql.connector Connection with thread-safe auto-commit/rollback semantics,
+    returning MySQLCompatCursor for seamless cross-dialect operations.
+    """
+
+    def __init__(self, conn):
+        self._conn = conn
+
+    def cursor(self, **kwargs):
+        kwargs.pop('dictionary', None)
+        return MySQLCompatCursor(self._conn.cursor(dictionary=False, **kwargs), conn=self._conn)
+
+    def commit(self):
+        self._conn.commit()
+
+    def rollback(self):
+        self._conn.rollback()
+
+    def close(self):
+        self._conn.close()
+
+    def __getattr__(self, name):
+        return getattr(self._conn, name)
+
+
+# =============================================================================
+# CENTRAL CONNECTION MANAGER
+# =============================================================================
 
 class ConnectionManager:
     """
@@ -154,6 +303,9 @@ class ConnectionManager:
                 import mysql.connector
                 from mysql.connector import pooling
                 conn_cfg = {k: v for k, v in self.db_config.items() if k not in ('type', 'url')}
+                conn_cfg.setdefault('charset', 'utf8mb4')
+                conn_cfg.setdefault('collation', 'utf8mb4_unicode_ci')
+                conn_cfg.setdefault('use_unicode', True)
                 ConnectionManager._pool = pooling.MySQLConnectionPool(
                     pool_name="abaqira_pool",
                     pool_size=10,
@@ -211,12 +363,12 @@ class ConnectionManager:
                 user = self.db_config.get('user', 'postgres')
                 host = self.db_config.get('host', 'localhost')
                 port = self.db_config.get('port', 5432)
-                db_name = self.db_config.get('database', 'abaqira_db')
+                db_name = self.db_config.get('database', 'abaqira')
 
                 if self.db_type in ('postgresql', 'postgres'):
                     db_url = f"postgresql+psycopg2://{user}:{pw}@{host}:{port}/{db_name}"
                 else:
-                    db_url = f"mysql+mysqlconnector://{user}:{pw}@{host}:{port}/{db_name}"
+                    db_url = f"mysql+mysqlconnector://{user}:{pw}@{host}:{port}/{db_name}?charset=utf8mb4"
 
             ConnectionManager._engine = create_engine(
                 db_url,
@@ -276,11 +428,15 @@ class ConnectionManager:
             if self.db_type in ('postgresql', 'postgres'):
                 return ConnectionManager._pool.getconn()
             elif self.db_type == 'mysql':
-                return ConnectionManager._pool.get_connection()
+                raw_conn = ConnectionManager._pool.get_connection()
+                return MySQLCompatConnection(raw_conn)
 
         if self.engine is not None:
             try:
-                return self.engine.raw_connection()
+                raw_conn = self.engine.raw_connection()
+                if self.db_type == 'mysql':
+                    return MySQLCompatConnection(raw_conn)
+                return raw_conn
             except Exception as e:
                 logger.warning(f"Engine connection failed: {e}; falling back to SQLite.")
                 self._fallback_to_sqlite()
@@ -293,7 +449,7 @@ class ConnectionManager:
     def release_connection(self, conn) -> None:
         """Safely returns connection to its respective pool or closes SQLite handles."""
         try:
-            if isinstance(conn, SQLiteCompatConnection) or self.db_type == 'sqlite':
+            if isinstance(conn, (SQLiteCompatConnection, MySQLCompatConnection)):
                 conn.close()
                 return
 
@@ -346,7 +502,7 @@ def load_db_config() -> dict:
         'host':     os.getenv('DB_HOST', 'localhost'),
         'user':     os.getenv('DB_USER', default_user),
         'password': os.getenv('DB_PASSWORD', ''),
-        'database': os.getenv('DB_NAME', 'abaqira_db'),
+        'database': os.getenv('DB_NAME', 'abaqira'),
         'port':     int(os.getenv('DB_PORT', default_port)),
         'url':      os.getenv('DATABASE_URL', None),
     }
@@ -363,7 +519,7 @@ def ensure_database_exists(db_config: dict) -> None:
             os.makedirs(parent_dir, exist_ok=True)
         return
 
-    db_name = db_config.get('database', 'abaqira_db')
+    db_name = db_config.get('database', 'abaqira')
 
     try:
         if db_type in ('postgresql', 'postgres'):
