@@ -35,6 +35,7 @@ backend/
 │   ├── budgets.py            # Budget targets & variance reporting
 │   ├── kitchen.py            # Daycare cafeteria procurement & bread logs
 │   ├── competitions.py       # Competition events, registrations & receipts
+│   ├── payroll.py            # HR monthly payroll runs, automated compensation & vouchers
 │   └── system.py             # System telemetry & infrastructure overview
 └── database/                 # Unified database connectivity, pooling, migrations & managers
     ├── README.md             # Database layer overview and FastAPI usage
@@ -61,6 +62,8 @@ backend/
     ├── budget_variance_manager.py # Data manager for budget variances & live actuals
     ├── kitchen_procurement_manager.py # Data manager for kitchen provisions & bread logs
     ├── competition_manager.py # Data manager for competitions & candidate registrations
+    ├── employee_manager.py   # Data manager for faculty coaches and operational staff
+    ├── payroll_manager.py    # Data manager for monthly payroll runs & disbursement ledger
     └── base/                 # Core database infrastructure (Connection, Schema, Backup, Archive)
 ```
 

@@ -70,6 +70,7 @@ _MANAGER_EXPORTS = {
     "CompetitionManager": ("competition_manager", "CompetitionManager"),
     "CompetitionRegistrationManager": ("competition_manager", "CompetitionRegistrationManager"),
     "PayrollManager": ("payroll_manager", "PayrollManager"),
+    "PayrollItemManager": ("payroll_manager", "PayrollItemManager"),
     "AuditLogManager": ("audit_log_manager", "AuditLogManager"),
 }
 

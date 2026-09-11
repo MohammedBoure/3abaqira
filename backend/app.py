@@ -93,6 +93,7 @@ def root():
             "budget_variances": "/api/budget-variances",
             "kitchen": "/api/kitchen",
             "competitions": "/api/competitions",
+            "payroll": "/api/payroll",
             "system_overview": "/api/system/overview",
         },
     }
