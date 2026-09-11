@@ -81,6 +81,9 @@ def root():
             "programs": "/api/programs",
             "levels": "/api/levels",
             "pricing_plans": "/api/pricing-plans",
+            "groups": "/api/groups",
+            "schedules": "/api/schedules",
+            "sessions": "/api/sessions",
             "system_overview": "/api/system/overview",
         },
     }

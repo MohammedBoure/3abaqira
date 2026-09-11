@@ -23,6 +23,9 @@ from .students import router as students_router
 from .programs import router as programs_router
 from .levels import router as levels_router
 from .pricing_plans import router as pricing_plans_router
+from .groups import router as groups_router
+from .schedules import router as schedules_router
+from .sessions import router as sessions_router
 from .system import router as system_router, system_health_check
 
 # Master API Router mounted under '/api'
@@ -39,6 +42,9 @@ api_router.include_router(students_router)
 api_router.include_router(programs_router)
 api_router.include_router(levels_router)
 api_router.include_router(pricing_plans_router)
+api_router.include_router(groups_router)
+api_router.include_router(schedules_router)
+api_router.include_router(sessions_router)
 api_router.include_router(system_router)
 
 # Top-level direct health check alias: GET /api/health
@@ -63,5 +69,8 @@ __all__ = [
     "programs_router",
     "levels_router",
     "pricing_plans_router",
+    "groups_router",
+    "schedules_router",
+    "sessions_router",
     "system_router",
 ]

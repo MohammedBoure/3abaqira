@@ -38,6 +38,9 @@ backend/database/
 | [program_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/program_manager.py) | Data Access Manager for the `programs` table, managing educational offerings and billing models. |
 | [level_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/level_manager.py) | Data Access Manager for curriculum `levels`, sequence ordering, age cohorts, and visual color tags. |
 | [pricing_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/pricing_manager.py) | Data Access Manager for `pricing_plans` matrices, installment structures, and discount simulations. |
+| [group_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/group_manager.py) | Data Access Manager for `groups` cohorts, capacities, and active student enrollment headcounts. |
+| [schedule_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/schedule_manager.py) | Data Access Manager for `group_schedules` weekly timetable slots, room occupancy, and collision/clash checks. |
+| [attendance_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/attendance_manager.py) | Data Access Manager for `completed_sessions` and `student_attendance` per-session marking, points scoring, and logs. |
 
 
 ## FastAPI Integration Pattern

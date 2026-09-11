@@ -22,6 +22,9 @@ backend/apis/
 ├── programs.py         # Educational programs & catalog (/api/programs)
 ├── levels.py           # Curriculum stages & sequence ordering (/api/levels)
 ├── pricing_plans.py    # Multi-tier pricing matrices & fee computation (/api/pricing-plans)
+├── groups.py           # Student groups, cohorts & class rosters (/api/groups)
+├── schedules.py        # Weekly timetable slots & clash detection (/api/schedules)
+├── sessions.py         # Conducted session logs & student attendance (/api/sessions)
 ├── system.py           # System telemetry, infrastructure overview & archive status (/api/system)
 └── README.md           # This documentation file
 ```
@@ -44,6 +47,9 @@ backend/apis/
 | [programs.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/programs.py) | REST router for educational programs, billing classification, and branch-scoped curriculums. |
 | [levels.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/levels.py) | REST router for curriculum progression stages, color tags, age cohorts, and sequence reordering. |
 | [pricing_plans.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/pricing_plans.py) | REST router for tuition matrices, sibling/cash discounts, installment schedules, and fee calculation simulations. |
+| [groups.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/groups.py) | REST router for study groups, cohorts, capacity monitoring, and teacher assignments. |
+| [schedules.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/schedules.py) | REST router for weekly group timetable slots, recurrence rules, and classroom conflict / clash prevention. |
+| [sessions.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/sessions.py) | REST router for conducted session logs, batch student attendance, performance points scoring, and attendance tracking. |
 | [system.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/system.py) | REST router providing health telemetry, multi-branch summary overview, and historical archive view mode status. |
 
 ---

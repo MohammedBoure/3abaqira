@@ -23,6 +23,9 @@ backend/
 │   ├── programs.py           # Educational programs & catalog
 │   ├── levels.py             # Curriculum stages & sequence ordering
 │   ├── pricing_plans.py      # Multi-tier pricing matrices & fee computation
+│   ├── groups.py             # Student groups, cohorts & class rosters
+│   ├── schedules.py          # Weekly timetable slots & clash detection
+│   ├── sessions.py           # Conducted session logs & student attendance
 │   └── system.py             # System telemetry & infrastructure overview
 └── database/                 # Unified database connectivity, pooling, migrations & managers
     ├── README.md             # Database layer overview and FastAPI usage
@@ -37,6 +40,9 @@ backend/
     ├── program_manager.py    # Data manager for educational programs & billing models
     ├── level_manager.py      # Data manager for curriculum levels & stage ordering
     ├── pricing_manager.py    # Data manager for multi-tier pricing matrices & discounts
+    ├── group_manager.py      # Data manager for student groups and active headcounts
+    ├── schedule_manager.py   # Data manager for weekly group timetables & clash checks
+    ├── attendance_manager.py # Data manager for conducted sessions & student attendance
     └── base/                 # Core database infrastructure (Connection, Schema, Backup, Archive)
 ```
 
