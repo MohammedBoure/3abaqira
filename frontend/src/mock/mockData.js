@@ -904,4 +904,629 @@ export const MOCK_BRANCHES_DETAILED = [
   },
 ];
 
+/**
+ * ==============================================================================
+ * INVOICES & PAYMENTS DATASET (Matches backend/apis/invoices.py & payments.py)
+ * ==============================================================================
+ */
+export const MOCK_INVOICES = [
+  {
+    invoice_id: 1,
+    branch_id: 'CENTER',
+    student_id: 101,
+    student_name: 'بن علي ريان',
+    enrollment_id: 1,
+    group_name: 'سوروبان الفوج أ1',
+    installment_number: 1,
+    period_label: 'الدفعة الأولى (سبتمبر - نوفمبر)',
+    amount_due: 8500,
+    amount_paid: 8500,
+    due_date: '2025-09-15',
+    status: 'PAID',
+    notes: 'تم السداد نقداً عبر إيصال #REC-8421',
+  },
+  {
+    invoice_id: 2,
+    branch_id: 'CENTER',
+    student_id: 101,
+    student_name: 'بن علي ريان',
+    enrollment_id: 1,
+    group_name: 'سوروبان الفوج أ1',
+    installment_number: 2,
+    period_label: 'الدفعة الثانية (ديسمبر - جانفي)',
+    amount_due: 8500,
+    amount_paid: 4000,
+    due_date: '2025-12-15',
+    status: 'PARTIALLY_PAID',
+    notes: 'متبقي 4,500 دج مستحقة السداد',
+  },
+  {
+    invoice_id: 3,
+    branch_id: 'RAWDA',
+    student_id: 102,
+    student_name: 'سعيدي أمين',
+    enrollment_id: 2,
+    group_name: 'روضة فوج البراعم',
+    installment_number: 1,
+    period_label: 'اشتراك شهر فيفري 2026',
+    amount_due: 14000,
+    amount_paid: 14000,
+    due_date: '2026-02-05',
+    status: 'PAID',
+    notes: 'شامل الإطعام والتموين الغذائي',
+  },
+  {
+    invoice_id: 4,
+    branch_id: 'CENTER',
+    student_id: 103,
+    student_name: 'مصباحي خديجة',
+    enrollment_id: 3,
+    group_name: 'الروبوتيك والذكاء الاصطناعي',
+    installment_number: 1,
+    period_label: 'المستوى الأول (ثلاثي كامل)',
+    amount_due: 12000,
+    amount_paid: 0,
+    due_date: '2026-01-30',
+    status: 'OVERDUE',
+    notes: 'تأخر السداد 12 يوماً - تم إرسال إشعار للولي',
+  },
+  {
+    invoice_id: 5,
+    branch_id: 'RAWDA',
+    student_id: 104,
+    student_name: 'بلقاسم مريم',
+    enrollment_id: 4,
+    group_name: 'تمهيدي أول',
+    installment_number: 2,
+    period_label: 'اشتراك شهر مارس 2026',
+    amount_due: 14000,
+    amount_paid: 0,
+    due_date: '2026-03-05',
+    status: 'UNPAID',
+    notes: 'مجدولة للسداد القادم',
+  },
+];
+
+export const MOCK_PAYMENTS_LIST = [
+  {
+    payment_id: 8421,
+    receipt_number: 'REC-CENTER-2026-08421',
+    invoice_id: 1,
+    student_name: 'بن علي ريان',
+    branch_id: 'CENTER',
+    amount: 8500,
+    payment_method: 'CASH',
+    payment_date: '2026-02-10',
+    collected_by: 'سارة منصوري (أمينة الصندوق)',
+    remarks: 'سداد نقدي في شباك الاستقبال',
+    status: 'COMPLETED',
+  },
+  {
+    payment_id: 8420,
+    receipt_number: 'REC-RAWDA-2026-08420',
+    invoice_id: 3,
+    student_name: 'سعيدي أمين',
+    branch_id: 'RAWDA',
+    amount: 14000,
+    payment_method: 'BANK_TRANSFER',
+    payment_date: '2026-02-09',
+    collected_by: 'كريم بن سعدة',
+    remarks: 'تحويل بنكي CCP #TX-998124',
+    status: 'COMPLETED',
+  },
+  {
+    payment_id: 8419,
+    receipt_number: 'REC-CENTER-2026-08419',
+    invoice_id: 2,
+    student_name: 'بن علي ريان',
+    branch_id: 'CENTER',
+    amount: 4000,
+    payment_method: 'CASH',
+    payment_date: '2026-02-08',
+    collected_by: 'سارة منصوري',
+    remarks: 'دفعة جزئية من القسط الثاني',
+    status: 'COMPLETED',
+  },
+];
+
+/**
+ * ==============================================================================
+ * EXPENSES & BUDGET VARIANCES DATASET (backend/apis/expenses.py & budgets.py)
+ * ==============================================================================
+ */
+export const MOCK_EXPENSE_CATEGORIES = [
+  { category_id: 1, code: 'CLEANING', name_ar: 'مواد التنظيف والتعقيم', is_cafeteria: false, budget_monthly: 25000 },
+  { category_id: 2, code: 'CAFETERIA_BREAD', name_ar: 'مشتريات المخبزة والخبز اليومي', is_cafeteria: true, budget_monthly: 35000 },
+  { category_id: 3, code: 'CAFETERIA_MEAT', name_ar: 'اللحوم والدواجن الطازجة', is_cafeteria: true, budget_monthly: 65000 },
+  { category_id: 4, code: 'STATIONERY', name_ar: 'القرطاسية والمطبوعات البيداغوجية', is_cafeteria: false, budget_monthly: 30000 },
+  { category_id: 5, code: 'UTILITIES', name_ar: 'الكهرباء، الماء، واشتراك الإنترنت', is_cafeteria: false, budget_monthly: 40000 },
+];
+
+export const MOCK_EXPENSES_LIST = [
+  {
+    expense_id: 101,
+    voucher_number: 'EXP-CENTER-2026-00101',
+    branch_id: 'CENTER',
+    category_id: 4,
+    category_name: 'القرطاسية والمطبوعات البيداغوجية',
+    description: 'طباعة كراسات السوروبان المستوى 1 وشهادات التكريم',
+    amount: 18500,
+    expense_date: '2026-02-11',
+    payment_method: 'CASH',
+    paid_to: 'مطبعة الأمل الحديثة',
+    authorized_by: 'محمد بوري (المدير العام)',
+  },
+  {
+    expense_id: 102,
+    voucher_number: 'EXP-RAWDA-2026-00102',
+    branch_id: 'RAWDA',
+    category_id: 2,
+    category_name: 'مشتريات المخبزة والخبز اليومي',
+    description: 'توريد 150 خبزة وسلع إفطار الصباح للأطفال',
+    amount: 3200,
+    expense_date: '2026-02-11',
+    payment_method: 'CASH',
+    paid_to: 'مخبزة النور النموذجية',
+    authorized_by: 'كريم بن سعدة',
+  },
+  {
+    expense_id: 103,
+    voucher_number: 'EXP-RAWDA-2026-00103',
+    branch_id: 'RAWDA',
+    category_id: 3,
+    category_name: 'اللحوم والدواجن الطازجة',
+    description: 'شراء لحم مفروم بقري طازج لإعداد وجبة الغداء',
+    amount: 14500,
+    expense_date: '2026-02-10',
+    payment_method: 'CASH',
+    paid_to: 'مجزرة البركة',
+    authorized_by: 'كريم بن سعدة',
+  },
+];
+
+export const MOCK_BUDGET_VARIANCES = [
+  {
+    category_code: 'CAFETERIA_FOOD',
+    category_name: 'تموين المطبخ والإطعام',
+    month_period: '2026-02',
+    budgeted_amount: 110000,
+    actual_spent: 98500,
+    variance: -11500,
+    status: 'FAVORABLE',
+    variable_factor: 115,
+  },
+  {
+    category_code: 'STATIONERY',
+    category_name: 'القرطاسية والأدوات',
+    month_period: '2026-02',
+    budgeted_amount: 30000,
+    actual_spent: 32400,
+    variance: 2400,
+    status: 'UNFAVORABLE',
+    variable_factor: 273,
+  },
+  {
+    category_code: 'UTILITIES',
+    category_name: 'الخدمات العامة والصيانة',
+    month_period: '2026-02',
+    budgeted_amount: 45000,
+    actual_spent: 42000,
+    variance: -3000,
+    status: 'FAVORABLE',
+    variable_factor: 2,
+  },
+];
+
+/**
+ * ==============================================================================
+ * CASH HANDOVERS DATASET (Matches backend/apis/handovers.py)
+ * ==============================================================================
+ */
+export const MOCK_HANDOVERS = [
+  {
+    handover_id: 401,
+    receipt_voucher_no: 'HND-CENTER-2026-00401',
+    branch_id: 'CENTER',
+    amount: 55000,
+    handover_date: '2026-02-11 18:30',
+    received_by_name: 'محمد بوري (الخزينة المركزية)',
+    transferred_by: 'سارة منصوري (أمينة الصندوق)',
+    status: 'CONFIRMED',
+    remarks: 'ترحيل إيرادات السداد المسائية من صندوق المركز',
+  },
+  {
+    handover_id: 402,
+    receipt_voucher_no: 'HND-RAWDA-2026-00402',
+    branch_id: 'RAWDA',
+    amount: 42000,
+    handover_date: '2026-02-10 17:15',
+    received_by_name: 'محمد بوري (الخزينة المركزية)',
+    transferred_by: 'كريم بن سعدة (مدير الروضة)',
+    status: 'CONFIRMED',
+    remarks: 'ترحيل اشتراكات الروضة لشهر فيفري',
+  },
+  {
+    handover_id: 403,
+    receipt_voucher_no: 'HND-CENTER-2026-00403',
+    branch_id: 'CENTER',
+    amount: 28000,
+    handover_date: '2026-02-12 11:00',
+    received_by_name: 'في انتظار الاستلام',
+    transferred_by: 'سارة منصوري',
+    status: 'PENDING',
+    remarks: 'تسليم سيولة الفترة الصباحية لليوم',
+  },
+];
+
+/**
+ * ==============================================================================
+ * PRICING PLANS DATASET (Matches backend/apis/pricing_plans.py)
+ * ==============================================================================
+ */
+export const MOCK_PRICING_PLANS = [
+  {
+    plan_id: 1,
+    plan_name: 'خطة السوروبان القياسية (4 أقساط)',
+    branch_id: 'CENTER',
+    program_name: 'الحساب الذهني والسوروبان',
+    standard_installment_price: 8500,
+    installments_count: 4,
+    registration_fee: 2000,
+    cash_discount: 1500,
+    sibling_discount: 1000,
+    annual_prepaid_discount: 2500,
+    total_annual_value: 34000,
+    is_active: true,
+  },
+  {
+    plan_id: 2,
+    plan_name: 'خطة الروضة الشاملة (اشتراك شهري كامل)',
+    branch_id: 'RAWDA',
+    program_name: 'الروضة والحضانة النموذجية',
+    standard_installment_price: 14000,
+    installments_count: 10,
+    registration_fee: 3000,
+    cash_discount: 0,
+    sibling_discount: 1500,
+    annual_prepaid_discount: 8000,
+    total_annual_value: 140000,
+    is_active: true,
+  },
+  {
+    plan_id: 3,
+    plan_name: 'خطة مخبر الروبوتيك والذكاء الاصطناعي',
+    branch_id: 'CENTER',
+    program_name: 'الروبوتيك والبرمجة',
+    standard_installment_price: 12000,
+    installments_count: 3,
+    registration_fee: 2000,
+    cash_discount: 1000,
+    sibling_discount: 1000,
+    annual_prepaid_discount: 2000,
+    total_annual_value: 36000,
+    is_active: true,
+  },
+];
+
+/**
+ * ==============================================================================
+ * ENROLLMENTS DATASET (Matches backend/apis/enrollments.py)
+ * ==============================================================================
+ */
+export const MOCK_ENROLLMENTS = [
+  {
+    enrollment_id: 1,
+    student_id: 101,
+    student_name: 'بن علي ريان',
+    branch_id: 'CENTER',
+    group_name: 'سوروبان الفوج أ1',
+    academic_year: '2025-2026',
+    enrollment_date: '2025-09-02',
+    payment_mode: 'INSTALLMENT',
+    agreed_total_amount: 32500,
+    total_discount_amount: 1500,
+    enrollment_status: 'ACTIVE',
+    invoices_count: 4,
+    paid_invoices_count: 2,
+  },
+  {
+    enrollment_id: 2,
+    student_id: 102,
+    student_name: 'سعيدي أمين',
+    branch_id: 'RAWDA',
+    group_name: 'روضة فوج البراعم',
+    academic_year: '2025-2026',
+    enrollment_date: '2025-09-05',
+    payment_mode: 'MONTHLY',
+    agreed_total_amount: 140000,
+    total_discount_amount: 0,
+    enrollment_status: 'ACTIVE',
+    invoices_count: 10,
+    paid_invoices_count: 6,
+  },
+  {
+    enrollment_id: 3,
+    student_id: 103,
+    student_name: 'مصباحي خديجة',
+    branch_id: 'CENTER',
+    group_name: 'الروبوتيك والذكاء الاصطناعي',
+    academic_year: '2025-2026',
+    enrollment_date: '2025-10-01',
+    payment_mode: 'CASH_UPFRONT',
+    agreed_total_amount: 34000,
+    total_discount_amount: 2000,
+    enrollment_status: 'ACTIVE',
+    invoices_count: 1,
+    paid_invoices_count: 0,
+  },
+];
+
+/**
+ * ==============================================================================
+ * GROUPS & LEVELS DATASET (Matches backend/apis/groups.py & levels.py)
+ * ==============================================================================
+ */
+export const MOCK_LEVELS_LIST = [
+  { level_id: 1, program_name: 'السوروبان', level_name: 'المستوى التمهيدي 1 (الأصابع والمعداد)', code: 'SOR-L1', max_students: 20 },
+  { level_id: 2, program_name: 'السوروبان', level_name: 'المستوى المتقدم 2 (التخييل السريع)', code: 'SOR-L2', max_students: 18 },
+  { level_id: 3, program_name: 'الروبوتيك', level_name: 'الروبوتيك المبتدئ (Lego WeDo)', code: 'ROB-L1', max_students: 16 },
+  { level_id: 4, program_name: 'الروضة', level_name: 'قسم البراعم (3 سنوات)', code: 'RWD-P1', max_students: 22 },
+  { level_id: 5, program_name: 'الروضة', level_name: 'القسم التحضيري (5 سنوات)', code: 'RWD-PREP', max_students: 28 },
+];
+
+export const MOCK_GROUPS_LIST = [
+  {
+    group_id: 1,
+    group_name: 'سوروبان الفوج أ1 (السبت صباحاً)',
+    branch_id: 'CENTER',
+    level_name: 'المستوى التمهيدي 1',
+    lead_teacher: 'فاطمة الزهراء قدور',
+    classroom_name: 'قاعة الخوارزمي',
+    max_capacity: 22,
+    enrolled_count: 20,
+    status: 'ACTIVE',
+  },
+  {
+    group_id: 2,
+    group_name: 'سوروبان الفوج ب2 (الثلاثاء مساءً)',
+    branch_id: 'CENTER',
+    level_name: 'المستوى المتقدم 2',
+    lead_teacher: 'فاطمة الزهراء قدور',
+    classroom_name: 'قاعة الخوارزمي',
+    max_capacity: 18,
+    enrolled_count: 16,
+    status: 'ACTIVE',
+  },
+  {
+    group_id: 3,
+    group_name: 'فوج العباقرة الصغار التحضيري',
+    branch_id: 'RAWDA',
+    level_name: 'القسم التحضيري معتمد',
+    lead_teacher: 'نور الهدى بلخير',
+    classroom_name: 'فوج العباقرة الصغار',
+    max_capacity: 28,
+    enrolled_count: 26,
+    status: 'ACTIVE',
+  },
+  {
+    group_id: 4,
+    group_name: 'مخبر الروبوتيك الفوج الأول',
+    branch_id: 'CENTER',
+    level_name: 'الروبوتيك المبتدئ',
+    lead_teacher: 'ياسين بوقرة',
+    classroom_name: 'مخبر الروبوتيك',
+    max_capacity: 16,
+    enrolled_count: 14,
+    status: 'ACTIVE',
+  },
+];
+
+/**
+ * ==============================================================================
+ * SCHEDULES & SESSIONS DATASET (backend/apis/schedules.py & sessions.py)
+ * ==============================================================================
+ */
+export const MOCK_SCHEDULES = [
+  {
+    schedule_id: 1,
+    group_name: 'سوروبان الفوج أ1',
+    classroom_name: 'قاعة الخوارزمي (C101)',
+    day_of_week: 'السبت',
+    start_time: '09:00',
+    end_time: '11:00',
+    shift_label: 'الفترة الصباحية الأولى',
+    instructor: 'فاطمة الزهراء قدور',
+  },
+  {
+    schedule_id: 2,
+    group_name: 'مخبر الروبوتيك الفوج الأول',
+    classroom_name: 'مخبر الروبوتيك (C102)',
+    day_of_week: 'السبت',
+    start_time: '11:15',
+    end_time: '13:15',
+    shift_label: 'الفترة الصباحية الثانية',
+    instructor: 'ياسين بوقرة',
+  },
+  {
+    schedule_id: 3,
+    group_name: 'سوروبان الفوج ب2',
+    classroom_name: 'قاعة الخوارزمي (C101)',
+    day_of_week: 'الثلاثاء',
+    start_time: '14:00',
+    end_time: '16:00',
+    shift_label: 'فترة ما بعد الظهيرة',
+    instructor: 'فاطمة الزهراء قدور',
+  },
+];
+
+export const MOCK_SESSIONS_LIST = [
+  {
+    session_id: 301,
+    group_name: 'سوروبان الفوج أ1',
+    session_date: '2026-02-10',
+    start_time: '09:00',
+    end_time: '11:00',
+    duration_hours: 2.0,
+    instructor_name: 'فاطمة الزهراء قدور',
+    calculated_wage: 2400,
+    present_count: 19,
+    absent_count: 1,
+    lesson_topic: 'قواعد الجمع المركب مع العدد 5 وتطبيقات التخييل',
+  },
+  {
+    session_id: 302,
+    group_name: 'مخبر الروبوتيك الفوج الأول',
+    session_date: '2026-02-09',
+    start_time: '14:00',
+    end_time: '16:00',
+    duration_hours: 2.0,
+    instructor_name: 'ياسين بوقرة',
+    calculated_wage: 2800,
+    present_count: 14,
+    absent_count: 0,
+    lesson_topic: 'برمجة حساس المسافة بالموجات فوق الصوتية',
+  },
+];
+
+/**
+ * ==============================================================================
+ * COMPETITIONS DATASET (Matches backend/apis/competitions.py)
+ * ==============================================================================
+ */
+export const MOCK_COMPETITIONS = [
+  {
+    competition_id: 1,
+    name: 'المسابقة الوطنية الكبرى للحساب الذهني 2026',
+    scope: 'NATIONAL',
+    branch_id: 'CENTER',
+    event_date: '2026-05-15',
+    location: 'قاعة المؤتمرات الكبرى - الجزائر العاصمة',
+    registration_fee: 3500,
+    total_candidates: 142,
+    total_revenue: 497000,
+    is_active: true,
+    descriptionAr: 'البطولة الوطنية الرسمية بمشاركة 12 ولاية وجوائز تكريمية دولية',
+  },
+  {
+    competition_id: 2,
+    name: 'أولمبياد الروبوتيك والابتكار الصغير',
+    scope: 'REGIONAL',
+    branch_id: 'CENTER',
+    event_date: '2026-06-20',
+    location: 'قصر المعارض الصنوبر البحري',
+    registration_fee: 4000,
+    total_candidates: 48,
+    total_revenue: 192000,
+    is_active: true,
+    descriptionAr: 'تحدي تتبع الخط والمهمات الذكية للفئات العمرية 8-14 سنة',
+  },
+];
+
+export const MOCK_COMPETITION_REGISTRATIONS = [
+  {
+    registration_id: 501,
+    competition_name: 'المسابقة الوطنية الكبرى للحساب الذهني 2026',
+    receipt_code: 'CMP-CENTER-2026-00501',
+    competitor_name: 'بن علي ريان',
+    is_internal_student: true,
+    division_level: 'المستوى 2 (8-10 سنوات)',
+    registration_fee: 3500,
+    payment_status: 'PAID',
+    registration_date: '2026-02-05',
+  },
+  {
+    registration_id: 502,
+    competition_name: 'المسابقة الوطنية الكبرى للحساب الذهني 2026',
+    receipt_code: 'CMP-CENTER-2026-00502',
+    competitor_name: 'بوعلي أكرم (مترشح حر)',
+    is_internal_student: false,
+    division_level: 'المستوى 1 (6-8 سنوات)',
+    registration_fee: 3500,
+    payment_status: 'PAID',
+    registration_date: '2026-02-08',
+  },
+];
+
+/**
+ * ==============================================================================
+ * GUARDIANS & PARENTS DATASET (Matches backend/apis/guardians.py)
+ * ==============================================================================
+ */
+export const MOCK_GUARDIANS = [
+  {
+    guardian_id: 1,
+    full_name_ar: 'بن علي رشيد',
+    full_name_fr: 'Benali Rachid',
+    relationship: 'الأب (Father)',
+    phone_primary: '0550123456',
+    phone_secondary: '0661987654',
+    national_id: '1029384756',
+    address: 'حي النصر، عمارة 4، شقة 12، الجزائر',
+    email: 'rachid.benali@email.dz',
+    wards_count: 2,
+    wards_names: 'ريان بن علي، ياسمين بن علي',
+  },
+  {
+    guardian_id: 2,
+    full_name_ar: 'سعيدي كمال',
+    full_name_fr: 'Saidi Kamel',
+    relationship: 'الأب (Father)',
+    phone_primary: '0770334455',
+    phone_secondary: '0540112233',
+    national_id: '9988776655',
+    address: 'حي السلام، فيلا 8، الجزائر',
+    email: 'kamel.saidi@email.dz',
+    wards_count: 1,
+    wards_names: 'أمين سعيدي',
+  },
+  {
+    guardian_id: 3,
+    full_name_ar: 'مصباحي فتيحة',
+    full_name_fr: 'Mesbahi Fatiha',
+    relationship: 'الأم (Mother)',
+    phone_primary: '0662778899',
+    phone_secondary: '',
+    national_id: '4455667788',
+    address: 'شارع الشهداء، الجزائر',
+    email: 'fatiha.mesbahi@email.dz',
+    wards_count: 1,
+    wards_names: 'خديجة مصباحي',
+  },
+];
+
+/**
+ * ==============================================================================
+ * SYSTEM HEALTH & METADATA DATASET (Matches backend/apis/system.py)
+ * ==============================================================================
+ */
+export const MOCK_SYSTEM_TELEMETRY = {
+  service_status: 'HEALTHY',
+  uptime_seconds: 345600,
+  database: {
+    status: 'CONNECTED',
+    engine: 'MySQL 8.0 (InnoDB)',
+    database_name: 'abaqira',
+    connection_pool: 'Active (10/10)',
+    tables_count: 18,
+    total_records: 24890,
+    latency_ms: 1.4,
+  },
+  metadata: {
+    academy_name_ar: 'أكاديمية وروضة الأطفال العباقرة',
+    academy_name_en: '3abaqira Kids Academy & Daycare',
+    currency: 'DZD',
+    active_year: '2025-2026',
+    platform_version: '3abaqira Enterprise Spatial v2.4',
+    archive_mode: 'READ_WRITE',
+  },
+  infrastructure: {
+    campuses_count: 2,
+    classrooms_count: 12,
+    total_capacity: 320,
+    enrolled_students: 273,
+    active_staff: 26,
+  },
+};
+
+
 

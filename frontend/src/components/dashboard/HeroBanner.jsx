@@ -31,14 +31,22 @@ export function HeroBanner({ onOpenStudentModal, onOpenDrawerModal }) {
             </span>
           </div>
 
-          {/* Heading */}
-          <h1 className="text-xl sm:text-2xl font-bold font-display text-slate-900 tracking-tight leading-tight">
-            منظومة إدارة العباقرة الموحدة (Enterprise Management)
-          </h1>
-
-          <p className="mt-1 text-xs sm:text-sm text-slate-600 font-normal max-w-3xl leading-relaxed">
-            المنصة المركزية لإدارة الأكاديمية والروضة — استغلال كامل لواجهة العمل وتكامل شامل مع بنية Excel لسهولة الترحيل والتشغيل الميداني.
-          </p>
+          {/* Heading with Logo */}
+          <div className="flex items-center gap-3 mt-1">
+            <img
+              src="/assets/branding/logo.webp"
+              alt="3abaqira Logo"
+              className="w-12 h-12 rounded-full border border-blue-300 shadow-xs object-cover flex-shrink-0"
+            />
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold font-display text-slate-900 tracking-tight leading-tight">
+                منظومة إدارة العباقرة الموحدة (Enterprise Management)
+              </h1>
+              <p className="mt-0.5 text-xs sm:text-sm text-slate-600 font-normal max-w-3xl leading-relaxed">
+                المنصة المركزية لإدارة الأكاديمية والروضة — استغلال كامل لواجهة العمل وتكامل شامل مع بنية Excel لسهولة الترحيل والتشغيل الميداني.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Quick Action CTA Buttons */}

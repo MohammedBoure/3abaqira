@@ -11,8 +11,8 @@ import React from 'react';
  * ==============================================================================
  */
 export const logoConfig = {
-  iconPath: '/assets/branding/logo-icon-placeholder.svg',
-  fullPath: '/assets/branding/logo-full-placeholder.svg',
+  iconPath: '/assets/branding/logo.webp',
+  fullPath: '/assets/branding/logo.webp',
   nameLatin: '3ABAQIRA',
   nameArabic: 'أكاديمية وروضة الأطفال العباقرة',
   tagline: 'Enterprise Management Platform',

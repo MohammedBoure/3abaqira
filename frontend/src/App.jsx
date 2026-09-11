@@ -14,6 +14,16 @@ import { AcademicYearsView } from './components/dashboard/AcademicYearsView';
 import { BranchesView } from './components/dashboard/BranchesView';
 import { AuditLogsView } from './components/dashboard/AuditLogsView';
 import { AuthSecurityView } from './components/dashboard/AuthSecurityView';
+import { InvoicesPaymentsView } from './components/dashboard/InvoicesPaymentsView';
+import { BudgetsExpensesView } from './components/dashboard/BudgetsExpensesView';
+import { HandoversView } from './components/dashboard/HandoversView';
+import { PricingPlansView } from './components/dashboard/PricingPlansView';
+import { EnrollmentsView } from './components/dashboard/EnrollmentsView';
+import { GroupsLevelsView } from './components/dashboard/GroupsLevelsView';
+import { SchedulesSessionsView } from './components/dashboard/SchedulesSessionsView';
+import { CompetitionsView } from './components/dashboard/CompetitionsView';
+import { GuardiansView } from './components/dashboard/GuardiansView';
+import { SystemHealthView } from './components/dashboard/SystemHealthView';
 import { StudentRegistrationModal, CashDrawerModal } from './components/dashboard/PreviewModals';
 import {
   Database,
@@ -28,6 +38,15 @@ import {
   Building2,
   ShieldAlert,
   KeyRound,
+  Receipt,
+  CreditCard,
+  Layers,
+  ArrowLeftRight,
+  TrendingUp,
+  Calendar,
+  Trophy,
+  Activity,
+  UserCheck,
 } from 'lucide-react';
 
 export function App() {
@@ -91,6 +110,46 @@ export function App() {
       title: 'إدارة الهوية، الصلاحيات والأمان (Authentication & Security)',
       eyebrow: 'SECURITY & JWT / backend/apis/auth.py',
     },
+    'invoices-payments': {
+      title: 'سجل الفواتير، الأقساط وسندات القبض (Invoices & Payments Ledger)',
+      eyebrow: 'FINANCE / backend/apis/invoices.py & payments.py',
+    },
+    'budgets-expenses': {
+      title: 'الميزانية التقديرية وسجل النفقات (Budgets & Expense Variances)',
+      eyebrow: 'COST CONTROL / backend/apis/budgets.py & expenses.py',
+    },
+    'handovers': {
+      title: 'ترحيل وتسليم سيولة الصندوق والخزينة (Cash Handovers)',
+      eyebrow: 'SAFE CUSTODY / backend/apis/handovers.py & registers.py',
+    },
+    'pricing-plans': {
+      title: 'خطط التسعير وهيكلة الأقساط والتخفيضات (Pricing Plans & Tariffs)',
+      eyebrow: 'REVENUE ARCHITECTURE / backend/apis/pricing_plans.py',
+    },
+    'enrollments': {
+      title: 'تسجيل الاشتراكات والعقود المالية (Enrolled Student Commitments)',
+      eyebrow: 'CONTRACTS / backend/apis/enrollments.py',
+    },
+    'groups-levels': {
+      title: 'الأفواج، المستويات وتوزيع القاعات الدراسية (Groups, Levels & Rooms)',
+      eyebrow: 'PEDAGOGY / backend/apis/groups.py, levels.py & classrooms.py',
+    },
+    'schedules-sessions': {
+      title: 'التوقيت الأسبوعي، تتبع الحصص والحضور (Schedules & Sessions)',
+      eyebrow: 'TIMETABLE & ATTENDANCE / backend/apis/schedules.py & sessions.py',
+    },
+    'competitions': {
+      title: 'المسابقات والبطولات وتوليد الوصولات (Competitions & Events)',
+      eyebrow: 'TOURNAMENTS / backend/apis/competitions.py',
+    },
+    'guardians': {
+      title: 'سجل أولياء الأمور وجهات الاتصال (Guardians Master Directory)',
+      eyebrow: 'PARENTS & CONTACTS / backend/apis/guardians.py',
+    },
+    'system-health': {
+      title: 'صحة الخادم، قاعدة البيانات والإعدادات (System Telemetry & Metadata)',
+      eyebrow: 'INFRASTRUCTURE / backend/apis/system.py',
+    },
   };
 
   return (
@@ -147,6 +206,22 @@ export function App() {
               <span>جداول البيانات (Excel)</span>
             </button>
             <button
+              onClick={() => setActiveView('invoices-payments')}
+              className={activeView === 'invoices-payments' ? 'active' : ''}
+              title="الفواتير والمدفوعات"
+            >
+              <Receipt className="w-3.5 h-3.5" />
+              <span>الفواتير والأقساط</span>
+            </button>
+            <button
+              onClick={() => setActiveView('schedules-sessions')}
+              className={activeView === 'schedules-sessions' ? 'active' : ''}
+              title="التوقيت والحضور"
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              <span>التوقيت والحصص</span>
+            </button>
+            <button
               onClick={() => setActiveView('analytics')}
               className={activeView === 'analytics' ? 'active' : ''}
               title="مؤشرات الأداء"
@@ -163,14 +238,6 @@ export function App() {
               <span>الخزينة</span>
             </button>
             <button
-              onClick={() => setActiveView('academic-years')}
-              className={activeView === 'academic-years' ? 'active' : ''}
-              title="مواسم وسنوات النظام"
-            >
-              <CalendarRange className="w-3.5 h-3.5" />
-              <span>المواسم الأكاديمية</span>
-            </button>
-            <button
               onClick={() => setActiveView('branches')}
               className={activeView === 'branches' ? 'active' : ''}
               title="الفروع والمقرات"
@@ -179,20 +246,12 @@ export function App() {
               <span>الفروع</span>
             </button>
             <button
-              onClick={() => setActiveView('audit-trail')}
-              className={activeView === 'audit-trail' ? 'active' : ''}
-              title="سجل الرقابة والتتبع"
+              onClick={() => setActiveView('system-health')}
+              className={activeView === 'system-health' ? 'active' : ''}
+              title="صحة الخادم والبارامترات"
             >
-              <ShieldAlert className="w-3.5 h-3.5" />
-              <span>الرقابة (Audit)</span>
-            </button>
-            <button
-              onClick={() => setActiveView('auth-security')}
-              className={activeView === 'auth-security' ? 'active' : ''}
-              title="الهوية والأمان"
-            >
-              <KeyRound className="w-3.5 h-3.5" />
-              <span>الأمان (Auth)</span>
+              <Activity className="w-3.5 h-3.5" />
+              <span>النظام (System)</span>
             </button>
           </div>
         </div>
@@ -271,6 +330,56 @@ export function App() {
           {activeView === 'auth-security' && (
             <AuthSecurityView />
           )}
+
+          {/* View 11: Invoices & Payments (backend/apis/invoices.py & payments.py) */}
+          {activeView === 'invoices-payments' && (
+            <InvoicesPaymentsView />
+          )}
+
+          {/* View 12: Budgets & Expenses (backend/apis/budgets.py & expenses.py) */}
+          {activeView === 'budgets-expenses' && (
+            <BudgetsExpensesView />
+          )}
+
+          {/* View 13: Cash Handovers & Registers (backend/apis/handovers.py & registers.py) */}
+          {activeView === 'handovers' && (
+            <HandoversView />
+          )}
+
+          {/* View 14: Pricing Plans & Tariffs (backend/apis/pricing_plans.py) */}
+          {activeView === 'pricing-plans' && (
+            <PricingPlansView />
+          )}
+
+          {/* View 15: Enrollments & Student Commitments (backend/apis/enrollments.py) */}
+          {activeView === 'enrollments' && (
+            <EnrollmentsView />
+          )}
+
+          {/* View 16: Groups, Levels & Classrooms (backend/apis/groups.py, levels.py & classrooms.py) */}
+          {activeView === 'groups-levels' && (
+            <GroupsLevelsView />
+          )}
+
+          {/* View 17: Schedules & Sessions Attendance (backend/apis/schedules.py & sessions.py) */}
+          {activeView === 'schedules-sessions' && (
+            <SchedulesSessionsView />
+          )}
+
+          {/* View 18: Competitions & Tournaments (backend/apis/competitions.py) */}
+          {activeView === 'competitions' && (
+            <CompetitionsView />
+          )}
+
+          {/* View 19: Guardians & Parents (backend/apis/guardians.py) */}
+          {activeView === 'guardians' && (
+            <GuardiansView />
+          )}
+
+          {/* View 20: System Health & Metadata (backend/apis/system.py) */}
+          {activeView === 'system-health' && (
+            <SystemHealthView />
+          )}
         </main>
 
         {/* Spatial Knowledge Workspace Blue Status Footer */}
@@ -279,7 +388,7 @@ export function App() {
             <span className="status-dot" />
             <span className="font-semibold text-slate-800">قاعدة البيانات: MySQL (abaqira)</span>
             <span className="status-separator">•</span>
-            <span className="hidden sm:inline">نظام التخزين المحلي المتزامن</span>
+            <span className="hidden sm:inline">نظام التخزين المتكامل لجميع الواجهات والـ APIs</span>
             <span className="status-separator hidden sm:inline">•</span>
             <span className="text-blue-900 font-mono text-[10px]">3abaqira Spatial Blue v2.4</span>
           </div>
@@ -314,4 +423,3 @@ export function App() {
 }
 
 export default App;
-

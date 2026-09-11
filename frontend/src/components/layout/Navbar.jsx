@@ -33,6 +33,16 @@ export function Navbar({
     'branches': 'إدارة الفروع والمقرات والقاعات (Branches)',
     'audit-trail': 'سجل الرقابة والتتبع الأمني (Audit Trail)',
     'auth-security': 'إدارة الهوية والصلاحيات والأمان (Auth & Security)',
+    'invoices-payments': 'سجل الفواتير وسندات القبض (Invoices & Payments)',
+    'budgets-expenses': 'الميزانية التقديرية وسجل النفقات (Budgets & Expenses)',
+    'handovers': 'ترحيل سيولة الصندوق والخزينة (Cash Handovers)',
+    'pricing-plans': 'خطط التسعير والأقساط المعيارية (Pricing Plans)',
+    'enrollments': 'تسجيل اشتراكات الطلاب المعتمدة (Enrollments)',
+    'groups-levels': 'الأفواج، المستويات وتوزيع القاعات (Groups & Levels)',
+    'schedules-sessions': 'التوقيت الأسبوعي والحصص المنفذة (Schedules & Sessions)',
+    'competitions': 'المسابقات والبطولات وتوليد الوصولات (Competitions)',
+    'guardians': 'دليل أولياء الأمور وجهات الاتصال (Guardians Registry)',
+    'system-health': 'صحة الخادم، قاعدة البيانات والبارامترات (System Telemetry)',
   };
 
   return (
@@ -48,6 +58,11 @@ export function Navbar({
         </button>
 
         <div className="flex items-center gap-2 text-xs text-slate-500">
+          <img
+            src="/assets/branding/logo.webp"
+            alt="3abaqira"
+            className="w-5 h-5 rounded-full object-cover border border-blue-200"
+          />
           <span className="font-serif font-bold text-blue-950">3abaqira</span>
           <span className="text-slate-300">/</span>
           <span className="text-slate-700 font-semibold truncate max-w-[200px] sm:max-w-[320px]">

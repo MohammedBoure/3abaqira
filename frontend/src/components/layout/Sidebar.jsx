@@ -16,6 +16,15 @@ import {
   CalendarRange,
   ShieldAlert,
   KeyRound,
+  Receipt,
+  CreditCard,
+  Layers,
+  ArrowLeftRight,
+  TrendingUp,
+  Calendar,
+  Trophy,
+  Activity,
+  Wallet,
 } from 'lucide-react';
 import { MOCK_BRANCHES } from '../../mock/mockData';
 
@@ -27,35 +36,53 @@ export function Sidebar({
   isCollapsed,
   onToggleCollapse,
 }) {
-  const navModules = [
+  const opModules = [
     { id: 'excel-grid', labelAr: 'جداول البيانات (Excel Grid)', icon: Table, tag: '26 col' },
     { id: 'analytics', labelAr: 'التحليلات القيادية (Analytics)', icon: BarChart3, tag: 'BI' },
-    { id: 'treasury', labelAr: 'الخزينة والصندوق (Treasury)', icon: Coins, tag: '184.5k' },
-    { id: 'programs', labelAr: 'دليل البرامج والأفواج', icon: GraduationCap, tag: '5' },
-    { id: 'payroll', labelAr: 'سجل الأجور والرواتب', icon: Users, tag: 'HR' },
+    { id: 'schedules-sessions', labelAr: 'التوقيت والحصص (Schedules)', icon: Calendar, tag: 'Live' },
+    { id: 'enrollments', labelAr: 'تسجيل الاشتراكات (Enroll)', icon: UserCheck, tag: 'Active' },
+    { id: 'guardians', labelAr: 'أولياء الأمور (Guardians)', icon: Users, tag: 'Parents' },
+    { id: 'competitions', labelAr: 'المسابقات والبطولات', icon: Trophy, tag: 'Events' },
+  ];
+
+  const finModules = [
+    { id: 'invoices-payments', labelAr: 'الفواتير والمدفوعات', icon: Receipt, tag: 'Dues' },
+    { id: 'treasury', labelAr: 'حركة الخزينة والصندوق', icon: Coins, tag: 'Cash' },
+    { id: 'budgets-expenses', labelAr: 'الميزانية والنفقات', icon: TrendingUp, tag: 'Costs' },
+    { id: 'handovers', labelAr: 'ترحيل السيولة (Handovers)', icon: ArrowLeftRight, tag: 'Vault' },
+    { id: 'pricing-plans', labelAr: 'خطط التسعير والأقساط', icon: CreditCard, tag: 'Tariffs' },
+    { id: 'payroll', labelAr: 'سجل الأجور والرواتب', icon: Wallet, tag: 'HR' },
     { id: 'provisions', labelAr: 'تموين ومطعم الروضة', icon: UtensilsCrossed, tag: 'Daily' },
   ];
 
-  const apiModules = [
+  const academicModules = [
+    { id: 'groups-levels', labelAr: 'الأفواج والمستويات', icon: Layers, tag: 'Cohorts' },
+    { id: 'programs', labelAr: 'دليل البرامج الأكاديمية', icon: GraduationCap, tag: '5 Progs' },
     { id: 'academic-years', labelAr: 'المواسم الأكاديمية (Years)', icon: CalendarRange, tag: 'Fiscal' },
-    { id: 'branches', labelAr: 'المقرات والقاعات (Branches)', icon: Building2, tag: '2 Sites' },
-    { id: 'audit-trail', labelAr: 'سجل الرقابة (Audit Trail)', icon: ShieldAlert, tag: 'Logs' },
-    { id: 'auth-security', labelAr: 'الهوية والأمان (Auth/Sec)', icon: KeyRound, tag: 'JWT' },
   ];
 
-  const allItems = [...navModules, ...apiModules];
+  const sysModules = [
+    { id: 'branches', labelAr: 'المقرات والقاعات (Branches)', icon: Building2, tag: '2 Sites' },
+    { id: 'system-health', labelAr: 'صحة الخادم والبارامترات', icon: Activity, tag: 'Telemetry' },
+    { id: 'audit-trail', labelAr: 'سجل الرقابة والتتبع (Audit)', icon: ShieldAlert, tag: 'Logs' },
+    { id: 'auth-security', labelAr: 'الهوية والصلاحيات والأمان', icon: KeyRound, tag: 'JWT' },
+  ];
+
+  const allItems = [...opModules, ...finModules, ...academicModules, ...sysModules];
 
   if (isCollapsed) {
     return (
       <aside className="w-12 border-e border-slate-200 bg-slate-50/90 flex flex-col items-center py-3 flex-shrink-0 z-30 select-none overflow-y-auto">
         <button
           onClick={onToggleCollapse}
-          className="icon-button mb-4 text-blue-900"
+          className="mb-4 hover:scale-105 transition-transform"
           title="توسيع القائمة الجانبية"
         >
-          <div className="brand-symbol">
-            <i /><i /><i /><i /><i /><i />
-          </div>
+          <img
+            src="/assets/branding/logo.webp"
+            alt="3abaqira Logo"
+            className="w-8 h-8 rounded-full border border-blue-300 shadow-2xs object-cover"
+          />
         </button>
 
         <div className="flex flex-col gap-1.5 w-full items-center">
@@ -83,19 +110,21 @@ export function Sidebar({
   }
 
   return (
-    <aside className="w-60 border-e border-slate-200 bg-[#fbfcfd] flex flex-col flex-shrink-0 z-30 select-none">
-      {/* 1. Brand Header (Signature Spatial Starburst Emblem) */}
-      <div className="p-4 pb-3 border-b border-slate-200/80 flex items-center justify-between">
+    <aside className="w-64 border-e border-slate-200 bg-[#fbfcfd] flex flex-col flex-shrink-0 z-30 select-none">
+      {/* 1. Brand Header with Official Logo */}
+      <div className="p-3.5 pb-3 border-b border-slate-200/80 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="brand-symbol">
-            <i /><i /><i /><i /><i /><i />
-          </div>
+          <img
+            src="/assets/branding/logo.webp"
+            alt="3abaqira Official Logo"
+            className="w-9 h-9 rounded-full border border-blue-300 shadow-xs object-cover flex-shrink-0"
+          />
           <div className="flex flex-col">
-            <span className="font-serif font-bold text-lg text-blue-950 tracking-tight leading-none">
+            <span className="font-serif font-bold text-base text-blue-950 tracking-tight leading-none">
               3abaqira<span className="text-blue-600 font-sans">.</span>
             </span>
-            <span className="text-[9px] text-slate-400 font-mono tracking-wider mt-0.5">
-              SPATIAL WORKSPACE
+            <span className="text-[9px] text-slate-500 font-arabic mt-0.5 leading-tight truncate max-w-[130px]">
+              أكاديمية الأطفال العباقرة
             </span>
           </div>
         </div>
@@ -110,7 +139,7 @@ export function Sidebar({
       </div>
 
       {/* 2. Workspace Branch Switcher Card */}
-      <div className="p-3 border-b border-slate-200/80">
+      <div className="p-2.5 border-b border-slate-200/80">
         <div className="p-2 bg-blue-50/70 border border-blue-200/80 rounded-[6px] flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-[4px] bg-blue-900 text-white flex items-center justify-center font-serif font-bold text-xs shadow-xs">
             3A
@@ -131,12 +160,13 @@ export function Sidebar({
         </div>
       </div>
 
-      {/* 3. Navigation Links (Modules & Sheets) */}
-      <div className="flex-1 overflow-y-auto p-2.5 space-y-4">
+      {/* 3. Navigation Links (Structured ERP Sections) */}
+      <div className="flex-1 overflow-y-auto p-2.5 space-y-3.5">
+        {/* Operations & Attendance */}
         <div>
-          <span className="eyebrow px-2 block mb-1.5">MODULES & SHEETS</span>
+          <span className="eyebrow px-2 block mb-1">OPERATIONS & SHEETS</span>
           <nav className="space-y-0.5">
-            {navModules.map((item) => {
+            {opModules.map((item) => {
               const Icon = item.icon;
               const isActive = activeView === item.id;
               return (
@@ -156,11 +186,59 @@ export function Sidebar({
           </nav>
         </div>
 
-        {/* System & Backend APIs Section */}
+        {/* Financial & Accounting */}
         <div>
-          <span className="eyebrow px-2 block mb-1.5">SYSTEM APIS & CONTROL</span>
+          <span className="eyebrow px-2 block mb-1">FINANCE & BILLING</span>
           <nav className="space-y-0.5">
-            {apiModules.map((item) => {
+            {finModules.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeView === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => onSelectView(item.id)}
+                  className={`nav-item ${isActive ? 'nav-active' : ''}`}
+                >
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-900' : 'text-slate-500'}`} />
+                  <span className="truncate flex-1">{item.labelAr}</span>
+                  <span className={`tag ${isActive ? 'tag-blue' : ''} text-[9px] font-mono py-0`}>
+                    {item.tag}
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Academic & Curriculum */}
+        <div>
+          <span className="eyebrow px-2 block mb-1">ACADEMIC & CURRICULUM</span>
+          <nav className="space-y-0.5">
+            {academicModules.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeView === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => onSelectView(item.id)}
+                  className={`nav-item ${isActive ? 'nav-active' : ''}`}
+                >
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-900' : 'text-slate-500'}`} />
+                  <span className="truncate flex-1">{item.labelAr}</span>
+                  <span className={`tag ${isActive ? 'tag-blue' : ''} text-[9px] font-mono py-0`}>
+                    {item.tag}
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* System & Telemetry */}
+        <div>
+          <span className="eyebrow px-2 block mb-1">SYSTEM & APIS</span>
+          <nav className="space-y-0.5">
+            {sysModules.map((item) => {
               const Icon = item.icon;
               const isActive = activeView === item.id;
               return (
@@ -182,7 +260,7 @@ export function Sidebar({
 
         {/* Branch Filter Segment */}
         <div>
-          <span className="eyebrow px-2 block mb-1.5">BRANCH SCOPE / تصفية المقر</span>
+          <span className="eyebrow px-2 block mb-1">BRANCH SCOPE / تصفية المقر</span>
           <div className="space-y-0.5">
             {MOCK_BRANCHES.map((b) => {
               const isCurrent = selectedBranch === b.id;
@@ -206,23 +284,23 @@ export function Sidebar({
 
       {/* 4. Local System Health Footer Card */}
       <div className="p-3 border-t border-slate-200/80 bg-slate-50/50">
-        <div className="flex items-center gap-2 text-xs text-slate-600 mb-2">
+        <div className="flex items-center gap-2 text-xs text-slate-600 mb-1">
           <Database className="w-3.5 h-3.5 text-blue-900" />
           <span className="font-semibold text-slate-800">قاعدة البيانات: abaqira</span>
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 ms-auto" />
         </div>
         <p className="text-[10px] text-slate-500 font-normal leading-relaxed">
-          اتصال مشفر ومطابق مع جداول Excel القديمة
+          اتصال متزامن وشامل لجميع الواجهات والـ APIs
         </p>
 
         {/* User Pill */}
-        <div className="mt-3 pt-2.5 border-t border-slate-200 flex items-center justify-between">
+        <div className="mt-2 pt-2 border-t border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-[3px] bg-slate-200 text-slate-700 flex items-center justify-center font-mono font-bold text-[10px]">
-              AD
+            <div className="w-6 h-6 rounded-[3px] bg-blue-900 text-white flex items-center justify-center font-mono font-bold text-[10px]">
+              MB
             </div>
             <div className="flex flex-col text-start">
-              <span className="text-[11px] font-bold text-slate-900 leading-none">مدير النظام</span>
+              <span className="text-[11px] font-bold text-slate-900 leading-none">محمد بوري</span>
               <span className="text-[9px] text-slate-400 font-mono">SUPER_ADMIN</span>
             </div>
           </div>
