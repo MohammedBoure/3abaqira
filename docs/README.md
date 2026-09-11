@@ -11,5 +11,7 @@ This directory contains complete technical documentation and specifications extr
 | [database_schema_reference.md](file:///C:/Users/moham/Desktop/3abaqira/docs/database_schema_reference.md) | Complete 3NF relational database architecture (SQL DDL, ER diagram, foreign keys, constraints, and migration plan) unifying both Academy and Kindergarten operations. |
 | [data_dictionary.md](file:///C:/Users/moham/Desktop/3abaqira/docs/data_dictionary.md) | Bilingual (Arabic / English) data dictionary mapping every Excel column header to its normalized SQL entity, attribute name, data type, and business validation rules. |
 | [schema.sql](file:///C:/Users/moham/Desktop/3abaqira/docs/schema.sql) | Production-ready PostgreSQL DDL script containing 30 normalized tables, automated integrity triggers, performance indexes, financial views, and bootstrap seed data. |
+| [frontend_plan.md](file:///C:/Users/moham/Desktop/3abaqira/docs/frontend_plan.md) | High-fidelity visual prototype and architectural design plan for the frontend application, defining the primary blue color palette, swappable Arabic & Latin typography tokens, decoupled brand logo component, and interactive 3D WebGL background engine. |
 | [excel_files/](file:///C:/Users/moham/Desktop/3abaqira/docs/excel_files) | Subdirectory housing the source legacy Excel workbooks (`center.xlsx` and `rawda.xlsx`). |
+
 
