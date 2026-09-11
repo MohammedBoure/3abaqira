@@ -7,6 +7,7 @@ Calculates a SHA256 schema fingerprint to bypass redundant checks on subsequent 
 
 import hashlib
 import logging
+import re
 
 from .tables import ALL_SCHEMA_QUERIES
 from .views_indexes import VIEW_QUERIES, INDEX_QUERIES
@@ -105,14 +106,28 @@ class SchemaInitializer:
                 (SCHEMA_FINGERPRINT_KEY, fingerprint)
             )
 
-    @staticmethod
-    def _run_queries(cursor, queries: list, label: str, ignore_errors: bool = False) -> None:
-        """Executes a list of queries sequentially with clean logging."""
+    def _run_queries(self, cursor, queries: list, label: str, ignore_errors: bool = False) -> None:
+        """Executes a list of queries sequentially with clean logging and cross-dialect adaptation."""
         logger.info(f"Executing {label} ({len(queries)} queries)...")
+        is_sqlite = (getattr(self._cm, "db_type", "sqlite") == "sqlite")
+
         for query in queries:
             clean_q = query.strip()
             if not clean_q:
                 continue
+
+            if is_sqlite:
+                # SQLite view translation: CREATE OR REPLACE VIEW -> DROP VIEW IF EXISTS + CREATE VIEW
+                m = re.search(r'CREATE\s+OR\s+REPLACE\s+VIEW\s+(\w+)\s+AS', clean_q, re.IGNORECASE)
+                if m:
+                    view_name = m.group(1)
+                    try:
+                        cursor.execute(f"DROP VIEW IF EXISTS {view_name};")
+                    except Exception:
+                        pass
+                    clean_q = re.sub(r'CREATE\s+OR\s+REPLACE\s+VIEW', 'CREATE VIEW', clean_q, flags=re.IGNORECASE)
+                clean_q = clean_q.replace("ILIKE", "LIKE")
+
             try:
                 cursor.execute(clean_q)
                 if hasattr(cursor, 'nextset'):

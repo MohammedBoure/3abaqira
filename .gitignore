@@ -20,3 +20,10 @@ temp_restore_csv/
 temp_view_archive/
 archive_view.flag
 *.zip
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+3abaqira_dev.db
+

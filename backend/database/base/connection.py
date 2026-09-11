@@ -1,11 +1,15 @@
 """
 backend/database/base/connection.py
 ------------------------------------
-Connection Manager supporting Connection Pooling (PostgreSQL / MySQL) and SQLAlchemy Engine.
+Connection Manager supporting Connection Pooling (PostgreSQL / MySQL / SQLite) and SQLAlchemy Engine.
 Provides thread-safe connection context managers with auto-commit/rollback semantics.
+Includes transparent SQLite compatibility layer and automatic development fallback
+when external database engines are unreachable.
 """
 
 import os
+import re
+import sqlite3
 import logging
 import urllib.parse
 from contextlib import contextmanager
@@ -20,6 +24,86 @@ from .config import get_external_path
 logger = logging.getLogger("ABAQIRA_SYS")
 
 
+# =============================================================================
+# SQLITE COMPATIBILITY WRAPPERS
+# =============================================================================
+
+class SQLiteCompatCursor:
+    """
+    Wraps sqlite3.Cursor to provide psycopg2-compatible parameter placeholder
+    translation (%s -> ?), ILIKE -> LIKE mapping, and standard row description.
+    """
+
+    def __init__(self, cur: sqlite3.Cursor):
+        self._cur = cur
+
+    def execute(self, sql: str, params: Optional[Any] = None):
+        cleaned_sql = sql.replace("ILIKE", "LIKE")
+        if params is not None:
+            # Substitute %s with ? for SQLite qmark parameter style
+            cleaned_sql = re.sub(r'(?<!%)(?:%%)*%s', '?', cleaned_sql)
+            return self._cur.execute(cleaned_sql, params)
+        return self._cur.execute(cleaned_sql)
+
+    def executemany(self, sql: str, seq_of_params):
+        cleaned_sql = re.sub(r'(?<!%)(?:%%)*%s', '?', sql.replace("ILIKE", "LIKE"))
+        return self._cur.executemany(cleaned_sql, seq_of_params)
+
+    def fetchone(self):
+        return self._cur.fetchone()
+
+    def fetchall(self):
+        return self._cur.fetchall()
+
+    def fetchmany(self, size: Optional[int] = None):
+        return self._cur.fetchmany(size) if size else self._cur.fetchmany()
+
+    @property
+    def description(self):
+        return self._cur.description
+
+    @property
+    def rowcount(self):
+        return self._cur.rowcount
+
+    def close(self):
+        self._cur.close()
+
+    def __getattr__(self, name):
+        return getattr(self._cur, name)
+
+
+class SQLiteCompatConnection:
+    """
+    Wraps sqlite3.Connection with auto-commit/rollback semantics and
+    custom functions for PostgreSQL compatibility (e.g. TO_CHAR).
+    """
+
+    def __init__(self, conn: sqlite3.Connection):
+        self._conn = conn
+
+    def cursor(self):
+        return SQLiteCompatCursor(self._conn.cursor())
+
+    def commit(self):
+        self._conn.commit()
+
+    def rollback(self):
+        self._conn.rollback()
+
+    def close(self):
+        self._conn.close()
+
+    def __getattr__(self, name):
+        return getattr(self._conn, name)
+
+
+# =============================================================================
+# CENTRAL CONNECTION MANAGER
+# =============================================================================
+
+from typing import Optional, Any
+
 class ConnectionManager:
     """
     Manages connection pooling and the underlying SQLAlchemy Engine.
@@ -31,7 +115,7 @@ class ConnectionManager:
 
     def __init__(self, db_config: dict):
         self.db_config = db_config
-        self.db_type = db_config.get('type', 'postgresql').lower()
+        self.db_type = db_config.get('type', 'sqlite').lower()
         self._init_pool()
         self._init_engine()
 
@@ -42,28 +126,34 @@ class ConnectionManager:
 
         try:
             if self.db_type in ('postgresql', 'postgres'):
-                # Try psycopg2 pool if available, otherwise rely on SQLAlchemy engine pool
                 try:
                     import psycopg2
                     from psycopg2 import pool as pg_pool
                     ConnectionManager._pool = pg_pool.ThreadedConnectionPool(
                         minconn=2,
                         maxconn=20,
-                        host=self.db_config['host'],
-                        port=self.db_config['port'],
-                        user=self.db_config['user'],
-                        password=self.db_config['password'],
-                        database=self.db_config['database']
+                        host=self.db_config.get('host', 'localhost'),
+                        port=self.db_config.get('port', 5432),
+                        user=self.db_config.get('user', 'postgres'),
+                        password=self.db_config.get('password', ''),
+                        database=self.db_config.get('database', 'abaqira_db'),
+                        connect_timeout=3,
                     )
                     logger.info("🚀 PostgreSQL ThreadedConnectionPool initialized successfully.")
                 except ImportError:
                     logger.warning("psycopg2 not directly installed; delegating pool to SQLAlchemy Engine.")
                     ConnectionManager._pool = "SQLALCHEMY_DELEGATED"
+                except Exception as conn_err:
+                    logger.warning(
+                        f"⚠️ PostgreSQL server unreachable ({conn_err}). "
+                        f"Switching to local SQLite development database."
+                    )
+                    self._fallback_to_sqlite()
 
             elif self.db_type == 'mysql':
                 import mysql.connector
                 from mysql.connector import pooling
-                conn_cfg = {k: v for k, v in self.db_config.items() if k != 'type'}
+                conn_cfg = {k: v for k, v in self.db_config.items() if k not in ('type', 'url')}
                 ConnectionManager._pool = pooling.MySQLConnectionPool(
                     pool_name="abaqira_pool",
                     pool_size=10,
@@ -72,17 +162,44 @@ class ConnectionManager:
                     **conn_cfg
                 )
                 logger.info("🚀 MySQL Connection Pool initialized successfully.")
+
+            elif self.db_type == 'sqlite':
+                ConnectionManager._pool = "SQLITE_DIRECT"
+                logger.info("🚀 SQLite database engine initialized.")
+
             else:
                 ConnectionManager._pool = "SQLALCHEMY_DELEGATED"
+
         except Exception as e:
-            logger.error(f"❌ Failed to initialize Connection Pool: {e}")
-            # Fallback to engine delegation
-            ConnectionManager._pool = "SQLALCHEMY_DELEGATED"
+            logger.warning(f"Connection Pool notice: {e}; falling back to SQLite.")
+            self._fallback_to_sqlite()
+
+    def _fallback_to_sqlite(self) -> None:
+        """Gracefully switches the active connection manager to SQLite mode."""
+        self.db_type = 'sqlite'
+        sqlite_file = self.db_config.get('database')
+        if not sqlite_file or not str(sqlite_file).endswith(('.db', '.sqlite')):
+            self.db_config['database'] = get_external_path('3abaqira_dev.db')
+        ConnectionManager._pool = "SQLITE_DIRECT"
+        logger.info(f"✅ Active database switched to SQLite: '{self.db_config['database']}'")
 
     # ── SQLAlchemy Engine Initialization ──────────────────────────────────────
     def _init_engine(self) -> None:
         if ConnectionManager._engine is not None:
             self.engine = ConnectionManager._engine
+            return
+
+        if self.db_type == 'sqlite':
+            try:
+                from sqlalchemy import create_engine
+                db_path = self.db_config.get('database', get_external_path('3abaqira_dev.db'))
+                ConnectionManager._engine = create_engine(
+                    f"sqlite:///{db_path}",
+                    connect_args={"check_same_thread": False},
+                )
+                self.engine = ConnectionManager._engine
+            except Exception:
+                self.engine = None
             return
 
         try:
@@ -94,7 +211,7 @@ class ConnectionManager:
                 user = self.db_config.get('user', 'postgres')
                 host = self.db_config.get('host', 'localhost')
                 port = self.db_config.get('port', 5432)
-                db_name = self.db_config.get('database', '3abaqira_db')
+                db_name = self.db_config.get('database', 'abaqira_db')
 
                 if self.db_type in ('postgresql', 'postgres'):
                     db_url = f"postgresql+psycopg2://{user}:{pw}@{host}:{port}/{db_name}"
@@ -110,7 +227,7 @@ class ConnectionManager:
             self.engine = ConnectionManager._engine
             logger.info("🚀 SQLAlchemy Engine initialized successfully.")
         except Exception as e:
-            logger.warning(f"SQLAlchemy Engine warning (safe if drivers not installed yet): {e}")
+            logger.warning(f"SQLAlchemy Engine warning: {e}")
             self.engine = None
 
     # ── Context Manager & Raw Connections ─────────────────────────────────────
@@ -132,23 +249,55 @@ class ConnectionManager:
             if conn:
                 self.release_connection(conn)
 
+    def _get_sqlite_connection(self) -> SQLiteCompatConnection:
+        """Spawns an isolated, thread-safe SQLite connection with compatibility extensions."""
+        db_path = self.db_config.get('database') or get_external_path('3abaqira_dev.db')
+        raw = sqlite3.connect(db_path, check_same_thread=False, timeout=10.0)
+        raw.execute("PRAGMA foreign_keys = ON;")
+
+        # Custom PostgreSQL compatibility function: TO_CHAR(date, 'YYYY-MM')
+        def _to_char(val, fmt):
+            if not val:
+                return ""
+            s = str(val)
+            if fmt == "YYYY-MM":
+                return s[:7]
+            return s
+
+        raw.create_function("TO_CHAR", 2, _to_char)
+        return SQLiteCompatConnection(raw)
+
     def get_raw_connection(self):
-        """Checkout a raw connection from the pool or engine. Caller is responsible for release."""
-        if ConnectionManager._pool is not None and ConnectionManager._pool != "SQLALCHEMY_DELEGATED":
+        """Checkout a raw connection from the pool, engine, or SQLite."""
+        if self.db_type == 'sqlite' or ConnectionManager._pool == "SQLITE_DIRECT":
+            return self._get_sqlite_connection()
+
+        if ConnectionManager._pool is not None and ConnectionManager._pool not in ("SQLALCHEMY_DELEGATED", "SQLITE_DIRECT"):
             if self.db_type in ('postgresql', 'postgres'):
                 return ConnectionManager._pool.getconn()
             elif self.db_type == 'mysql':
                 return ConnectionManager._pool.get_connection()
 
         if self.engine is not None:
-            return self.engine.raw_connection()
+            try:
+                return self.engine.raw_connection()
+            except Exception as e:
+                logger.warning(f"Engine connection failed: {e}; falling back to SQLite.")
+                self._fallback_to_sqlite()
+                return self._get_sqlite_connection()
 
-        raise RuntimeError("No active database pool or engine connection available.")
+        # Final safety fallback to SQLite
+        self._fallback_to_sqlite()
+        return self._get_sqlite_connection()
 
     def release_connection(self, conn) -> None:
-        """Safely returns connection to its respective pool."""
+        """Safely returns connection to its respective pool or closes SQLite handles."""
         try:
-            if ConnectionManager._pool is not None and ConnectionManager._pool != "SQLALCHEMY_DELEGATED":
+            if isinstance(conn, SQLiteCompatConnection) or self.db_type == 'sqlite':
+                conn.close()
+                return
+
+            if ConnectionManager._pool is not None and ConnectionManager._pool not in ("SQLALCHEMY_DELEGATED", "SQLITE_DIRECT"):
                 if self.db_type in ('postgresql', 'postgres'):
                     ConnectionManager._pool.putconn(conn)
                     return
@@ -165,12 +314,30 @@ class ConnectionManager:
 # ── Standalone Utility Functions ─────────────────────────────────────────────
 
 def load_db_config() -> dict:
-    """Reads database connectivity credentials from .env or environment variables."""
+    """
+    Reads database connectivity credentials from .env or environment variables.
+    Defaults to SQLite ('3abaqira_dev.db') for frictionless out-of-the-box operation
+    unless PostgreSQL or MySQL is explicitly configured.
+    """
     env_path = get_external_path(".env")
     if os.path.exists(env_path):
         load_dotenv(env_path)
 
-    db_type = os.getenv('DB_TYPE', 'postgresql').lower()
+    db_type = os.getenv('DB_TYPE')
+    if not db_type:
+        # If DATABASE_URL or DB_HOST is explicitly defined, target postgresql, else sqlite
+        if os.getenv('DATABASE_URL') or os.getenv('DB_HOST'):
+            db_type = 'postgresql'
+        else:
+            db_type = 'sqlite'
+    db_type = db_type.lower()
+
+    if db_type == 'sqlite':
+        return {
+            'type':     'sqlite',
+            'database': os.getenv('DB_NAME', get_external_path('3abaqira_dev.db')),
+        }
+
     default_port = 5432 if db_type in ('postgresql', 'postgres') else 3306
     default_user = 'postgres' if db_type in ('postgresql', 'postgres') else 'root'
 
@@ -186,8 +353,16 @@ def load_db_config() -> dict:
 
 
 def ensure_database_exists(db_config: dict) -> None:
-    """Verifies that the target database catalog exists on the database server; creates if missing."""
-    db_type = db_config.get('type', 'postgresql').lower()
+    """Verifies target database existence or creates if missing."""
+    db_type = db_config.get('type', 'sqlite').lower()
+
+    if db_type == 'sqlite':
+        db_path = db_config.get('database') or get_external_path('3abaqira_dev.db')
+        parent_dir = os.path.dirname(os.path.abspath(db_path))
+        if parent_dir and not os.path.exists(parent_dir):
+            os.makedirs(parent_dir, exist_ok=True)
+        return
+
     db_name = db_config.get('database', 'abaqira_db')
 
     try:
@@ -196,11 +371,12 @@ def ensure_database_exists(db_config: dict) -> None:
                 import psycopg2
                 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
                 conn = psycopg2.connect(
-                    host=db_config['host'],
-                    port=db_config['port'],
-                    user=db_config['user'],
-                    password=db_config['password'],
-                    database='postgres'  # Connect to default system DB
+                    host=db_config.get('host', 'localhost'),
+                    port=db_config.get('port', 5432),
+                    user=db_config.get('user', 'postgres'),
+                    password=db_config.get('password', ''),
+                    database='postgres',
+                    connect_timeout=3,
                 )
                 conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
                 with conn.cursor() as cur:

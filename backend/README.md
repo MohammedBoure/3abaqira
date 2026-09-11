@@ -78,3 +78,20 @@ backend/
 | [requirements.txt](file:///C:/Users/moham/Desktop/3abaqira/backend/requirements.txt) | Package requirements listing FastAPI, Uvicorn, Pydantic, PyJWT, bcrypt, SQLAlchemy, and drivers. |
 | [database/](file:///C:/Users/moham/Desktop/3abaqira/backend/database) | Central data layer providing pooled database connections, automated schema migrations, historical backup/archiving, and domain managers with FastAPI dependency injection. |
 
+## Running the Backend
+
+The platform supports zero-configuration development mode with SQLite (`3abaqira_dev.db`) out-of-the-box, as well as PostgreSQL and MySQL.
+
+To start the FastAPI REST API development server with hot-reload:
+
+```bash
+# Using the Windows Python Launcher (targeting Python 3.14 with installed dependencies)
+py -m uvicorn backend.app:app --reload --port 8000
+```
+
+Once running:
+- **Interactive OpenAPI Documentation (Swagger UI)**: `http://localhost:8000/docs`
+- **ReDoc Interactive Documentation**: `http://localhost:8000/redoc`
+- **System Health Endpoint**: `http://localhost:8000/api/health`
+
+

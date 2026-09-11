@@ -12,7 +12,7 @@ backend/database/
     ├── __init__.py           # Package entrypoint for base
     ├── base.py               # Backward-compatibility shim
     ├── config.py             # Global logging, path helpers, constants & JSON serializers
-    ├── connection.py         # Connection pooling (PostgreSQL/MySQL) & SQLAlchemy engine
+    ├── connection.py         # Connection pooling (PostgreSQL/MySQL/SQLite) & SQLAlchemy engine
     ├── database.py           # Central Database Singleton coordinator
     ├── schema_initializer.py # Automated fingerprinted DDL execution & migrations
     ├── tables.py             # Modular DDL table definition queries
