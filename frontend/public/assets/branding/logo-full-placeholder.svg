@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" fill="none">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="50%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#1D4ED8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Logo Mark -->
+  <g transform="translate(10, 10)">
+    <!-- Hexagon -->
+    <path d="M30 6 L52 18 L52 42 L30 54 L8 42 L8 18 Z" 
+          stroke="url(#logoGrad)" stroke-width="2.5" fill="rgba(37, 99, 235, 0.15)" stroke-linejoin="round" />
+    <polygon points="30,12 46,21 30,30 14,21" fill="#3B82F6" opacity="0.9" />
+    <polygon points="14,21 30,30 30,48 14,39" fill="#1D4ED8" opacity="0.85" />
+    <polygon points="30,30 46,21 46,39 30,48" fill="#0A192F" opacity="0.9" stroke="#06B6D4" stroke-width="1" />
+    <circle cx="30" cy="30" r="3" fill="#06B6D4" />
+  </g>
+
+  <!-- Latin Brand Name -->
+  <text x="75" y="38" fill="#FFFFFF" font-family="'Outfit', sans-serif" font-weight="700" font-size="22" letter-spacing="1">
+    3ABAQIRA
+  </text>
+  
+  <!-- Arabic Brand Name -->
+  <text x="75" y="58" fill="#93C5FD" font-family="'Cairo', sans-serif" font-weight="600" font-size="13">
+    أكاديمية وروضة الأطفال العباقرة
+  </text>
+</svg>

@@ -27,3 +27,9 @@ archive_view.flag
 *.sqlite3
 3abaqira_dev.db
 
+# Frontend Dependencies & Build Artifacts
+node_modules/
+dist/
+.vite/
+
+

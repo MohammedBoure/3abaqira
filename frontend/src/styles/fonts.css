@@ -1,0 +1,46 @@
+/**
+ * ==============================================================================
+ * 3ABAQIRA ENTERPRISE PLATFORM - SWAPPABLE TYPOGRAPHY ARCHITECTURE
+ * ==============================================================================
+ * All Arabic, Latin, and Display font families are decoupled into CSS variables.
+ * To change the entire typography of the application in the future:
+ *   1. Swap the font family names in the variables below, OR
+ *   2. Link new font files/URLs in index.html and update the variable definitions.
+ * ZERO modifications to React components or layout stylesheets are required.
+ * ==============================================================================
+ */
+
+:root {
+  /* Latin Font Family (English / French) - Default: Inter */
+  --font-family-latin: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* Arabic Font Family - Default: Cairo */
+  --font-family-arabic: 'Cairo', 'Alexandria', 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Modern Display / Hero Font Family - Default: Outfit */
+  --font-family-display: 'Outfit', 'Cairo', sans-serif;
+
+  /* Code / Monospace */
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+}
+
+/* Direction-aware global typography binding */
+[dir="rtl"], html[dir="rtl"] body {
+  font-family: var(--font-family-arabic);
+}
+
+[dir="ltr"], html[dir="ltr"] body {
+  font-family: var(--font-family-latin);
+}
+
+.font-latin {
+  font-family: var(--font-family-latin) !important;
+}
+
+.font-arabic {
+  font-family: var(--font-family-arabic) !important;
+}
+
+.font-display {
+  font-family: var(--font-family-display) !important;
+}
