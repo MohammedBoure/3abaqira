@@ -1,0 +1,22 @@
+# Logs
+*.log
+app.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.env
+.venv
+venv/
+ENV/
+
+# Temporary backup/archive files
+temp_backup_csv/
+temp_restore_csv/
+temp_view_archive/
+archive_view.flag
+*.zip

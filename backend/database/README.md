@@ -1,0 +1,51 @@
+# Backend Database Layer (`backend/database/`)
+
+This directory serves as the unified data access and persistence layer for the 3abaqira Enterprise Management Platform. It is patterned after the proven modular architecture from `GoldShop2.0/database`, extended for multi-branch operations and integrated with FastAPI.
+
+## Directory Architecture
+
+```
+backend/database/
+├── __init__.py               # Central registry, dynamic lazy manager loader & FastAPI dependencies (get_db)
+├── README.md                 # Directory documentation
+└── base/                     # Core engine infrastructure
+    ├── __init__.py           # Package entrypoint for base
+    ├── base.py               # Backward-compatibility shim
+    ├── config.py             # Global logging, path helpers, constants & JSON serializers
+    ├── connection.py         # Connection pooling (PostgreSQL/MySQL) & SQLAlchemy engine
+    ├── database.py           # Central Database Singleton coordinator
+    ├── schema_initializer.py # Automated fingerprinted DDL execution & migrations
+    ├── tables.py             # Modular DDL table definition queries
+    ├── views_indexes.py      # Analytical reporting views & B-tree performance indexes
+    ├── backup_manager.py     # CSV/ZIP/Excel backup, restore & historical purging
+    ├── archive_view_manager.py # Non-destructive archive view mode
+    └── README.md             # Detailed documentation of the base infrastructure
+```
+
+## Directory Contents
+
+| File / Folder | Purpose |
+|---------------|---------|
+| [base/](file:///C:/Users/moham/Desktop/3abaqira/backend/database/base) | Core infrastructure containing connection pooling, schema migrations, backup/restore managers, and archive viewing. |
+| [__init__.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/__init__.py) | Package entry point re-exporting `Database`, dynamic domain manager loader (`_MANAGER_EXPORTS`), and FastAPI dependencies (`get_db`, `get_database`). |
+
+## FastAPI Integration Pattern
+
+FastAPI route handlers can consume database connections and singleton services effortlessly:
+
+```python
+from fastapi import APIRouter, Depends
+from backend.database import get_db, get_database, Database
+
+router = APIRouter(prefix="/students", tags=["Students"])
+
+@router.get("/")
+def get_students(conn = Depends(get_db)):
+    cursor = conn.cursor()
+    cursor.execute("SELECT student_id, full_name_ar, full_name_fr FROM students WHERE is_active = TRUE;")
+    return cursor.fetchall()
+
+@router.get("/system/status")
+def system_status(db: Database = Depends(get_database)):
+    return db.get_archive_view_status()
+```
