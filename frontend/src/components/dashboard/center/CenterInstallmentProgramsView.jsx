@@ -157,7 +157,6 @@ export function CenterInstallmentProgramsView({ defaultProgram = 'support-classe
     <StandardViewLayout
       titleAr={currentProgram.titleAr}
       titleEn={currentProgram.titleEn}
-      description="نظام إدارة ومتابعة البرامج التعليمية بنظام الـ 4 دفعات مجدولة (Installment Programs)، تتبع إجمالي المستحقات، تواريخ استحقاق الدفعات، وأرقام وصولات القبض المالي."
       entityTag="برامج الدورات بنظام الدفعات"
       branchCode="CENTER"
       kpiCards={kpiCards}
