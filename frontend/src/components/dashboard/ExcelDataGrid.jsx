@@ -134,6 +134,32 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
     setTimeout(() => setToastMessage(''), 3000);
   };
 
+  // Filter Data based on selectedBranch, payment status and search term
+  const filteredData = useMemo(() => {
+    return studentsList.filter((item) => {
+      const matchesBranch =
+        selectedBranch === 'ALL' || item.branchId === selectedBranch;
+      const matchesStatus =
+        statusFilter === 'ALL' || item.paymentStatus === statusFilter;
+      const matchesSearch =
+        searchTerm === '' ||
+        item.fullNameAr?.includes(searchTerm) ||
+        item.fullNameFr?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.studentCode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.program?.includes(searchTerm) ||
+        item.coachName?.includes(searchTerm) ||
+        item.guardianName?.includes(searchTerm) ||
+        item.guardianPhone?.includes(searchTerm);
+
+      return matchesBranch && matchesStatus && matchesSearch;
+    });
+  }, [studentsList, selectedBranch, statusFilter, searchTerm]);
+
+  // Visible columns array
+  const visibleColumns = useMemo(() => {
+    return ALL_COLUMNS.filter((c) => visibleColIds.has(c.id));
+  }, [visibleColIds]);
+
   // Keyboard navigation & Escape key handling (Exit fullscreen, cancel edit)
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -196,32 +222,6 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [editingCell, paymentTransactionStudent, isAddStudentOpen, inspectStudent, editStudent, receiptStudent, isColumnPickerOpen, isFullscreen, filteredData.length, visibleColumns.length]);
-
-  // Filter Data based on selectedBranch, payment status and search term
-  const filteredData = useMemo(() => {
-    return studentsList.filter((item) => {
-      const matchesBranch =
-        selectedBranch === 'ALL' || item.branchId === selectedBranch;
-      const matchesStatus =
-        statusFilter === 'ALL' || item.paymentStatus === statusFilter;
-      const matchesSearch =
-        searchTerm === '' ||
-        item.fullNameAr?.includes(searchTerm) ||
-        item.fullNameFr?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.studentCode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.program?.includes(searchTerm) ||
-        item.coachName?.includes(searchTerm) ||
-        item.guardianName?.includes(searchTerm) ||
-        item.guardianPhone?.includes(searchTerm);
-
-      return matchesBranch && matchesStatus && matchesSearch;
-    });
-  }, [studentsList, selectedBranch, statusFilter, searchTerm]);
-
-  // Visible columns array
-  const visibleColumns = useMemo(() => {
-    return ALL_COLUMNS.filter((c) => visibleColIds.has(c.id));
-  }, [visibleColIds]);
 
   // Preset switchers
   const applyPreset = (presetType) => {
