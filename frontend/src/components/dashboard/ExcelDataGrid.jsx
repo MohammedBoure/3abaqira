@@ -22,6 +22,10 @@ import {
   Building2,
   ArrowRight,
   ExternalLink,
+  Maximize2,
+  Minimize2,
+  Plus,
+  ArrowLeftRight,
 } from 'lucide-react';
 import { StatusBadge } from '../common/StatusBadge';
 import { GlassButton } from '../common/GlassButton';
@@ -90,6 +94,39 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
     new Set(ALL_COLUMNS.map((c) => c.id))
   );
 
+  // Fullscreen & Focus View State
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Inline Cell Editing State: { rowId: string, colId: string, value: string } | null
+  const [editingCell, setEditingCell] = useState(null);
+
+  // Quick Payment Transaction Modal State
+  const [paymentTransactionStudent, setPaymentTransactionStudent] = useState(null);
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [paymentReceiptNumber, setPaymentReceiptNumber] = useState('');
+  const [paymentNote, setPaymentNote] = useState('');
+
+  // Add New Student Modal State
+  const [isAddStudentOpen, setIsAddStudentOpen] = useState(false);
+  const [newStudentForm, setNewStudentForm] = useState({
+    fullNameAr: '',
+    fullNameFr: '',
+    branchId: 'CENTER',
+    program: 'الحساب الذهني (السوربان)',
+    level: 'المستوى الأول',
+    cohort: 'الفوج A (السبت 09:00 - 11:00)',
+    coachName: 'أ. مريم بلقاسم',
+    birthDate: '2016-04-12',
+    gender: 'ذكر',
+    guardianName: '',
+    guardianPhone: '',
+    agreedAmount: 18000,
+    registrationFee: 2000,
+    installment1: 6000,
+    receipt1: 'REC-2026-0150',
+    notes: 'تسجيل جديد',
+  });
+
   const tableContainerRef = useRef(null);
 
   const showToast = (msg) => {
@@ -97,9 +134,45 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
     setTimeout(() => setToastMessage(''), 3000);
   };
 
-  // Keyboard navigation for active Excel cell
+  // Keyboard navigation & Escape key handling (Exit fullscreen, cancel edit)
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (editingCell) {
+          setEditingCell(null);
+          return;
+        }
+        if (paymentTransactionStudent) {
+          setPaymentTransactionStudent(null);
+          return;
+        }
+        if (isAddStudentOpen) {
+          setIsAddStudentOpen(false);
+          return;
+        }
+        if (inspectStudent) {
+          setInspectStudent(null);
+          return;
+        }
+        if (editStudent) {
+          setEditStudent(null);
+          return;
+        }
+        if (receiptStudent) {
+          setReceiptStudent(null);
+          return;
+        }
+        if (isColumnPickerOpen) {
+          setIsColumnPickerOpen(false);
+          return;
+        }
+        if (isFullscreen) {
+          setIsFullscreen(false);
+          showToast('تم الخروج من وضع ملء الشاشة للجدول');
+          return;
+        }
+      }
+
       if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'SELECT' || document.activeElement?.tagName === 'TEXTAREA') {
         return;
       }
@@ -122,7 +195,7 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [editingCell, paymentTransactionStudent, isAddStudentOpen, inspectStudent, editStudent, receiptStudent, isColumnPickerOpen, isFullscreen, filteredData.length, visibleColumns.length]);
 
   // Filter Data based on selectedBranch, payment status and search term
   const filteredData = useMemo(() => {
@@ -306,6 +379,184 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
     setEditStudent(null);
   };
 
+  // Inline Cell Editing commit handler
+  const handleSaveInlineCell = (rowId, colId, newValue) => {
+    setStudentsList((prev) =>
+      prev.map((row) => {
+        if (row.id !== rowId) return row;
+
+        const updated = { ...row };
+        const colDef = ALL_COLUMNS.find((c) => c.id === colId);
+
+        if (colDef?.isCurrency) {
+          const num = parseFloat(newValue) || 0;
+          updated[colId] = num;
+
+          // Recompute totalPaid and remaining if installments changed
+          if (['installment1', 'installment2', 'installment3', 'installment4', 'registrationFee'].includes(colId)) {
+            const paid = (updated.installment1 || 0) + (updated.installment2 || 0) + (updated.installment3 || 0) + (updated.installment4 || 0);
+            updated.totalPaid = paid;
+            updated.remainingBalance = Math.max(0, (updated.agreedAmount || 0) - paid);
+            updated.paymentStatus = updated.remainingBalance === 0 ? 'PAID' : paid > 0 ? 'PARTIAL' : 'OVERDUE';
+          } else if (colId === 'agreedAmount') {
+            updated.remainingBalance = Math.max(0, num - (updated.totalPaid || 0));
+            updated.paymentStatus = updated.remainingBalance === 0 ? 'PAID' : (updated.totalPaid || 0) > 0 ? 'PARTIAL' : 'OVERDUE';
+          } else if (colId === 'totalPaid') {
+            updated.remainingBalance = Math.max(0, (updated.agreedAmount || 0) - num);
+            updated.paymentStatus = updated.remainingBalance === 0 ? 'PAID' : num > 0 ? 'PARTIAL' : 'OVERDUE';
+          }
+        } else {
+          updated[colId] = newValue;
+        }
+
+        return updated;
+      })
+    );
+    setEditingCell(null);
+    showToast('تم حفظ التعديل في الخلية مباشرة');
+  };
+
+  // Quick Payment Transaction Submit
+  const handleSavePaymentTransaction = (e) => {
+    e.preventDefault();
+    if (!paymentTransactionStudent) return;
+
+    const amount = parseFloat(paymentAmount) || 0;
+    if (amount <= 0) {
+      showToast('يرجى إدخال مبلغ صحيح أكبر من الصفر');
+      return;
+    }
+
+    const studentId = paymentTransactionStudent.id;
+    const rcCode = paymentReceiptNumber.trim() || `REC-${Date.now().toString().slice(-6)}`;
+
+    setStudentsList((prev) =>
+      prev.map((s) => {
+        if (s.id !== studentId) return s;
+
+        const nextPaid = (s.totalPaid || 0) + amount;
+        const nextRemaining = Math.max(0, (s.agreedAmount || 0) - nextPaid);
+        const nextStatus = nextRemaining === 0 ? 'PAID' : 'PARTIAL';
+
+        // Assign to first empty installment slot
+        let inst1 = s.installment1;
+        let rc1 = s.receipt1;
+        let inst2 = s.installment2;
+        let rc2 = s.receipt2;
+        let inst3 = s.installment3;
+        let rc3 = s.receipt3;
+        let inst4 = s.installment4;
+        let rc4 = s.receipt4;
+
+        if (!inst1 || inst1 === 0) {
+          inst1 = amount;
+          rc1 = rcCode;
+        } else if (!inst2 || inst2 === 0) {
+          inst2 = amount;
+          rc2 = rcCode;
+        } else if (!inst3 || inst3 === 0) {
+          inst3 = amount;
+          rc3 = rcCode;
+        } else {
+          inst4 = (inst4 || 0) + amount;
+          rc4 = rcCode;
+        }
+
+        return {
+          ...s,
+          installment1: inst1,
+          receipt1: rc1,
+          installment2: inst2,
+          receipt2: rc2,
+          installment3: inst3,
+          receipt3: rc3,
+          installment4: inst4,
+          receipt4: rc4,
+          totalPaid: nextPaid,
+          remainingBalance: nextRemaining,
+          paymentStatus: nextStatus,
+          notes: paymentNote ? `${s.notes || ''} | ${paymentNote}`.trim() : s.notes,
+        };
+      })
+    );
+
+    showToast(`تم تسجيل دفعة بقيمة ${amount.toLocaleString()} دج للطالب: ${paymentTransactionStudent.fullNameAr}`);
+    setPaymentTransactionStudent(null);
+    setPaymentAmount('');
+    setPaymentReceiptNumber('');
+    setPaymentNote('');
+  };
+
+  // Add New Student To Grid
+  const handleAddNewStudent = (e) => {
+    e.preventDefault();
+    if (!newStudentForm.fullNameAr.trim()) {
+      showToast('يرجى كتابة اسم التلميذ بالعربية');
+      return;
+    }
+
+    const nextSeq = studentsList.length + 1;
+    const newCode = `STD-${newStudentForm.branchId === 'RAWDA' ? 'RWD' : 'CTR'}-2026-${String(nextSeq).padStart(4, '0')}`;
+    const paid = Number(newStudentForm.installment1) || 0;
+    const agreed = Number(newStudentForm.agreedAmount) || 0;
+    const remaining = Math.max(0, agreed - paid);
+
+    const newStudent = {
+      id: `std-custom-${Date.now()}`,
+      seqNumber: nextSeq,
+      studentCode: newCode,
+      fullNameAr: newStudentForm.fullNameAr,
+      fullNameFr: newStudentForm.fullNameFr || 'Eleve Nouveau',
+      branchId: newStudentForm.branchId,
+      branchNameAr: newStudentForm.branchId === 'RAWDA' ? 'روضة وحضانة العباقرة' : 'المركز الأكاديمي الرئيسي',
+      program: newStudentForm.program,
+      level: newStudentForm.level,
+      cohort: newStudentForm.cohort,
+      coachName: newStudentForm.coachName,
+      birthDate: newStudentForm.birthDate,
+      gender: newStudentForm.gender,
+      guardianName: newStudentForm.guardianName || 'ولي الأمر',
+      guardianPhone: newStudentForm.guardianPhone || '0550000000',
+      agreedAmount: agreed,
+      registrationFee: Number(newStudentForm.registrationFee) || 0,
+      installment1: paid,
+      receipt1: newStudentForm.receipt1 || `REC-2026-${String(nextSeq).padStart(4, '0')}`,
+      installment2: 0,
+      receipt2: '-',
+      installment3: 0,
+      receipt3: '-',
+      installment4: 0,
+      receipt4: '-',
+      totalPaid: paid,
+      remainingBalance: remaining,
+      paymentStatus: remaining === 0 ? 'PAID' : paid > 0 ? 'PARTIAL' : 'OVERDUE',
+      enrollmentDate: new Date().toISOString().split('T')[0],
+      notes: newStudentForm.notes,
+    };
+
+    setStudentsList((prev) => [newStudent, ...prev]);
+    showToast(`تم قيد التلميذ بنجاح: ${newStudent.fullNameAr}`);
+    setIsAddStudentOpen(false);
+    setNewStudentForm({
+      fullNameAr: '',
+      fullNameFr: '',
+      branchId: 'CENTER',
+      program: 'الحساب الذهني (السوربان)',
+      level: 'المستوى الأول',
+      cohort: 'الفوج A (السبت 09:00 - 11:00)',
+      coachName: 'أ. مريم بلقاسم',
+      birthDate: '2016-04-12',
+      gender: 'ذكر',
+      guardianName: '',
+      guardianPhone: '',
+      agreedAmount: 18000,
+      registrationFee: 2000,
+      installment1: 6000,
+      receipt1: `REC-2026-${String(nextSeq + 1).padStart(4, '0')}`,
+      notes: 'تسجيل جديد',
+    });
+  };
+
   // Build Context Menu Items
   const contextMenuItems = useMemo(() => {
     if (!contextMenu.row) {
@@ -352,6 +603,15 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
         onClick: () => setInspectStudent(r),
       },
       {
+        label: 'تسجيل دفعة / قبض مالي فوري',
+        icon: CreditCard,
+        onClick: () => {
+          setPaymentTransactionStudent(r);
+          setPaymentAmount(r.remainingBalance > 0 ? String(r.remainingBalance) : '5000');
+          setPaymentReceiptNumber(`REC-2026-${String(Date.now()).slice(-5)}`);
+        },
+      },
+      {
         label: 'تعديل السجل سريعاً',
         icon: Edit3,
         onClick: () => setEditStudent(r),
@@ -384,12 +644,57 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
   }, [contextMenu, selectedRowIds]);
 
   return (
-    <div className="w-full bg-white border border-slate-300 shadow-xs flex flex-col font-arabic relative">
+    <div
+      className={
+        isFullscreen
+          ? 'fixed inset-0 z-50 bg-white flex flex-col h-screen w-screen font-arabic select-text overflow-hidden'
+          : 'w-full bg-white border border-slate-300 shadow-xs flex flex-col font-arabic relative'
+      }
+    >
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-4 end-4 z-50 bg-slate-900 text-white px-3 py-2 text-xs rounded shadow-lg border border-slate-700 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
           <Check className="w-3.5 h-3.5 text-emerald-400" />
           <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Fullscreen Dedicated Header Bar */}
+      {isFullscreen && (
+        <div className="bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between border-b border-slate-800 shadow-md">
+          <div className="flex items-center gap-3">
+            <div className="bg-blue-600 text-white font-mono text-xs px-2 py-0.5 rounded font-bold">
+              وضع ملء الشاشة المتكامل
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-sm">جدول بيانات الطلاب والمعاملات المالية الموسع</span>
+              <span className="text-xs text-slate-400 font-mono">
+                ({filteredData.length} تلميذ مقيد • {stats.sumAgreed.toLocaleString('fr-DZ')} دج مستحقات)
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsAddStudentOpen(true)}
+              className="h-7 px-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded flex items-center gap-1.5 transition-colors shadow-xs"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>تسجيل قيد جديد</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setIsFullscreen(false);
+                showToast('تم الخروج من وضع ملء الشاشة');
+              }}
+              className="h-7 px-3 bg-rose-600/90 hover:bg-rose-600 text-white text-xs font-semibold rounded flex items-center gap-1.5 transition-colors shadow-xs"
+              title="خروج من وضع ملء الشاشة (Escape)"
+            >
+              <Minimize2 className="w-3.5 h-3.5" />
+              <span>تصغير الشاشة (Esc)</span>
+            </button>
+          </div>
         </div>
       )}
 
@@ -507,11 +812,44 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
           </div>
         </div>
 
-        {/* Right: Technical Export & Actions */}
+        {/* Right: Technical Export & Operational Actions */}
         <div className="flex items-center gap-1.5">
-          <div className="hidden md:flex items-center text-[11px] text-slate-500 pe-2 border-e border-slate-300">
-            <span>انقر بالزر الأيمن على أي سطر للمزيد من الإجراءات</span>
-          </div>
+          {/* Quick Add Record Button */}
+          <button
+            onClick={() => setIsAddStudentOpen(true)}
+            className="h-7 px-2.5 flex items-center gap-1.5 text-xs bg-blue-900 hover:bg-blue-800 text-white font-medium shadow-xs"
+            title="إضافة تسجيل طالب جديد"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>تسجيل قيد جديد</span>
+          </button>
+
+          {/* Fullscreen / Focus Mode Toggle Button */}
+          <button
+            onClick={() => {
+              const next = !isFullscreen;
+              setIsFullscreen(next);
+              showToast(next ? 'تم تفعيل وضع ملء الشاشة الموسع للجدول' : 'تم الخروج من وضع ملء الشاشة');
+            }}
+            className={`h-7 px-2.5 flex items-center gap-1.5 text-xs transition-colors ${
+              isFullscreen
+                ? 'bg-blue-700 text-white border border-blue-800'
+                : 'sharp-btn-secondary text-slate-700'
+            }`}
+            title={isFullscreen ? 'تصغير الشاشة (Esc)' : 'تكبير وتوسيع الجدول بملء الشاشة'}
+          >
+            {isFullscreen ? (
+              <>
+                <Minimize2 className="w-3.5 h-3.5 text-white" />
+                <span>تصغير</span>
+              </>
+            ) : (
+              <>
+                <Maximize2 className="w-3.5 h-3.5 text-slate-600" />
+                <span>توسيع الجدول</span>
+              </>
+            )}
+          </button>
 
           <button
             onClick={copyToClipboard}
@@ -540,7 +878,9 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
       {/* 2. Primary Excel Spreadsheet Table View - Comfortable Density & Soft Borders */}
       <div
         ref={tableContainerRef}
-        className="w-full overflow-x-auto overflow-y-auto max-h-[calc(100vh-230px)] border-b border-slate-200/90 relative select-text"
+        className={`w-full overflow-x-auto overflow-y-auto ${
+          isFullscreen ? 'flex-1 border-b border-slate-200/90 relative select-text' : 'max-h-[calc(100vh-230px)] border-b border-slate-200/90 relative select-text'
+        }`}
       >
         <table className="excel-table text-xs border-collapse w-full">
           {/* Sticky Header Row */}
@@ -589,8 +929,8 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
               })}
 
               {/* Action Column */}
-              <th className="excel-th w-16 text-center sticky end-0 z-20 bg-slate-100/95 border-s border-slate-200 py-2.5 sm:py-3 px-2">
-                إجراءات
+              <th className="excel-th w-28 text-center sticky end-0 z-20 bg-slate-100/95 border-s border-slate-200 py-2.5 sm:py-3 px-2">
+                إجراءات ومعاملات
               </th>
             </tr>
           </thead>
@@ -623,7 +963,7 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
                       </button>
                     </td>
 
-                    {/* Column Cells */}
+                    {/* Column Cells with Inline Editing & Double Click Support */}
                     {visibleColumns.map((col, cIndex) => {
                       const isPinned = col.pinned;
                       const rawValue = row[col.id];
@@ -635,16 +975,32 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
 
                       const isCurrentCell =
                         activeCell.rowIndex === rIndex && activeCell.colIndex === cIndex;
+                      const isEditingThisCell =
+                        editingCell && editingCell.rowId === row.id && editingCell.colId === col.id;
+
+                      // Check if column is editable directly
+                      const isEditable = !['seqNumber', 'studentCode'].includes(col.id);
 
                       return (
                         <td
                           key={col.id}
                           onClick={() => setActiveCell({ rowIndex: rIndex, colIndex: cIndex })}
+                          onDoubleClick={() => {
+                            if (isEditable) {
+                              setEditingCell({
+                                rowId: row.id,
+                                colId: col.id,
+                                value: rawValue !== undefined && rawValue !== null ? String(rawValue) : '',
+                              });
+                            }
+                          }}
                           onContextMenu={(e) => handleContextMenu(e, row, col, rawValue)}
+                          title={isEditable ? 'انقر مرتين للتعديل المباشر' : undefined}
                           className={`
                             excel-td py-2.5 sm:py-3 px-3 ${col.width}
                             ${isPinned ? 'sticky z-10 bg-inherit border-e border-slate-200/80' : ''}
                             ${isCurrentCell ? 'excel-cell-active' : ''}
+                            ${isEditable ? 'cursor-cell' : ''}
                           `}
                           style={
                             isPinned && cIndex === 1
@@ -654,7 +1010,28 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
                               : {}
                           }
                         >
-                          {col.id === 'fullNameAr' ? (
+                          {isEditingThisCell ? (
+                            <input
+                              type={col.isCurrency ? 'number' : 'text'}
+                              autoFocus
+                              value={editingCell.value}
+                              onChange={(e) =>
+                                setEditingCell({ ...editingCell, value: e.target.value })
+                              }
+                              onBlur={() =>
+                                handleSaveInlineCell(row.id, col.id, editingCell.value)
+                              }
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  handleSaveInlineCell(row.id, col.id, editingCell.value);
+                                } else if (e.key === 'Escape') {
+                                  e.stopPropagation();
+                                  setEditingCell(null);
+                                }
+                              }}
+                              className="w-full h-7 px-1.5 py-0.5 text-xs border border-blue-600 bg-white font-mono shadow-inner outline-none"
+                            />
+                          ) : col.id === 'fullNameAr' ? (
                             <div className="flex flex-col text-start leading-tight">
                               <span className="text-sm font-semibold text-slate-900 leading-snug">
                                 {row.fullNameAr}
@@ -674,9 +1051,20 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
                       );
                     })}
 
-                    {/* Action Controls */}
+                    {/* Action Controls & Direct Transactions */}
                     <td className="excel-td py-2 px-1.5 text-center sticky end-0 z-10 bg-inherit border-s border-slate-200/80">
                       <div className="flex items-center justify-center gap-1">
+                        <button
+                          onClick={() => {
+                            setPaymentTransactionStudent(row);
+                            setPaymentAmount(row.remainingBalance > 0 ? String(row.remainingBalance) : '5000');
+                            setPaymentReceiptNumber(`REC-2026-${String(Date.now()).slice(-5)}`);
+                          }}
+                          title="تسجيل دفعة / قبض مالي سريع"
+                          className="p-1 hover:bg-blue-100 text-blue-800 rounded flex items-center gap-0.5 text-[11px] font-medium"
+                        >
+                          <CreditCard className="w-3.5 h-3.5 text-blue-700" />
+                        </button>
                         <button
                           onClick={() => setInspectStudent(row)}
                           title="معاينة بطاقة الطالب"
@@ -1168,6 +1556,322 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
         }
         items={contextMenuItems}
       />
+
+      {/* 10. Modal: Quick Financial Payment Transaction ("تسجيل دفعة / قبض مالي") */}
+      {paymentTransactionStudent && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-white border border-slate-400 w-full max-w-lg shadow-2xl rounded p-5 font-arabic">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-emerald-100 text-emerald-800 rounded">
+                  <CreditCard className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900 text-sm">
+                    تسجيل دفعة وقبض مالي فوري
+                  </h3>
+                  <p className="text-[11px] text-slate-500 font-mono">
+                    {paymentTransactionStudent.fullNameAr} ({paymentTransactionStudent.studentCode})
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setPaymentTransactionStudent(null)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Financial Overview Summary */}
+            <div className="grid grid-cols-3 gap-2 my-3 p-3 bg-slate-50 border border-slate-200 rounded text-xs">
+              <div>
+                <span className="text-slate-500 block text-[10px]">إجمالي المستحق</span>
+                <strong className="text-slate-900 font-mono">
+                  {paymentTransactionStudent.agreedAmount?.toLocaleString('fr-DZ')} دج
+                </strong>
+              </div>
+              <div>
+                <span className="text-emerald-700 block text-[10px]">المسدد حتى الآن</span>
+                <strong className="text-emerald-800 font-mono">
+                  {paymentTransactionStudent.totalPaid?.toLocaleString('fr-DZ')} دج
+                </strong>
+              </div>
+              <div>
+                <span className="text-rose-700 block text-[10px]">المبلغ المتبقي</span>
+                <strong className="text-rose-800 font-mono">
+                  {paymentTransactionStudent.remainingBalance?.toLocaleString('fr-DZ')} دج
+                </strong>
+              </div>
+            </div>
+
+            <form onSubmit={handleSavePaymentTransaction} className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">
+                    المبلغ المقبوض نقدًا (دج) *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="100"
+                    autoFocus
+                    value={paymentAmount}
+                    onChange={(e) => setPaymentAmount(e.target.value)}
+                    placeholder="مثال: 6000"
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded font-mono font-bold text-slate-900 focus:border-blue-900 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">
+                    رقم وصل القبض المالي *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={paymentReceiptNumber}
+                    onChange={(e) => setPaymentReceiptNumber(e.target.value)}
+                    placeholder="REC-2026-XXXX"
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded font-mono focus:border-blue-900 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-slate-700 font-semibold mb-1">
+                  ملاحظة أو بيان الدفعة
+                </label>
+                <input
+                  type="text"
+                  value={paymentNote}
+                  onChange={(e) => setPaymentNote(e.target.value)}
+                  placeholder="مثال: قسط الفصل الثاني نقداً مع الولي"
+                  className="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:border-blue-900 focus:outline-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setPaymentTransactionStudent(null)}
+                  className="px-3 py-1.5 border border-slate-300 rounded text-slate-600 hover:bg-slate-50"
+                >
+                  إلغاء
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded font-medium shadow-xs flex items-center gap-1.5"
+                >
+                  <Check className="w-3.5 h-3.5" />
+                  <span>تأكيد وتسجيل القبض</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 11. Modal: Add New Student Record ("تسجيل قيد جديد") */}
+      {isAddStudentOpen && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-white border border-slate-400 w-full max-w-2xl shadow-2xl rounded p-5 font-arabic max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-blue-900 text-white rounded">
+                  <Plus className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900 text-sm">
+                    إضافة قيد تلميذ جديد للجدول مباشرة
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    تسجيل أكاديمي ومالي مع التحديث الفوري لإجماليات الجدول
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsAddStudentOpen(false)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddNewStudent} className="space-y-3 mt-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">
+                    الاسم واللقب (عربي) *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={newStudentForm.fullNameAr}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, fullNameAr: e.target.value })}
+                    placeholder="مثال: يوسف عبد الرحمان بن علي"
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:border-blue-900 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">
+                    Nom et Prénom (الاسم بالفرنسية)
+                  </label>
+                  <input
+                    type="text"
+                    value={newStudentForm.fullNameFr}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, fullNameFr: e.target.value })}
+                    placeholder="Ex: Benali Youcef"
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:border-blue-900 focus:outline-none font-latin"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">
+                    المقر / الفرع *
+                  </label>
+                  <select
+                    value={newStudentForm.branchId}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, branchId: e.target.value })}
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:border-blue-900 focus:outline-none"
+                  >
+                    <option value="CENTER">المركز الأكاديمي الرئيسي</option>
+                    <option value="RAWDA">روضة وحضانة العباقرة</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">
+                    البرنامج التعليمي *
+                  </label>
+                  <select
+                    value={newStudentForm.program}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, program: e.target.value })}
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:border-blue-900 focus:outline-none"
+                  >
+                    <option value="الحساب الذهني (السوربان)">الحساب الذهني (السوربان)</option>
+                    <option value="رعاية الطفولة المبكرة">رعاية الطفولة المبكرة</option>
+                    <option value="تحفيظ القرآن الكريم">تحفيظ القرآن الكريم</option>
+                    <option value="اللغة الإنجليزية التأسيسية">اللغة الإنجليزية التأسيسية</option>
+                    <option value="الروبوتيك والبرمجة للصغار">الروبوتيك والبرمجة للصغار</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">
+                    المستوى والفوج
+                  </label>
+                  <input
+                    type="text"
+                    value={newStudentForm.cohort}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, cohort: e.target.value })}
+                    placeholder="الفوج A (السبت)"
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:border-blue-900 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">
+                    اسم ولي الأمر
+                  </label>
+                  <input
+                    type="text"
+                    value={newStudentForm.guardianName}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, guardianName: e.target.value })}
+                    placeholder="ولي الأمر"
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:border-blue-900 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">
+                    رقم هاتف ولي الأمر
+                  </label>
+                  <input
+                    type="tel"
+                    value={newStudentForm.guardianPhone}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, guardianPhone: e.target.value })}
+                    placeholder="0550123456"
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded font-mono focus:border-blue-900 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-700 font-semibold mb-1">
+                    الجنس
+                  </label>
+                  <select
+                    value={newStudentForm.gender}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, gender: e.target.value })}
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:border-blue-900 focus:outline-none"
+                  >
+                    <option value="ذكر">ذكر</option>
+                    <option value="أنثى">أنثى</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Financial Plan Fields */}
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded space-y-2">
+                <div className="font-semibold text-slate-800 text-xs">
+                  الخطة المالية والتحصيل الأولى
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-slate-700 font-medium mb-1">
+                      إجمالي المستحق المتفق عليه (دج)
+                    </label>
+                    <input
+                      type="number"
+                      value={newStudentForm.agreedAmount}
+                      onChange={(e) => setNewStudentForm({ ...newStudentForm, agreedAmount: e.target.value })}
+                      className="w-full px-2.5 py-1.5 border border-slate-300 rounded font-mono focus:border-blue-900 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-700 font-medium mb-1">
+                      الدفعة الأولى المدفوعة (دج)
+                    </label>
+                    <input
+                      type="number"
+                      value={newStudentForm.installment1}
+                      onChange={(e) => setNewStudentForm({ ...newStudentForm, installment1: e.target.value })}
+                      className="w-full px-2.5 py-1.5 border border-slate-300 rounded font-mono focus:border-blue-900 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-700 font-medium mb-1">
+                      رقم وصل الدفعة الأولى
+                    </label>
+                    <input
+                      type="text"
+                      value={newStudentForm.receipt1}
+                      onChange={(e) => setNewStudentForm({ ...newStudentForm, receipt1: e.target.value })}
+                      className="w-full px-2.5 py-1.5 border border-slate-300 rounded font-mono focus:border-blue-900 focus:outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setIsAddStudentOpen(false)}
+                  className="px-3 py-1.5 border border-slate-300 rounded text-slate-600 hover:bg-slate-50"
+                >
+                  إلغاء
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 bg-blue-900 hover:bg-blue-800 text-white rounded font-medium shadow-xs flex items-center gap-1.5"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>إضافة التلميذ للجدول</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
