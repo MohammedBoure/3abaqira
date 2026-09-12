@@ -262,11 +262,15 @@ export function App() {
           {activeView === 'excel-grid' && (
             <div className="space-y-3">
               <HeroBanner
+                selectedBranch={selectedBranch}
                 onOpenStudentModal={() => setIsStudentModalOpen(true)}
                 onOpenDrawerModal={() => setIsDrawerModalOpen(true)}
               />
-              <MetricGrid />
-              <ExcelDataGrid selectedBranch={selectedBranch} />
+              <MetricGrid selectedBranch={selectedBranch} />
+              <ExcelDataGrid
+                selectedBranch={selectedBranch}
+                onSelectBranch={setSelectedBranch}
+              />
             </div>
           )}
 
@@ -281,11 +285,12 @@ export function App() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-start">
                 <div className="lg:col-span-2">
                   <CashDrawerOverview
+                    selectedBranch={selectedBranch}
                     onOpenVoucherModal={() => setIsDrawerModalOpen(true)}
                   />
                 </div>
                 <div>
-                  <ProgramsOverview />
+                  <ProgramsOverview selectedBranch={selectedBranch} />
                 </div>
               </div>
             </div>
@@ -294,23 +299,23 @@ export function App() {
           {/* View 4: Academic Programs & Cohorts */}
           {activeView === 'programs' && (
             <div className="space-y-3">
-              <ProgramsOverview />
+              <ProgramsOverview selectedBranch={selectedBranch} />
             </div>
           )}
 
           {/* View 5: HR & Staff Payroll Template */}
           {activeView === 'payroll' && (
-            <PayrollOverview />
+            <PayrollOverview selectedBranch={selectedBranch} />
           )}
 
           {/* View 6: Kitchen & Provisions Template */}
           {activeView === 'provisions' && (
-            <ProvisionsOverview />
+            <ProvisionsOverview selectedBranch={selectedBranch} />
           )}
 
           {/* View 7: Academic Cycles & Years (backend/apis/academic_years.py) */}
           {activeView === 'academic-years' && (
-            <AcademicYearsView />
+            <AcademicYearsView selectedBranch={selectedBranch} />
           )}
 
           {/* View 8: Multi-Tenant Branches & Facilities (backend/apis/branches.py) */}
@@ -323,62 +328,62 @@ export function App() {
 
           {/* View 9: System Audit Trail & Diffs (backend/apis/audit.py) */}
           {activeView === 'audit-trail' && (
-            <AuditLogsView />
+            <AuditLogsView selectedBranch={selectedBranch} />
           )}
 
           {/* View 10: Authentication & Security (backend/apis/auth.py) */}
           {activeView === 'auth-security' && (
-            <AuthSecurityView />
+            <AuthSecurityView selectedBranch={selectedBranch} />
           )}
 
           {/* View 11: Invoices & Payments (backend/apis/invoices.py & payments.py) */}
           {activeView === 'invoices-payments' && (
-            <InvoicesPaymentsView />
+            <InvoicesPaymentsView selectedBranch={selectedBranch} />
           )}
 
           {/* View 12: Budgets & Expenses (backend/apis/budgets.py & expenses.py) */}
           {activeView === 'budgets-expenses' && (
-            <BudgetsExpensesView />
+            <BudgetsExpensesView selectedBranch={selectedBranch} />
           )}
 
           {/* View 13: Cash Handovers & Registers (backend/apis/handovers.py & registers.py) */}
           {activeView === 'handovers' && (
-            <HandoversView />
+            <HandoversView selectedBranch={selectedBranch} />
           )}
 
           {/* View 14: Pricing Plans & Tariffs (backend/apis/pricing_plans.py) */}
           {activeView === 'pricing-plans' && (
-            <PricingPlansView />
+            <PricingPlansView selectedBranch={selectedBranch} />
           )}
 
           {/* View 15: Enrollments & Student Commitments (backend/apis/enrollments.py) */}
           {activeView === 'enrollments' && (
-            <EnrollmentsView />
+            <EnrollmentsView selectedBranch={selectedBranch} />
           )}
 
           {/* View 16: Groups, Levels & Classrooms (backend/apis/groups.py, levels.py & classrooms.py) */}
           {activeView === 'groups-levels' && (
-            <GroupsLevelsView />
+            <GroupsLevelsView selectedBranch={selectedBranch} />
           )}
 
           {/* View 17: Schedules & Sessions Attendance (backend/apis/schedules.py & sessions.py) */}
           {activeView === 'schedules-sessions' && (
-            <SchedulesSessionsView />
+            <SchedulesSessionsView selectedBranch={selectedBranch} />
           )}
 
           {/* View 18: Competitions & Tournaments (backend/apis/competitions.py) */}
           {activeView === 'competitions' && (
-            <CompetitionsView />
+            <CompetitionsView selectedBranch={selectedBranch} />
           )}
 
           {/* View 19: Guardians & Parents (backend/apis/guardians.py) */}
           {activeView === 'guardians' && (
-            <GuardiansView />
+            <GuardiansView selectedBranch={selectedBranch} />
           )}
 
           {/* View 20: System Health & Metadata (backend/apis/system.py) */}
           {activeView === 'system-health' && (
-            <SystemHealthView />
+            <SystemHealthView selectedBranch={selectedBranch} />
           )}
         </main>
 

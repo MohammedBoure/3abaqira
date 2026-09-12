@@ -140,13 +140,20 @@ export function Sidebar({
 
       {/* 2. Workspace Branch Switcher Card */}
       <div className="p-2.5 border-b border-slate-200/80">
-        <div className="p-2 bg-blue-50/70 border border-blue-200/80 rounded-[6px] flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-[4px] bg-blue-900 text-white flex items-center justify-center font-serif font-bold text-xs shadow-xs">
+        <button
+          onClick={() => {
+            const next = selectedBranch === 'ALL' ? 'CENTER' : selectedBranch === 'CENTER' ? 'RAWDA' : 'ALL';
+            onSelectBranch(next);
+          }}
+          title="انقر للتبديل السريع بين المقرات"
+          className="w-full text-start p-2 bg-blue-50/70 hover:bg-blue-100/70 border border-blue-200/80 rounded-[6px] flex items-center gap-2.5 transition-colors cursor-pointer group"
+        >
+          <div className="w-7 h-7 rounded-[4px] bg-blue-900 text-white flex items-center justify-center font-serif font-bold text-xs shadow-xs group-hover:scale-105 transition-transform">
             3A
           </div>
           <div className="flex-1 min-w-0">
             <span className="eyebrow block leading-none text-blue-900/70">
-              WORKSPACE
+              WORKSPACE (انقر للتبديل)
             </span>
             <strong className="text-xs font-semibold text-slate-900 block truncate mt-0.5">
               {selectedBranch === 'CENTER'
@@ -156,8 +163,8 @@ export function Sidebar({
                 : 'كافة المقرات والفروع'}
             </strong>
           </div>
-          <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-        </div>
+          <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-900 transition-colors" />
+        </button>
       </div>
 
       {/* 3. Navigation Links (Structured ERP Sections) */}
@@ -260,21 +267,52 @@ export function Sidebar({
 
         {/* Branch Filter Segment */}
         <div>
-          <span className="eyebrow px-2 block mb-1">BRANCH SCOPE / تصفية المقر</span>
-          <div className="space-y-0.5">
+          <div className="flex items-center justify-between px-2 mb-1.5">
+            <span className="eyebrow block">BRANCH SCOPE / تصفية المقر</span>
+            <span className="text-[10px] font-mono font-bold text-blue-900 bg-blue-50 px-1 py-0.5 border border-blue-200">
+              {selectedBranch}
+            </span>
+          </div>
+          <div className="space-y-1">
             {MOCK_BRANCHES.map((b) => {
               const isCurrent = selectedBranch === b.id;
+              const subtext =
+                b.id === 'CENTER'
+                  ? '6 قاعات • 158 مسجل نشط'
+                  : b.id === 'RAWDA'
+                  ? '6 قاعات • 115 مسجل نشط'
+                  : '12 قاعة • 273 مسجل إجمالي';
+
               return (
                 <button
                   key={b.id}
                   onClick={() => onSelectBranch(b.id)}
-                  className={`nav-item text-xs py-1.5 ${
-                    isCurrent ? 'bg-slate-200/70 text-slate-900 font-semibold' : ''
+                  className={`w-full text-start p-2 rounded transition-all flex flex-col gap-0.5 border ${
+                    isCurrent
+                      ? 'bg-blue-900 text-white border-blue-900 shadow-xs'
+                      : 'bg-white text-slate-700 hover:bg-blue-50/70 hover:text-blue-950 border-slate-200'
                   }`}
                 >
-                  <Building2 className={`w-3 h-3 ${isCurrent ? 'text-blue-900' : 'text-slate-400'}`} />
-                  <span className="truncate flex-1">{b.nameAr}</span>
-                  {isCurrent && <span className="w-1.5 h-1.5 rounded-full bg-blue-900" />}
+                  <div className="flex items-center justify-between gap-1 w-full">
+                    <div className="flex items-center gap-2 truncate font-semibold text-xs">
+                      <Building2 className={`w-3.5 h-3.5 shrink-0 ${isCurrent ? 'text-blue-200' : 'text-blue-900'}`} />
+                      <span className="truncate">{b.nameAr}</span>
+                    </div>
+                    {isCurrent ? (
+                      <span className="px-1.5 py-0.2 bg-blue-800 text-blue-100 text-[9px] font-mono font-bold shrink-0">
+                        محدد ✓
+                      </span>
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-300 shrink-0" />
+                    )}
+                  </div>
+                  <span
+                    className={`text-[10px] font-mono ps-5 leading-tight ${
+                      isCurrent ? 'text-blue-200 font-medium' : 'text-slate-400'
+                    }`}
+                  >
+                    {subtext}
+                  </span>
                 </button>
               );
             })}

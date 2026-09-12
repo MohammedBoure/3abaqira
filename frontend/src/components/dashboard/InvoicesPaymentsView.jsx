@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Receipt,
   CreditCard,
@@ -14,10 +14,13 @@ import {
   Printer,
   Ban,
   ArrowDownLeft,
+  Copy,
+  Eye,
 } from 'lucide-react';
+import { ContextMenu } from '../common/ContextMenu';
 import { MOCK_INVOICES, MOCK_PAYMENTS_LIST } from '../../mock/mockData';
 
-export function InvoicesPaymentsView() {
+export function InvoicesPaymentsView({ selectedBranch = 'ALL' }) {
   const [invoices, setInvoices] = useState(MOCK_INVOICES);
   const [payments, setPayments] = useState(MOCK_PAYMENTS_LIST);
   const [subTab, setSubTab] = useState('invoices'); // 'invoices' | 'payments'
@@ -25,6 +28,21 @@ export function InvoicesPaymentsView() {
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [toastMsg, setToastMsg] = useState('');
+
+  // Right-Click Context Menu State
+  const [contextMenu, setContextMenu] = useState({
+    isOpen: false,
+    x: 0,
+    y: 0,
+    item: null,
+    type: 'invoice', // 'invoice' | 'payment'
+  });
+
+  const showToast = (m) => {
+    setToastMsg(m);
+    setTimeout(() => setToastMsg(''), 2500);
+  };
 
   // Record Payment Form
   const [paymentForm, setPaymentForm] = useState({
@@ -34,19 +52,28 @@ export function InvoicesPaymentsView() {
     remarks: '',
   });
 
-  const totalBilled = invoices.reduce((acc, inv) => acc + inv.amount_due, 0);
-  const totalCollected = invoices.reduce((acc, inv) => acc + inv.amount_paid, 0);
-  const totalOutstanding = totalBilled - totalCollected;
-  const collectionRate = totalBilled > 0 ? Math.round((totalCollected / totalBilled) * 100) : 0;
-
   const filteredInvoices = invoices.filter((inv) => {
+    const matchesBranch = selectedBranch === 'ALL' || inv.branch_id === selectedBranch;
     const matchesSearch =
       inv.student_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       inv.period_label.toLowerCase().includes(searchTerm.toLowerCase()) ||
       String(inv.invoice_id).includes(searchTerm);
     const matchesStatus = statusFilter === 'ALL' || inv.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    return matchesBranch && matchesSearch && matchesStatus;
   });
+
+  const filteredPayments = payments.filter((p) => {
+    const matchesBranch = selectedBranch === 'ALL' || p.branch_id === selectedBranch;
+    const matchesSearch =
+      p.student_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.receipt_number.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesBranch && matchesSearch;
+  });
+
+  const totalBilled = filteredInvoices.reduce((acc, inv) => acc + inv.amount_due, 0);
+  const totalCollected = filteredInvoices.reduce((acc, inv) => acc + inv.amount_paid, 0);
+  const totalOutstanding = totalBilled - totalCollected;
+  const collectionRate = totalBilled > 0 ? Math.round((totalCollected / totalBilled) * 100) : 0;
 
   const handleRecordPayment = (e) => {
     e.preventDefault();
@@ -90,6 +117,119 @@ export function InvoicesPaymentsView() {
     setIsPaymentModalOpen(false);
     setPaymentForm({ invoice_id: '', amount: '', payment_method: 'CASH', remarks: '' });
   };
+
+  const contextMenuItems = useMemo(() => {
+    if (!contextMenu.item) return [];
+
+    if (contextMenu.type === 'invoice') {
+      const inv = contextMenu.item;
+      const rem = inv.amount_due - inv.amount_paid;
+
+      return [
+        { type: 'header', label: `فاتورة #${inv.invoice_id} • ${inv.student_name}` },
+        {
+          label: `نسخ رقم الفاتورة (#${inv.invoice_id})`,
+          icon: Copy,
+          onClick: () => {
+            navigator.clipboard.writeText(String(inv.invoice_id));
+            showToast(`تم نسخ رقم الفاتورة: #${inv.invoice_id}`);
+          },
+        },
+        {
+          label: `نسخ المبلغ المستحق (${inv.amount_due.toLocaleString()} دج)`,
+          icon: Copy,
+          onClick: () => {
+            navigator.clipboard.writeText(String(inv.amount_due));
+            showToast(`تم نسخ المبلغ: ${inv.amount_due} دج`);
+          },
+        },
+        {
+          label: `نسخ سطر الفاتورة كـ TSV`,
+          icon: FileSpreadsheet,
+          onClick: () => {
+            const rowStr = `${inv.invoice_id}\t${inv.student_name}\t${inv.period_label}\t${inv.amount_due}\t${inv.amount_paid}\t${rem}\t${inv.due_date}\t${inv.status}`;
+            navigator.clipboard.writeText(rowStr);
+            showToast(`تم نسخ سطر الفاتورة كـ TSV`);
+          },
+        },
+        { type: 'divider' },
+        ...(rem > 0
+          ? [
+              {
+                label: `تسجيل سداد للقسط (المتبقي: ${rem.toLocaleString()} دج)`,
+                icon: CreditCard,
+                onClick: () => {
+                  setPaymentForm({
+                    invoice_id: String(inv.invoice_id),
+                    amount: String(rem),
+                    payment_method: 'CASH',
+                    remarks: `سداد ${inv.period_label}`,
+                  });
+                  setIsPaymentModalOpen(true);
+                },
+              },
+            ]
+          : []),
+        {
+          label: `تصفية الجدول حسب الطالب (${inv.student_name})`,
+          icon: Filter,
+          onClick: () => {
+            setSearchTerm(inv.student_name);
+            showToast(`تمت التصفية حسب: ${inv.student_name}`);
+          },
+        },
+        {
+          label: 'طباعة كشف الحساب / الفاتورة',
+          icon: Printer,
+          onClick: () => window.print(),
+        },
+      ];
+    } else {
+      const p = contextMenu.item;
+      return [
+        { type: 'header', label: `سند قبض: ${p.receipt_number}` },
+        {
+          label: `نسخ رقم الوصل (${p.receipt_number})`,
+          icon: Copy,
+          onClick: () => {
+            navigator.clipboard.writeText(p.receipt_number);
+            showToast(`تم نسخ رقم الوصل: ${p.receipt_number}`);
+          },
+        },
+        {
+          label: `نسخ المبلغ المقبوض (${p.amount.toLocaleString()} دج)`,
+          icon: Copy,
+          onClick: () => {
+            navigator.clipboard.writeText(String(p.amount));
+            showToast(`تم نسخ المبلغ: ${p.amount} دج`);
+          },
+        },
+        {
+          label: `نسخ سطر السند كـ TSV`,
+          icon: FileSpreadsheet,
+          onClick: () => {
+            const rowStr = `${p.receipt_number}\t${p.student_name}\t${p.branch_id}\t${p.amount}\t${p.payment_method}\t${p.payment_date}\t${p.collected_by}`;
+            navigator.clipboard.writeText(rowStr);
+            showToast(`تم نسخ سطر السند كـ TSV`);
+          },
+        },
+        { type: 'divider' },
+        {
+          label: `تصفية الجدول حسب الطالب (${p.student_name})`,
+          icon: Filter,
+          onClick: () => {
+            setSearchTerm(p.student_name);
+            showToast(`تمت التصفية حسب: ${p.student_name}`);
+          },
+        },
+        {
+          label: 'طباعة سند القبض الرسمي',
+          icon: Printer,
+          onClick: () => window.print(),
+        },
+      ];
+    }
+  }, [contextMenu.item, contextMenu.type]);
 
   return (
     <div className="space-y-3 font-arabic">
@@ -241,7 +381,20 @@ export function InvoicesPaymentsView() {
                 {filteredInvoices.map((inv) => {
                   const rem = inv.amount_due - inv.amount_paid;
                   return (
-                    <tr key={inv.invoice_id} className="hover:bg-slate-50/80 transition-colors">
+                    <tr
+                      key={inv.invoice_id}
+                      onContextMenu={(e) => {
+                        e.preventDefault();
+                        setContextMenu({
+                          isOpen: true,
+                          x: e.clientX,
+                          y: e.clientY,
+                          item: inv,
+                          type: 'invoice',
+                        });
+                      }}
+                      className="hover:bg-slate-50/80 transition-colors cursor-context-menu"
+                    >
                       <td className="excel-td p-2 text-center font-mono text-slate-500">
                         #{inv.invoice_id}
                       </td>
@@ -317,7 +470,7 @@ export function InvoicesPaymentsView() {
           </div>
 
           <div className="excel-status-bar p-2 text-slate-600 flex items-center justify-between text-[11px]">
-            <span>عدد الأقساط المعروضة: <strong>{filteredInvoices.length}</strong></span>
+            <span>عدد الأقساط المعروضة: <strong>{filteredInvoices.length}</strong> (انقر بالزر الأيمن على السطر لإجراءات إضافية)</span>
             <span className="text-blue-900 font-mono">FastAPI: /invoices, /invoices/{'{id}'}/credit-payment</span>
           </div>
         </div>
@@ -340,8 +493,21 @@ export function InvoicesPaymentsView() {
                 </tr>
               </thead>
               <tbody>
-                {payments.map((p) => (
-                  <tr key={p.payment_id} className="hover:bg-slate-50/80 transition-colors">
+                {filteredPayments.map((p) => (
+                  <tr
+                    key={p.payment_id}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      setContextMenu({
+                        isOpen: true,
+                        x: e.clientX,
+                        y: e.clientY,
+                        item: p,
+                        type: 'payment',
+                      });
+                    }}
+                    className="hover:bg-slate-50/80 transition-colors cursor-context-menu"
+                  >
                     <td className="excel-td p-2 text-center font-mono font-bold text-blue-900">
                       {p.receipt_number}
                     </td>
@@ -491,6 +657,31 @@ export function InvoicesPaymentsView() {
           </div>
         </div>
       )}
+
+      {/* Toast Notification */}
+      {toastMsg && (
+        <div className="fixed bottom-4 end-4 z-50 bg-slate-900 text-white px-3 py-2 text-xs rounded shadow-lg border border-slate-700 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
+          <span>{toastMsg}</span>
+        </div>
+      )}
+
+      {/* Interactive Right-Click Context Menu */}
+      <ContextMenu
+        isOpen={contextMenu.isOpen}
+        position={{ x: contextMenu.x, y: contextMenu.y }}
+        onClose={() => setContextMenu((prev) => ({ ...prev, isOpen: false }))}
+        title={
+          contextMenu.type === 'invoice'
+            ? `فاتورة: #${contextMenu.item?.invoice_id} • ${contextMenu.item?.student_name}`
+            : `سند قبض: ${contextMenu.item?.receipt_number}`
+        }
+        subtitle={
+          contextMenu.type === 'invoice'
+            ? `${contextMenu.item?.period_label} • ${contextMenu.item?.amount_due?.toLocaleString()} دج`
+            : `${contextMenu.item?.student_name} • ${contextMenu.item?.amount?.toLocaleString()} دج`
+        }
+        items={contextMenuItems}
+      />
     </div>
   );
 }

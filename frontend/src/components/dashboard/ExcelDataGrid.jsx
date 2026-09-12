@@ -11,12 +11,22 @@ import {
   Printer,
   Table as TableIcon,
   Check,
+  Edit3,
+  Filter,
+  FileSpreadsheet,
+  Trash2,
+  Share2,
+  X,
+  CreditCard,
+  UserCheck,
+  Building2,
+  ArrowRight,
+  ExternalLink,
 } from 'lucide-react';
 import { StatusBadge } from '../common/StatusBadge';
 import { GlassButton } from '../common/GlassButton';
-import {
-  MOCK_STUDENTS_ROSTER,
-} from '../../mock/mockData';
+import { ContextMenu } from '../common/ContextMenu';
+import { MOCK_STUDENTS_ROSTER } from '../../mock/mockData';
 
 // Full column definition catalog (26 columns)
 const ALL_COLUMNS = [
@@ -50,14 +60,30 @@ const ALL_COLUMNS = [
   { id: 'notes', labelAr: 'ملاحظات إدارية', labelEn: 'Notes', width: 'w-56 text-slate-600 truncate', category: 'personal' },
 ];
 
-export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
-  const [activeSheet, setActiveSheet] = useState('STUDENTS_CENTER'); // 'STUDENTS_CENTER' | 'STUDENTS_RAWDA'
+export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
+  const [studentsList, setStudentsList] = useState(MOCK_STUDENTS_ROSTER);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [selectedRowIds, setSelectedRowIds] = useState(new Set());
   const [activeCell, setActiveCell] = useState({ rowIndex: 0, colIndex: 2 });
   const [isColumnPickerOpen, setIsColumnPickerOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  // Right-Click Context Menu State
+  const [contextMenu, setContextMenu] = useState({
+    isOpen: false,
+    x: 0,
+    y: 0,
+    row: null,
+    column: null,
+    cellValue: null,
+  });
+
+  // Modal Dialogs triggered from Context Menu
+  const [inspectStudent, setInspectStudent] = useState(null);
+  const [editStudent, setEditStudent] = useState(null);
+  const [receiptStudent, setReceiptStudent] = useState(null);
 
   // Column Presets
   const [visibleColIds, setVisibleColIds] = useState(
@@ -66,10 +92,15 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
 
   const tableContainerRef = useRef(null);
 
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
+
   // Keyboard navigation for active Excel cell
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'SELECT') {
+      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'SELECT' || document.activeElement?.tagName === 'TEXTAREA') {
         return;
       }
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
@@ -93,16 +124,9 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Filter Data based on Active Sheet and Search
+  // Filter Data based on selectedBranch, payment status and search term
   const filteredData = useMemo(() => {
-    let source = MOCK_STUDENTS_ROSTER;
-    if (activeSheet === 'STUDENTS_CENTER') {
-      source = MOCK_STUDENTS_ROSTER.filter((s) => s.branchId === 'CENTER');
-    } else if (activeSheet === 'STUDENTS_RAWDA') {
-      source = MOCK_STUDENTS_ROSTER.filter((s) => s.branchId === 'RAWDA');
-    }
-
-    return source.filter((item) => {
+    return studentsList.filter((item) => {
       const matchesBranch =
         selectedBranch === 'ALL' || item.branchId === selectedBranch;
       const matchesStatus =
@@ -113,11 +137,13 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
         item.fullNameFr?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.studentCode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.program?.includes(searchTerm) ||
-        item.coachName?.includes(searchTerm);
+        item.coachName?.includes(searchTerm) ||
+        item.guardianName?.includes(searchTerm) ||
+        item.guardianPhone?.includes(searchTerm);
 
       return matchesBranch && matchesStatus && matchesSearch;
     });
-  }, [activeSheet, selectedBranch, statusFilter, searchTerm]);
+  }, [studentsList, selectedBranch, statusFilter, searchTerm]);
 
   // Visible columns array
   const visibleColumns = useMemo(() => {
@@ -150,8 +176,8 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
     setVisibleColIds(next);
   };
 
-  // Toggle row selection
-  const toggleRowSelect = (id) => {
+  // Row selection handlers
+  const toggleSelectRow = (id) => {
     const next = new Set(selectedRowIds);
     if (next.has(id)) next.delete(id);
     else next.add(id);
@@ -166,22 +192,22 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
     }
   };
 
-  // Live Formula Bar calculations (Excel Aggregates)
+  // Statistics calculation for the bottom ribbon
   const stats = useMemo(() => {
-    const targetRows = selectedRowIds.size > 0
+    const target = selectedRowIds.size > 0
       ? filteredData.filter((d) => selectedRowIds.has(d.id))
       : filteredData;
 
-    const count = targetRows.length;
-    const sumAgreed = targetRows.reduce((acc, cur) => acc + (cur.agreedAmount || 0), 0);
-    const sumPaid = targetRows.reduce((acc, cur) => acc + (cur.totalPaid || 0), 0);
-    const sumRemaining = targetRows.reduce((acc, cur) => acc + (cur.remainingBalance || 0), 0);
-    const collectionRate = sumAgreed > 0 ? ((sumPaid / sumAgreed) * 100).toFixed(1) : '0.0';
+    const count = target.length;
+    const sumAgreed = target.reduce((acc, curr) => acc + (curr.agreedAmount || 0), 0);
+    const sumPaid = target.reduce((acc, curr) => acc + (curr.totalPaid || 0), 0);
+    const sumRemaining = target.reduce((acc, curr) => acc + (curr.remainingBalance || 0), 0);
+    const collectionRate = sumAgreed > 0 ? Math.round((sumPaid / sumAgreed) * 100) : 0;
 
     return { count, sumAgreed, sumPaid, sumRemaining, collectionRate };
   }, [filteredData, selectedRowIds]);
 
-  // Export to clean CSV (UTF-8 BOM for Arabic support in Excel)
+  // Export CSV
   const exportToCSV = () => {
     const headers = visibleColumns.map((c) => `"${c.labelAr}"`).join(',');
     const rows = filteredData.map((row) => {
@@ -197,10 +223,11 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `3abaqira_export_${activeSheet}_${Date.now()}.csv`);
+    link.setAttribute('download', `3abaqira_export_${selectedBranch}_${Date.now()}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    showToast('تم تصدير ملف CSV بنجاح');
   };
 
   // Copy TSV to clipboard (Direct paste into Excel / Sheets)
@@ -212,12 +239,160 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
     const tsvContent = [headers, ...rows].join('\n');
     navigator.clipboard.writeText(tsvContent).then(() => {
       setCopySuccess(true);
+      showToast('تم نسخ بيانات الجدول بالكامل بتنسيق Excel/TSV');
       setTimeout(() => setCopySuccess(false), 2000);
     });
   };
 
+  // Right-Click Context Menu Trigger
+  const handleContextMenu = (e, row, column, cellValue) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setContextMenu({
+      isOpen: true,
+      x: e.clientX,
+      y: e.clientY,
+      row,
+      column,
+      cellValue,
+    });
+  };
+
+  // Context Menu Actions
+  const handleCopyCellValue = () => {
+    if (contextMenu.cellValue !== undefined && contextMenu.cellValue !== null) {
+      navigator.clipboard.writeText(String(contextMenu.cellValue));
+      showToast(`تم نسخ القيمة: "${contextMenu.cellValue}"`);
+    }
+  };
+
+  const handleCopyRowTSV = () => {
+    if (contextMenu.row) {
+      const rowTSV = visibleColumns.map((col) => contextMenu.row[col.id] ?? '').join('\t');
+      navigator.clipboard.writeText(rowTSV);
+      showToast(`تم نسخ سطر الطالب [${contextMenu.row.fullNameAr}] كـ TSV`);
+    }
+  };
+
+  const handleCopyRowJSON = () => {
+    if (contextMenu.row) {
+      navigator.clipboard.writeText(JSON.stringify(contextMenu.row, null, 2));
+      showToast(`تم نسخ بيانات السجل كـ JSON`);
+    }
+  };
+
+  const handleQuickFilterByValue = () => {
+    if (contextMenu.cellValue) {
+      setSearchTerm(String(contextMenu.cellValue));
+      showToast(`تمت التصفية حسب: "${contextMenu.cellValue}"`);
+    }
+  };
+
+  const handleDeleteRow = () => {
+    if (contextMenu.row) {
+      const targetId = contextMenu.row.id;
+      setStudentsList((prev) => prev.filter((s) => s.id !== targetId));
+      showToast(`تم حذف / أرشفة سجل الطالب: ${contextMenu.row.fullNameAr}`);
+    }
+  };
+
+  const handleSaveEditStudent = (e) => {
+    e.preventDefault();
+    if (!editStudent) return;
+    setStudentsList((prev) =>
+      prev.map((item) => (item.id === editStudent.id ? editStudent : item))
+    );
+    showToast(`تم تحديث بيانات الطالب: ${editStudent.fullNameAr}`);
+    setEditStudent(null);
+  };
+
+  // Build Context Menu Items
+  const contextMenuItems = useMemo(() => {
+    if (!contextMenu.row) {
+      return [
+        {
+          label: 'تصدير الجدول بالكامل كـ CSV',
+          icon: Download,
+          onClick: exportToCSV,
+        },
+        {
+          label: 'نسخ الجدول بالكامل (Excel/TSV)',
+          icon: Copy,
+          onClick: copyToClipboard,
+        },
+      ];
+    }
+
+    const r = contextMenu.row;
+    const col = contextMenu.column;
+
+    return [
+      { type: 'header', label: 'النسخ والبيانات' },
+      {
+        label: `نسخ محتوى الخلية (${col?.labelAr || 'الخلية'})`,
+        icon: Copy,
+        onClick: handleCopyCellValue,
+        shortcut: 'Ctrl+C',
+      },
+      {
+        label: 'نسخ السطر بالكامل (Excel / TSV)',
+        icon: FileSpreadsheet,
+        onClick: handleCopyRowTSV,
+      },
+      {
+        label: 'نسخ بيانات السجل كـ JSON',
+        icon: Share2,
+        onClick: handleCopyRowJSON,
+      },
+      { type: 'divider' },
+      { type: 'header', label: 'إجراءات السجل' },
+      {
+        label: 'معاينة بطاقة الطالب والتفاصيل',
+        icon: Eye,
+        onClick: () => setInspectStudent(r),
+      },
+      {
+        label: 'تعديل السجل سريعاً',
+        icon: Edit3,
+        onClick: () => setEditStudent(r),
+      },
+      {
+        label: selectedRowIds.has(r.id) ? 'إلغاء تحديد هذا السطر' : 'تحديد هذا السطر',
+        icon: CheckSquare,
+        onClick: () => toggleSelectRow(r.id),
+      },
+      {
+        label: `تصفية الجدول حسب (${contextMenu.cellValue || r.fullNameAr})`,
+        icon: Filter,
+        onClick: handleQuickFilterByValue,
+      },
+      { type: 'divider' },
+      { type: 'header', label: 'المعاملات والإيصالات' },
+      {
+        label: 'طباعة إيصال السداد المعتمد',
+        icon: Printer,
+        onClick: () => setReceiptStudent(r),
+      },
+      { type: 'divider' },
+      {
+        label: 'حذف أو أرشفة السجل',
+        icon: Trash2,
+        danger: true,
+        onClick: handleDeleteRow,
+      },
+    ];
+  }, [contextMenu, selectedRowIds]);
+
   return (
-    <div className="w-full bg-white border border-slate-300 shadow-xs flex flex-col">
+    <div className="w-full bg-white border border-slate-300 shadow-xs flex flex-col font-arabic relative">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-4 end-4 z-50 bg-slate-900 text-white px-3 py-2 text-xs rounded shadow-lg border border-slate-700 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
+          <Check className="w-3.5 h-3.5 text-emerald-400" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       {/* 1. Technical Utility Toolbar (Density & Purposeful Controls) */}
       <div className="p-2 sm:p-2.5 border-b border-slate-300 bg-slate-50 flex flex-wrap items-center justify-between gap-2">
         {/* Left: Search & Filter Segment */}
@@ -320,10 +495,10 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
                         type="checkbox"
                         checked={visibleColIds.has(col.id)}
                         onChange={() => toggleColumn(col.id)}
-                        className="rounded-none text-blue-900 focus:ring-0"
+                        className="rounded-none border-slate-300 text-blue-900 focus:ring-0"
                       />
-                      <span className="font-medium truncate">{col.labelAr}</span>
-                      <span className="text-[10px] text-slate-400 ms-auto font-mono">{col.labelEn}</span>
+                      <span>{col.labelAr}</span>
+                      <span className="text-[10px] text-slate-400 ms-auto font-latin">{col.labelEn}</span>
                     </label>
                   ))}
                 </div>
@@ -332,80 +507,52 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
           </div>
         </div>
 
-        {/* Right: Operational Transfer & Export Actions */}
+        {/* Right: Technical Export & Actions */}
         <div className="flex items-center gap-1.5">
-          <GlassButton
-            onClick={copyToClipboard}
-            variant="secondary"
-            size="sm"
-            icon={copySuccess ? Check : Copy}
-            className="h-7 text-xs"
-            title="نسخ الجدول بتنسيق Excel إلى الحافظة (Ctrl+C)"
-          >
-            {copySuccess ? 'تم النسخ بنجاح' : 'نسخ للحافظة (TSV)'}
-          </GlassButton>
+          <div className="hidden md:flex items-center text-[11px] text-slate-500 pe-2 border-e border-slate-300">
+            <span>انقر بالزر الأيمن على أي سطر للمزيد من الإجراءات</span>
+          </div>
 
-          <GlassButton
-            onClick={exportToCSV}
-            variant="primary"
-            size="sm"
-            icon={Download}
-            className="h-7 text-xs"
-            title="تنزيل جدول البيانات بتنسيق Excel (.CSV)"
+          <button
+            onClick={copyToClipboard}
+            className="h-7 px-2.5 flex items-center gap-1.5 text-xs sharp-btn-secondary"
+            title="نسخ الجدول بتنسيق Excel"
           >
-            تصدير إلى Excel (.CSV)
-          </GlassButton>
+            {copySuccess ? (
+              <Check className="w-3.5 h-3.5 text-emerald-600" />
+            ) : (
+              <Copy className="w-3.5 h-3.5 text-slate-600" />
+            )}
+            <span>{copySuccess ? 'تم النسخ!' : 'نسخ Excel'}</span>
+          </button>
+
+          <button
+            onClick={exportToCSV}
+            className="h-7 px-2.5 flex items-center gap-1.5 text-xs sharp-btn-secondary"
+            title="تصدير ملف CSV"
+          >
+            <Download className="w-3.5 h-3.5 text-slate-600" />
+            <span>تصدير CSV</span>
+          </button>
         </div>
       </div>
 
-      {/* 2. Workbook Sheet Switcher Tabs (Excel-like Sheet Tabs at Top) */}
-      <div className="flex items-center border-b border-slate-300 bg-slate-200/70 overflow-x-auto text-xs select-none">
-        <button
-          onClick={() => setActiveSheet('STUDENTS_CENTER')}
-          className={`flex items-center gap-1.5 px-4 py-2 border-r border-slate-300 font-semibold transition-colors ${
-            activeSheet === 'STUDENTS_CENTER'
-              ? 'bg-white text-blue-900 border-b-2 border-b-blue-900 shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-          }`}
-        >
-          <TableIcon className="w-3.5 h-3.5 text-blue-700" />
-          <span>سجل طلاب الأكاديمية (المركز)</span>
-          <span className="text-[10px] font-mono px-1 py-0.2 bg-slate-100 text-slate-700 border border-slate-200">
-            {MOCK_STUDENTS_ROSTER.filter((s) => s.branchId === 'CENTER').length}
-          </span>
-        </button>
-
-        <button
-          onClick={() => setActiveSheet('STUDENTS_RAWDA')}
-          className={`flex items-center gap-1.5 px-4 py-2 border-r border-slate-300 font-semibold transition-colors ${
-            activeSheet === 'STUDENTS_RAWDA'
-              ? 'bg-white text-blue-900 border-b-2 border-b-blue-900 shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-          }`}
-        >
-          <TableIcon className="w-3.5 h-3.5 text-blue-700" />
-          <span>سجل أطفال الروضة والحضانة</span>
-          <span className="text-[10px] font-mono px-1 py-0.2 bg-slate-100 text-slate-700 border border-slate-200">
-            {MOCK_STUDENTS_ROSTER.filter((s) => s.branchId === 'RAWDA').length}
-          </span>
-        </button>
-      </div>
-
-      {/* 3. Multi-Column Excel Data Table Container (Freeze Panes & Overflow Handling) */}
+      {/* 2. Primary Excel Spreadsheet Table View */}
       <div
         ref={tableContainerRef}
-        className="w-full overflow-x-auto overflow-y-auto max-h-[580px] relative border-b border-slate-300"
+        className="w-full overflow-x-auto overflow-y-auto max-h-[calc(100vh-270px)] border-b border-slate-300 relative select-text"
       >
-        <table className="excel-table text-xs text-slate-800">
+        <table className="excel-table text-xs border-collapse">
+          {/* Header Row */}
           <thead>
-            <tr className="bg-slate-100 text-slate-700 sticky top-0 z-20 shadow-xs">
-              {/* Select All Checkbox Column */}
-              <th className="excel-th py-2 px-2 w-8 text-center sticky start-0 z-30 bg-slate-100 border-r-2 border-r-slate-400">
+            <tr>
+              {/* Select All Checkbox */}
+              <th className="excel-th w-10 text-center sticky start-0 z-30 bg-slate-100 border-e border-slate-300">
                 <button
                   onClick={toggleSelectAll}
-                  className="flex items-center justify-center w-full text-slate-600 hover:text-slate-900"
+                  className="flex items-center justify-center w-full"
                 >
-                  {selectedRowIds.size > 0 && selectedRowIds.size === filteredData.length ? (
+                  {selectedRowIds.size === filteredData.length && filteredData.length > 0 ? (
                     <CheckSquare className="w-3.5 h-3.5 text-blue-900" />
                   ) : (
                     <Square className="w-3.5 h-3.5 text-slate-400" />
@@ -413,96 +560,97 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
                 </button>
               </th>
 
-              {/* Dynamic Headers with Excel Letter indicators */}
-              {visibleColumns.map((col, idx) => {
-                const excelColLetter = String.fromCharCode(65 + (idx % 26));
+              {/* Dynamic Visible Columns */}
+              {visibleColumns.map((col, cIndex) => {
                 const isPinned = col.pinned;
                 return (
                   <th
                     key={col.id}
-                    className={`
-                      excel-th py-2 px-3 text-start ${col.width}
-                      ${isPinned ? 'sticky z-25 bg-slate-100 border-r border-slate-300' : ''}
-                    `}
+                    onContextMenu={(e) => handleContextMenu(e, null, col, col.labelAr)}
+                    className={`excel-th ${col.width} ${
+                      isPinned ? 'sticky z-20 bg-slate-100 border-e border-slate-300' : ''
+                    }`}
                     style={
-                      isPinned && idx === 1
-                        ? { insetInlineStart: '2rem' }
-                        : isPinned && idx === 2
-                        ? { insetInlineStart: '9rem' }
+                      isPinned && cIndex === 1
+                        ? { insetInlineStart: '2.5rem' }
+                        : isPinned && cIndex === 2
+                        ? { insetInlineStart: '9.5rem' }
                         : {}
                     }
                   >
-                    <div className="flex flex-col">
-                      <span className="text-[10px] text-slate-400 font-mono font-normal">
-                        {excelColLetter}
+                    <div className="flex flex-col text-start">
+                      <span>{col.labelAr}</span>
+                      <span className="text-[9px] text-slate-400 font-latin font-normal">
+                        {col.labelEn}
                       </span>
-                      <span className="font-semibold text-slate-900">{col.labelAr}</span>
                     </div>
                   </th>
                 );
               })}
 
-              {/* Actions Header */}
-              <th className="excel-th py-2 px-3 w-20 text-center sticky end-0 z-25 bg-slate-100 border-l border-slate-300">
-                الإجراءات
+              {/* Action Column */}
+              <th className="excel-th w-16 text-center sticky end-0 z-20 bg-slate-100 border-l border-slate-300">
+                إجراءات
               </th>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-200">
+          {/* Table Body */}
+          <tbody>
             {filteredData.length > 0 ? (
               filteredData.map((row, rIndex) => {
                 const isSelected = selectedRowIds.has(row.id);
                 return (
                   <tr
                     key={row.id}
+                    onContextMenu={(e) => handleContextMenu(e, row, visibleColumns[0], row.fullNameAr)}
                     className={`
-                      transition-colors
-                      ${isSelected ? 'excel-row-selected' : rIndex % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}
-                      hover:bg-blue-50/80
+                      ${isSelected ? 'bg-blue-100/50' : rIndex % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'}
+                      hover:bg-blue-50/70 transition-colors
                     `}
                   >
-                    {/* Row Select Box */}
-                    <td className="excel-td py-1.5 px-2 text-center sticky start-0 z-10 bg-inherit border-r-2 border-r-slate-400">
+                    {/* Row Selector Checkbox */}
+                    <td className="excel-td text-center sticky start-0 z-20 bg-inherit border-e border-slate-300">
                       <button
-                        onClick={() => toggleRowSelect(row.id)}
-                        className="flex items-center justify-center w-full text-slate-500 hover:text-blue-900"
+                        onClick={() => toggleSelectRow(row.id)}
+                        className="flex items-center justify-center w-full"
                       >
                         {isSelected ? (
                           <CheckSquare className="w-3.5 h-3.5 text-blue-900" />
                         ) : (
-                          <Square className="w-3.5 h-3.5 text-slate-300" />
+                          <Square className="w-3.5 h-3.5 text-slate-300 hover:text-slate-500" />
                         )}
                       </button>
                     </td>
 
                     {/* Column Cells */}
                     {visibleColumns.map((col, cIndex) => {
-                      const isCellActive =
-                        activeCell.rowIndex === rIndex && activeCell.colIndex === cIndex;
+                      const isPinned = col.pinned;
                       const rawValue = row[col.id];
                       let displayVal = rawValue;
 
                       if (col.isCurrency && typeof rawValue === 'number') {
-                        displayVal = rawValue.toLocaleString('fr-DZ') + ' دج';
+                        displayVal = rawValue.toLocaleString('fr-DZ');
                       }
 
-                      const isPinned = col.pinned;
+                      const isCurrentCell =
+                        activeCell.rowIndex === rIndex && activeCell.colIndex === cIndex;
 
                       return (
                         <td
                           key={col.id}
                           onClick={() => setActiveCell({ rowIndex: rIndex, colIndex: cIndex })}
+                          onContextMenu={(e) => handleContextMenu(e, row, col, rawValue)}
                           className={`
-                            excel-td py-1.5 px-3 ${col.width}
-                            ${isCellActive ? 'excel-cell-active' : ''}
-                            ${isPinned ? 'sticky z-10 bg-inherit' : ''}
+                            excel-td ${col.width}
+                            ${isPinned ? 'sticky z-10 bg-inherit border-e border-slate-300' : ''}
+                            ${isCurrentCell ? 'excel-cell-active' : ''}
                           `}
                           style={
                             isPinned && cIndex === 1
-                              ? { insetInlineStart: '2rem' }
+                              ? { insetInlineStart: '2.5rem' }
                               : isPinned && cIndex === 2
-                              ? { insetInlineStart: '9rem' }
+                              ? { insetInlineStart: '9.5rem' }
                               : {}
                           }
                         >
@@ -516,17 +664,19 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
                     })}
 
                     {/* Action Controls */}
-                    <td className="excel-td py-1.5 px-2 text-center sticky end-0 z-10 bg-inherit border-l border-slate-300">
+                    <td className="excel-td py-1 px-1.5 text-center sticky end-0 z-10 bg-inherit border-l border-slate-300">
                       <div className="flex items-center justify-center gap-1">
                         <button
-                          title="معاينة السجل"
-                          className="p-1 hover:bg-slate-200 text-slate-600 hover:text-blue-900"
+                          onClick={() => setInspectStudent(row)}
+                          title="معاينة بطاقة الطالب"
+                          className="p-1 hover:bg-slate-200 text-slate-600 hover:text-blue-900 rounded"
                         >
                           <Eye className="w-3.5 h-3.5" />
                         </button>
                         <button
+                          onClick={() => setReceiptStudent(row)}
                           title="طباعة إيصال السداد"
-                          className="p-1 hover:bg-slate-200 text-slate-600 hover:text-blue-900"
+                          className="p-1 hover:bg-slate-200 text-slate-600 hover:text-blue-900 rounded"
                         >
                           <Printer className="w-3.5 h-3.5" />
                         </button>
@@ -541,12 +691,61 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
                   colSpan={visibleColumns.length + 2}
                   className="py-12 text-center text-slate-400 font-medium"
                 >
-                  لا توجد سجلات مطابقة لشروط البحث والتصفية المحددة.
+                  لا توجد سجلات مطابقة لنطاق المقر المحدد ({selectedBranch === 'CENTER' ? 'المركز الأكاديمي' : selectedBranch === 'RAWDA' ? 'الروضة' : 'كافة الفروع'}) أو شروط البحث والتصفية.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* 3. Excel Workbook Sheet Tabs Bar (Just like Microsoft Excel) */}
+      <div className="border-b border-slate-300 bg-slate-200 flex items-center justify-between px-2 overflow-x-auto select-none">
+        <div className="flex items-center">
+          <span className="text-[10px] text-slate-500 font-bold px-2 py-1 font-mono uppercase">
+            WORKBOOK SHEETS:
+          </span>
+
+          <button
+            onClick={() => onSelectBranch?.('ALL')}
+            className={`px-3 py-1 text-xs font-semibold flex items-center gap-1.5 border-e border-slate-300 transition-colors ${
+              selectedBranch === 'ALL'
+                ? 'bg-white text-blue-950 border-t-2 border-t-blue-900 shadow-xs'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            <TableIcon className="w-3 h-3 text-blue-900" />
+            <span>all_students.xlsx (كافة الفروع)</span>
+          </button>
+
+          <button
+            onClick={() => onSelectBranch?.('CENTER')}
+            className={`px-3 py-1 text-xs font-semibold flex items-center gap-1.5 border-e border-slate-300 transition-colors ${
+              selectedBranch === 'CENTER'
+                ? 'bg-white text-blue-950 border-t-2 border-t-blue-900 shadow-xs'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            <Building2 className="w-3 h-3 text-blue-800" />
+            <span>center.xlsx (المركز الأكاديمي)</span>
+          </button>
+
+          <button
+            onClick={() => onSelectBranch?.('RAWDA')}
+            className={`px-3 py-1 text-xs font-semibold flex items-center gap-1.5 border-e border-slate-300 transition-colors ${
+              selectedBranch === 'RAWDA'
+                ? 'bg-white text-blue-950 border-t-2 border-t-blue-900 shadow-xs'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            <Building2 className="w-3 h-3 text-blue-800" />
+            <span>rawda.xlsx (الروضة والحضانة)</span>
+          </button>
+        </div>
+
+        <div className="text-[10px] text-slate-500 font-mono hidden md:block">
+          جاهز للإدخال والتحرير • انقر بالزر الأيمن على أي خلية
+        </div>
       </div>
 
       {/* 4. Live Formula & Aggregation Status Ribbon (Excel Bottom Bar) */}
@@ -593,6 +792,338 @@ export function ExcelDataGrid({ selectedBranch = 'ALL' }) {
           </span>
         </div>
       </div>
+
+      {/* 5. Rich Right-Click Interactive Context Menu */}
+      <ContextMenu
+        isOpen={contextMenu.isOpen}
+        position={{ x: contextMenu.x, y: contextMenu.y }}
+        onClose={() => setContextMenu((prev) => ({ ...prev, isOpen: false }))}
+        title={contextMenu.row ? `[${contextMenu.row.studentCode}] ${contextMenu.row.fullNameAr}` : 'جدول بيانات الطلاب'}
+        subtitle={contextMenu.column ? `${contextMenu.column.labelAr}: ${contextMenu.cellValue ?? '-'}` : 'إجراءات السجل'}
+        items={contextMenuItems}
+      />
+
+      {/* 6. Modal: Inspect Student Profile Details */}
+      {inspectStudent && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-white border border-slate-400 w-full max-w-xl shadow-2xl rounded p-5 font-arabic">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded bg-blue-900 text-white flex items-center justify-center font-bold text-xs">
+                  {inspectStudent.seqNumber}
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900 text-sm">
+                    {inspectStudent.fullNameAr} ({inspectStudent.fullNameFr})
+                  </h3>
+                  <p className="text-[11px] font-mono text-slate-500">
+                    كود الطالب: {inspectStudent.studentCode} • المقر: {inspectStudent.branchNameAr}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setInspectStudent(null)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="my-4 space-y-3 text-xs">
+              {/* Academic Details Card */}
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded">
+                <div className="font-bold text-blue-950 mb-2 flex items-center gap-1.5">
+                  <UserCheck className="w-3.5 h-3.5 text-blue-800" />
+                  <span>البيانات البيداغوجية والأكاديمية</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-slate-700">
+                  <div>البرنامج: <strong className="text-slate-900">{inspectStudent.program}</strong></div>
+                  <div>المستوى: <strong className="text-slate-900">{inspectStudent.level}</strong></div>
+                  <div>الفوج: <strong className="text-slate-900">{inspectStudent.cohort}</strong></div>
+                  <div>المؤطر: <strong className="text-slate-900">{inspectStudent.coachName}</strong></div>
+                  <div>تاريخ القيد: <strong className="font-mono text-slate-900">{inspectStudent.enrollmentDate}</strong></div>
+                  <div>الجنس: <strong className="text-slate-900">{inspectStudent.gender}</strong></div>
+                </div>
+              </div>
+
+              {/* Guardian & Contact */}
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded">
+                <div className="font-bold text-blue-950 mb-2 flex items-center gap-1.5">
+                  <UserCheck className="w-3.5 h-3.5 text-blue-800" />
+                  <span>بيانات ولي الأمر والاتصال</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-slate-700">
+                  <div>ولي الأمر: <strong className="text-slate-900">{inspectStudent.guardianName}</strong></div>
+                  <div>الهاتف: <strong className="font-mono text-blue-900">{inspectStudent.guardianPhone}</strong></div>
+                  <div className="col-span-2">الملاحظات: <span className="text-slate-600">{inspectStudent.notes}</span></div>
+                </div>
+              </div>
+
+              {/* Financial Status & Installments */}
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded">
+                <div className="font-bold text-blue-950 mb-2 flex items-center gap-1.5">
+                  <CreditCard className="w-3.5 h-3.5 text-blue-800" />
+                  <span>المستحقات المالية وجدول الدفعات</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2 mb-2">
+                  <div className="p-2 bg-white border border-slate-200 rounded text-center">
+                    <span className="text-slate-500 block text-[10px]">المبلغ المتفق عليه</span>
+                    <strong className="text-slate-900 font-mono text-sm">{inspectStudent.agreedAmount?.toLocaleString()} دج</strong>
+                  </div>
+                  <div className="p-2 bg-emerald-50 border border-emerald-200 rounded text-center">
+                    <span className="text-emerald-700 block text-[10px]">المبلغ المسدد</span>
+                    <strong className="text-emerald-800 font-mono text-sm">{inspectStudent.totalPaid?.toLocaleString()} دج</strong>
+                  </div>
+                  <div className="p-2 bg-rose-50 border border-rose-200 rounded text-center">
+                    <span className="text-rose-700 block text-[10px]">المبلغ المتبقي</span>
+                    <strong className="text-rose-800 font-mono text-sm">{inspectStudent.remainingBalance?.toLocaleString()} دج</strong>
+                  </div>
+                </div>
+
+                <div className="border border-slate-200 rounded bg-white overflow-hidden">
+                  <table className="w-full text-xs">
+                    <thead className="bg-slate-100 text-slate-600">
+                      <tr>
+                        <th className="p-1.5 text-right">الدفعة</th>
+                        <th className="p-1.5 text-right">المبلغ</th>
+                        <th className="p-1.5 text-right">رقم الوصل</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      <tr>
+                        <td className="p-1.5">الدفعة 1</td>
+                        <td className="p-1.5 font-mono">{inspectStudent.installment1?.toLocaleString()} دج</td>
+                        <td className="p-1.5 font-mono text-blue-900">{inspectStudent.receipt1}</td>
+                      </tr>
+                      {inspectStudent.installment2 > 0 && (
+                        <tr>
+                          <td className="p-1.5">الدفعة 2</td>
+                          <td className="p-1.5 font-mono">{inspectStudent.installment2?.toLocaleString()} دج</td>
+                          <td className="p-1.5 font-mono text-blue-900">{inspectStudent.receipt2}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-slate-200">
+              <button
+                onClick={() => {
+                  setInspectStudent(null);
+                  setReceiptStudent(inspectStudent);
+                }}
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs rounded flex items-center gap-1"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                <span>طباعة الوصل</span>
+              </button>
+              <button
+                onClick={() => setInspectStudent(null)}
+                className="px-3 py-1.5 bg-blue-900 text-white text-xs rounded hover:bg-blue-800"
+              >
+                إغلاق
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 7. Modal: Quick Edit Student Record */}
+      {editStudent && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-white border border-slate-300 w-full max-w-md shadow-2xl rounded p-4 font-arabic">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+              <div className="flex items-center gap-1.5 text-blue-950 font-bold text-sm">
+                <Edit3 className="w-4 h-4 text-blue-800" />
+                <span>تعديل سجل الطالب: {editStudent.studentCode}</span>
+              </div>
+              <button
+                onClick={() => setEditStudent(null)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditStudent} className="space-y-3 mt-3 text-xs">
+              <div>
+                <label className="block text-slate-700 font-medium mb-1">الاسم واللقب (عربي)</label>
+                <input
+                  type="text"
+                  required
+                  value={editStudent.fullNameAr}
+                  onChange={(e) => setEditStudent({ ...editStudent, fullNameAr: e.target.value })}
+                  className="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:border-blue-900 focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-slate-700 font-medium mb-1">هاتف ولي الأمر</label>
+                  <input
+                    type="tel"
+                    value={editStudent.guardianPhone}
+                    onChange={(e) => setEditStudent({ ...editStudent, guardianPhone: e.target.value })}
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:border-blue-900 focus:outline-none font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-700 font-medium mb-1">حالة السداد</label>
+                  <select
+                    value={editStudent.paymentStatus}
+                    onChange={(e) => setEditStudent({ ...editStudent, paymentStatus: e.target.value })}
+                    className="w-full px-2 py-1.5 border border-slate-300 rounded focus:border-blue-900 focus:outline-none"
+                  >
+                    <option value="PAID">مسدد بالكامل (PAID)</option>
+                    <option value="PARTIAL">تسديد جزئي (PARTIAL)</option>
+                    <option value="OVERDUE">متأخر (OVERDUE)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-slate-700 font-medium mb-1">المستحق المتفق عليه (دج)</label>
+                  <input
+                    type="number"
+                    value={editStudent.agreedAmount}
+                    onChange={(e) => {
+                      const agreed = parseFloat(e.target.value) || 0;
+                      const remaining = Math.max(0, agreed - editStudent.totalPaid);
+                      setEditStudent({
+                        ...editStudent,
+                        agreedAmount: agreed,
+                        remainingBalance: remaining,
+                      });
+                    }}
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-700 font-medium mb-1">المحصل الفعلي (دج)</label>
+                  <input
+                    type="number"
+                    value={editStudent.totalPaid}
+                    onChange={(e) => {
+                      const paid = parseFloat(e.target.value) || 0;
+                      const remaining = Math.max(0, editStudent.agreedAmount - paid);
+                      setEditStudent({
+                        ...editStudent,
+                        totalPaid: paid,
+                        remainingBalance: remaining,
+                        paymentStatus: remaining === 0 ? 'PAID' : paid > 0 ? 'PARTIAL' : 'OVERDUE',
+                      });
+                    }}
+                    className="w-full px-2.5 py-1.5 border border-slate-300 rounded font-mono"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-slate-700 font-medium mb-1">ملاحظات إدارية</label>
+                <textarea
+                  rows="2"
+                  value={editStudent.notes || ''}
+                  onChange={(e) => setEditStudent({ ...editStudent, notes: e.target.value })}
+                  className="w-full px-2.5 py-1.5 border border-slate-300 rounded focus:border-blue-900 focus:outline-none resize-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setEditStudent(null)}
+                  className="px-3 py-1.5 border border-slate-300 rounded text-slate-600 hover:bg-slate-50"
+                >
+                  إلغاء
+                </button>
+                <button
+                  type="submit"
+                  className="px-3 py-1.5 bg-blue-900 hover:bg-blue-800 text-white rounded font-medium shadow-xs"
+                >
+                  حفظ التعديلات
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 8. Modal: Printable Receipt Voucher */}
+      {receiptStudent && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-white border border-slate-400 w-full max-w-md shadow-2xl rounded p-5 font-arabic">
+            <div className="flex items-center justify-between border-b border-slate-300 pb-3">
+              <div>
+                <h3 className="font-serif font-bold text-slate-900 text-sm">أكاديمية وروضة الأطفال العباقرة</h3>
+                <p className="text-[10px] text-slate-500 font-mono">OFFICIAL PAYMENT RECEIPT VOUCHER</p>
+              </div>
+              <button
+                onClick={() => setReceiptStudent(null)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="my-4 p-3 bg-slate-50 border border-dashed border-slate-300 rounded space-y-2 text-xs">
+              <div className="flex justify-between items-center text-slate-600">
+                <span>رقم الوصل:</span>
+                <span className="font-mono font-bold text-blue-950">{receiptStudent.receipt1 || 'REC-2026-0001'}</span>
+              </div>
+              <div className="flex justify-between items-center text-slate-600">
+                <span>اسم التلميذ:</span>
+                <span className="font-bold text-slate-900">{receiptStudent.fullNameAr}</span>
+              </div>
+              <div className="flex justify-between items-center text-slate-600">
+                <span>رمز القيد:</span>
+                <span className="font-mono text-slate-900">{receiptStudent.studentCode}</span>
+              </div>
+              <div className="flex justify-between items-center text-slate-600">
+                <span>المقر والبرنامج:</span>
+                <span className="text-slate-900">{receiptStudent.branchNameAr} • {receiptStudent.program}</span>
+              </div>
+              <div className="border-t border-slate-200 pt-2 flex justify-between items-center">
+                <span className="font-bold text-slate-900">المبلغ المسدد نقداً:</span>
+                <span className="text-sm font-mono font-bold text-emerald-700">
+                  {receiptStudent.totalPaid?.toLocaleString()} دج
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-slate-500 text-[11px]">
+                <span>المتبقي:</span>
+                <span className="font-mono text-rose-700 font-bold">{receiptStudent.remainingBalance?.toLocaleString()} دج</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-slate-500 border-t border-slate-200 pt-3">
+              <span>خاتم وتوقيع أمين الصندوق المعتمد</span>
+              <button
+                onClick={() => window.print()}
+                className="px-3 py-1.5 bg-blue-900 text-white rounded flex items-center gap-1 font-medium hover:bg-blue-800"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                <span>طباعة الوصل الآن</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 9. Interactive Right-Click Context Menu */}
+      <ContextMenu
+        isOpen={contextMenu.isOpen}
+        position={{ x: contextMenu.x, y: contextMenu.y }}
+        onClose={() => setContextMenu((prev) => ({ ...prev, isOpen: false }))}
+        title={contextMenu.row ? contextMenu.row.fullNameAr : 'جدول الطلاب والمنتسبين'}
+        subtitle={
+          contextMenu.row
+            ? `${contextMenu.row.studentCode} • ${contextMenu.row.branchNameAr}`
+            : 'Excel Data Grid Actions'
+        }
+        items={contextMenuItems}
+      />
     </div>
   );
 }

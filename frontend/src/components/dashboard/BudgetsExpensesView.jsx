@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   TrendingDown,
   DollarSign,
@@ -13,33 +13,120 @@ import {
   UtensilsCrossed,
   ArrowUpRight,
   RefreshCw,
+  Copy,
+  Printer,
+  Filter,
 } from 'lucide-react';
+import { ContextMenu } from '../common/ContextMenu';
 import {
   MOCK_EXPENSES_LIST,
   MOCK_EXPENSE_CATEGORIES,
   MOCK_BUDGET_VARIANCES,
 } from '../../mock/mockData';
 
-export function BudgetsExpensesView() {
+export function BudgetsExpensesView({ selectedBranch = 'ALL' }) {
   const [expenses, setExpenses] = useState(MOCK_EXPENSES_LIST);
   const [categories, setCategories] = useState(MOCK_EXPENSE_CATEGORIES);
   const [variances, setVariances] = useState(MOCK_BUDGET_VARIANCES);
   const [subTab, setSubTab] = useState('expenses'); // 'expenses' | 'budgets' | 'categories'
   const [searchTerm, setSearchTerm] = useState('');
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
+  const [toastMsg, setToastMsg] = useState('');
+
+  // Right-Click Context Menu State
+  const [contextMenu, setContextMenu] = useState({
+    isOpen: false,
+    x: 0,
+    y: 0,
+    expense: null,
+  });
+
+  const showToast = (msg) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(''), 2500);
+  };
 
   // New Expense Form
   const [expenseForm, setExpenseForm] = useState({
     category_id: 1,
-    branch_id: 'CENTER',
+    branch_id: selectedBranch === 'RAWDA' ? 'RAWDA' : 'CENTER',
     description: '',
     amount: '',
     paid_to: '',
     payment_method: 'CASH',
   });
 
-  const totalSpent = expenses.reduce((acc, exp) => acc + exp.amount, 0);
+  const filteredExpenses = useMemo(() => {
+    return expenses.filter((exp) => {
+      const matchesBranch = selectedBranch === 'ALL' || exp.branch_id === selectedBranch;
+      const matchesSearch =
+        !searchTerm ||
+        exp.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        exp.voucher_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        exp.paid_to.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        exp.category_name.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesBranch && matchesSearch;
+    });
+  }, [expenses, selectedBranch, searchTerm]);
+
+  const totalSpent = filteredExpenses.reduce((acc, exp) => acc + exp.amount, 0);
   const totalBudget = categories.reduce((acc, cat) => acc + (cat.budget_monthly || 0), 0);
+
+  const contextMenuItems = useMemo(() => {
+    if (!contextMenu.expense) return [];
+    const exp = contextMenu.expense;
+
+    return [
+      { type: 'header', label: `سند صرف: ${exp.voucher_number}` },
+      {
+        label: `نسخ رقم السند (${exp.voucher_number})`,
+        icon: Copy,
+        onClick: () => {
+          navigator.clipboard.writeText(exp.voucher_number);
+          showToast(`تم نسخ رقم السند: ${exp.voucher_number}`);
+        },
+      },
+      {
+        label: `نسخ المبلغ (${exp.amount.toLocaleString()} دج)`,
+        icon: Copy,
+        onClick: () => {
+          navigator.clipboard.writeText(String(exp.amount));
+          showToast(`تم نسخ المبلغ: ${exp.amount} دج`);
+        },
+      },
+      {
+        label: `نسخ سطر النفقة كـ TSV`,
+        icon: FileSpreadsheet,
+        onClick: () => {
+          const rowStr = `${exp.voucher_number}\t${exp.branch_id}\t${exp.category_name}\t${exp.description}\t${exp.amount}\t${exp.expense_date}\t${exp.paid_to}\t${exp.authorized_by}`;
+          navigator.clipboard.writeText(rowStr);
+          showToast(`تم نسخ سطر السند كـ TSV`);
+        },
+      },
+      { type: 'divider' },
+      {
+        label: `تصفية الجدول حسب البند (${exp.category_name})`,
+        icon: Filter,
+        onClick: () => {
+          setSearchTerm(exp.category_name);
+          showToast(`تمت التصفية حسب: ${exp.category_name}`);
+        },
+      },
+      {
+        label: `تصفية الجدول حسب المستفيد (${exp.paid_to})`,
+        icon: Filter,
+        onClick: () => {
+          setSearchTerm(exp.paid_to);
+          showToast(`تمت التصفية حسب: ${exp.paid_to}`);
+        },
+      },
+      {
+        label: 'طباعة سند الصرف المعتمد',
+        icon: Printer,
+        onClick: () => window.print(),
+      },
+    ];
+  }, [contextMenu.expense]);
 
   const handleCreateExpense = (e) => {
     e.preventDefault();
@@ -180,8 +267,20 @@ export function BudgetsExpensesView() {
                 </tr>
               </thead>
               <tbody>
-                {expenses.map((exp) => (
-                  <tr key={exp.expense_id} className="hover:bg-slate-50/80 transition-colors">
+                {filteredExpenses.map((exp) => (
+                  <tr
+                    key={exp.expense_id}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      setContextMenu({
+                        isOpen: true,
+                        x: e.clientX,
+                        y: e.clientY,
+                        expense: exp,
+                      });
+                    }}
+                    className="hover:bg-slate-50/80 transition-colors cursor-context-menu"
+                  >
                     <td className="excel-td p-2 text-center font-mono font-bold text-blue-900">
                       {exp.voucher_number}
                     </td>
@@ -213,7 +312,7 @@ export function BudgetsExpensesView() {
           </div>
 
           <div className="excel-status-bar p-2 text-slate-600 flex items-center justify-between text-[11px]">
-            <span>إجمالي النفقات المسجلة: <strong>{expenses.length} سند</strong></span>
+            <span>إجمالي النفقات المعروضة: <strong>{filteredExpenses.length} سند</strong> (انقر بالزر الأيمن للمزيد من الإجراءات)</span>
             <span className="text-blue-900 font-mono">FastAPI: /expenses</span>
           </div>
         </div>
@@ -414,6 +513,27 @@ export function BudgetsExpensesView() {
           </div>
         </div>
       )}
+
+      {/* Toast Notification */}
+      {toastMsg && (
+        <div className="fixed bottom-4 end-4 z-50 bg-slate-900 text-white px-3 py-2 text-xs rounded shadow-lg border border-slate-700 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
+          <span>{toastMsg}</span>
+        </div>
+      )}
+
+      {/* Interactive Right-Click Context Menu */}
+      <ContextMenu
+        isOpen={contextMenu.isOpen}
+        position={{ x: contextMenu.x, y: contextMenu.y }}
+        onClose={() => setContextMenu((prev) => ({ ...prev, isOpen: false }))}
+        title={contextMenu.expense ? `سند صرف: ${contextMenu.expense.voucher_number}` : 'إجراءات النفقات'}
+        subtitle={
+          contextMenu.expense
+            ? `${contextMenu.expense.category_name} • ${contextMenu.expense.amount?.toLocaleString()} دج`
+            : ''
+        }
+        items={contextMenuItems}
+      />
     </div>
   );
 }

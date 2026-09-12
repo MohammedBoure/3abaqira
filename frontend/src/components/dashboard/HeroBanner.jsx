@@ -1,14 +1,28 @@
 import React from 'react';
-import { UserPlus, Receipt, ShieldCheck, Database, Calendar } from 'lucide-react';
+import { UserPlus, Receipt, ShieldCheck, Database, Calendar, Building2 } from 'lucide-react';
 import { GlassButton } from '../common/GlassButton';
 
-export function HeroBanner({ onOpenStudentModal, onOpenDrawerModal }) {
+export function HeroBanner({ selectedBranch = 'ALL', onOpenStudentModal, onOpenDrawerModal }) {
   const currentDate = new Date().toLocaleDateString('ar-DZ', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
+
+  const branchTitle =
+    selectedBranch === 'CENTER'
+      ? 'أكاديمية الأطفال العباقرة — المركز الأكاديمي الرئيسي'
+      : selectedBranch === 'RAWDA'
+      ? 'روضة وحضانة الأطفال العباقرة النموذجية'
+      : 'كافة المقرات والفروع (المركز الأكاديمي + الروضة النموذجية)';
+
+  const branchBadge =
+    selectedBranch === 'CENTER'
+      ? 'المقر: المركز الأكاديمي (158 طالب نشط)'
+      : selectedBranch === 'RAWDA'
+      ? 'المقر: روضة وحضانة العباقرة (115 طفل نشط)'
+      : 'نطاق موحد: كافة المقرات (273 مسجل)';
 
   return (
     <div className="relative rounded-none p-4 sm:p-5 bg-white border border-slate-300 shadow-xs">
@@ -19,6 +33,11 @@ export function HeroBanner({ onOpenStudentModal, onOpenDrawerModal }) {
             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-semibold bg-blue-50 text-blue-900 border border-blue-300">
               <Calendar className="w-3 h-3 text-blue-800" />
               <span>السنة الأكاديمية: 2025-2026</span>
+            </span>
+
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-semibold bg-blue-900 text-white">
+              <Building2 className="w-3 h-3 text-blue-200" />
+              <span>{branchBadge}</span>
             </span>
 
             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-semibold bg-emerald-50 text-emerald-900 border border-emerald-300">
@@ -40,7 +59,7 @@ export function HeroBanner({ onOpenStudentModal, onOpenDrawerModal }) {
             />
             <div>
               <h1 className="text-xl sm:text-2xl font-bold font-display text-slate-900 tracking-tight leading-tight">
-                منظومة إدارة العباقرة الموحدة (Enterprise Management)
+                {branchTitle}
               </h1>
               <p className="mt-0.5 text-xs sm:text-sm text-slate-600 font-normal max-w-3xl leading-relaxed">
                 المنصة المركزية لإدارة الأكاديمية والروضة — استغلال كامل لواجهة العمل وتكامل شامل مع بنية Excel لسهولة الترحيل والتشغيل الميداني.
@@ -75,4 +94,3 @@ export function HeroBanner({ onOpenStudentModal, onOpenDrawerModal }) {
     </div>
   );
 }
-
