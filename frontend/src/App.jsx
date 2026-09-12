@@ -2,42 +2,46 @@ import React, { useState, useEffect } from 'react';
 import { InteractiveBackground } from './components/3d/InteractiveBackground';
 import { Navbar } from './components/layout/Navbar';
 import { Sidebar } from './components/layout/Sidebar';
-import { HeroBanner } from './components/dashboard/HeroBanner';
-import { MetricGrid } from './components/dashboard/MetricGrid';
-import { ExcelDataGrid } from './components/dashboard/ExcelDataGrid';
-import { AnalyticsDashboard } from './components/dashboard/AnalyticsDashboard';
-import { CashDrawerOverview } from './components/dashboard/CashDrawerOverview';
-import { ProgramsOverview } from './components/dashboard/ProgramsOverview';
-import { PayrollOverview } from './components/dashboard/PayrollOverview';
-import { ProvisionsOverview } from './components/dashboard/ProvisionsOverview';
-import { AcademicYearsView } from './components/dashboard/AcademicYearsView';
-import { BranchesView } from './components/dashboard/BranchesView';
-import { AuditLogsView } from './components/dashboard/AuditLogsView';
-import { AuthSecurityView } from './components/dashboard/AuthSecurityView';
-import { InvoicesPaymentsView } from './components/dashboard/InvoicesPaymentsView';
-import { BudgetsExpensesView } from './components/dashboard/BudgetsExpensesView';
-import { HandoversView } from './components/dashboard/HandoversView';
-import { PricingPlansView } from './components/dashboard/PricingPlansView';
-import { EnrollmentsView } from './components/dashboard/EnrollmentsView';
-import { GroupsLevelsView } from './components/dashboard/GroupsLevelsView';
-import { SchedulesSessionsView } from './components/dashboard/SchedulesSessionsView';
-import { CompetitionsView } from './components/dashboard/CompetitionsView';
-import { GuardiansView } from './components/dashboard/GuardiansView';
-import { SystemHealthView } from './components/dashboard/SystemHealthView';
-import { StudentRegistrationModal, CashDrawerModal } from './components/dashboard/PreviewModals';
 import { AuthLoginModal } from './components/common/AuthLoginModal';
 import { MOCK_AUTH_USERS } from './mock/mockData';
 import { UserCheck } from 'lucide-react';
 
+// Rawda Components (docs/frontend.md Section 2)
+import { RawdaStudentsRosterView } from './components/dashboard/rawda/RawdaStudentsRosterView';
+import { RawdaCohortsKanbanView } from './components/dashboard/rawda/RawdaCohortsKanbanView';
+import { RawdaDailyExpensesView } from './components/dashboard/rawda/RawdaDailyExpensesView';
+import { RawdaBudgetVarianceView } from './components/dashboard/rawda/RawdaBudgetVarianceView';
+import { RawdaCashDrawerView } from './components/dashboard/rawda/RawdaCashDrawerView';
+import { RawdaCashHandoverView } from './components/dashboard/rawda/RawdaCashHandoverView';
+import { RawdaBreadTrackingView } from './components/dashboard/rawda/RawdaBreadTrackingView';
+import { RawdaMeatProvisionsView } from './components/dashboard/rawda/RawdaMeatProvisionsView';
+
+// Center Components (docs/frontend.md Section 3)
+import { CenterInstallmentProgramsView } from './components/dashboard/center/CenterInstallmentProgramsView';
+import { CenterSorobanView } from './components/dashboard/center/CenterSorobanView';
+import { CenterQuranView } from './components/dashboard/center/CenterQuranView';
+import { CenterPreparatoryView } from './components/dashboard/center/CenterPreparatoryView';
+import { CenterSummerCampView } from './components/dashboard/center/CenterSummerCampView';
+import { CenterSorobanChampionshipsView } from './components/dashboard/center/CenterSorobanChampionshipsView';
+import { CenterTimetableView } from './components/dashboard/center/CenterTimetableView';
+import { CenterFixedPayrollView } from './components/dashboard/center/CenterFixedPayrollView';
+import { CenterTrainerPayrollView } from './components/dashboard/center/CenterTrainerPayrollView';
+import { CenterDailyExpensesView } from './components/dashboard/center/CenterDailyExpensesView';
+import { CenterCashHandoverView } from './components/dashboard/center/CenterCashHandoverView';
+import { CenterPricingPolicyView } from './components/dashboard/center/CenterPricingPolicyView';
+
+// Super Admin Comprehensive Workspace Views
+import { ExcelDataGrid } from './components/dashboard/ExcelDataGrid';
+import { AnalyticsDashboard } from './components/dashboard/AnalyticsDashboard';
+import { HeroBanner } from './components/dashboard/HeroBanner';
+import { MetricGrid } from './components/dashboard/MetricGrid';
 
 export function App() {
   const [currentUser, setCurrentUser] = useState(MOCK_AUTH_USERS[0]); // mohammed_admin (SUPER_ADMIN)
-  const [selectedBranch, setSelectedBranch] = useState('ALL');
-  const [activeView, setActiveView] = useState('excel-grid');
+  const [selectedBranch, setSelectedBranch] = useState('RAWDA');
+  const [activeView, setActiveView] = useState('rawda-students');
   const [currentLang, setCurrentLang] = useState('ar');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
-  const [isDrawerModalOpen, setIsDrawerModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
 
@@ -51,7 +55,7 @@ export function App() {
     const isAdmin = currentUser.role === 'SUPER_ADMIN' || currentUser.branch_id === 'ALL';
     if (!isAdmin && currentUser.branch_id !== branchId) {
       showToast(
-        `عذراً، حسابك الحالي (${currentUser.full_name}) مقيد بمقر [${currentUser.branch_name_ar}]. صلاحية التنقل بين المقرات مقتصرة على الإدارة العامة.`
+        `عذراً، حسابك الحالي (${currentUser.full_name}) مقيد بمقر [${currentUser.branch_name_ar}].`
       );
       return;
     }
@@ -63,6 +67,7 @@ export function App() {
     setCurrentUser(user);
     if (user.branch_id !== 'ALL') {
       setSelectedBranch(user.branch_id);
+      setActiveView(user.branch_id === 'CENTER' ? 'center-support-classes' : 'rawda-students');
     }
     showToast(`تم تفعيل حساب: ${user.full_name} (${user.role_label_ar})`);
   };
@@ -79,14 +84,12 @@ export function App() {
     document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
   }, [currentLang]);
 
-
-
   return (
     <div className="relative h-screen w-screen text-slate-800 flex font-arabic bg-[#f8fafc] overflow-hidden">
       {/* 1. Ambient Understated 3D Background */}
       <InteractiveBackground />
 
-      {/* 2. Spatial Knowledge Workspace Sidebar (Collapsible) */}
+      {/* 2. Spatial Knowledge Workspace Sidebar (Collapsible with 2-State Context Switcher) */}
       <Sidebar
         activeView={activeView}
         onSelectView={setActiveView}
@@ -98,9 +101,9 @@ export function App() {
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
       />
 
-      {/* 3. Main Workspace Shell: 100% Full Width Exploitation (Zero Wasted Margin) */}
+      {/* 3. Main Workspace Shell: 100% Full Width Exploitation */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        {/* Sharp Top Navigation Bar */}
+        {/* Top Navigation Bar */}
         <Navbar
           selectedBranch={selectedBranch}
           onSelectBranch={handleSelectBranch}
@@ -109,23 +112,74 @@ export function App() {
           activeView={activeView}
           onSelectView={setActiveView}
           onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          onOpenStudentModal={() => setIsStudentModalOpen(true)}
-          onOpenDrawerModal={() => setIsDrawerModalOpen(true)}
           currentUser={currentUser}
           onOpenLoginModal={() => setIsLoginModalOpen(true)}
         />
 
-
-
         {/* Scrollable Workspace Body */}
-        <main className="flex-1 overflow-y-auto px-2.5 sm:px-4 py-3 space-y-3 min-w-0">
-          {/* View 1: Excel Data Grid (Primary Spreadsheet Interface) */}
+        <main className="flex-1 overflow-y-auto px-2.5 sm:px-4 py-3 min-w-0">
+          {/* ========================================================= */}
+          {/* RAWDA VIEWS (Section 2 of docs/frontend.md)              */}
+          {/* ========================================================= */}
+          {/* Group 1: التمدرس وشؤون الأطفال */}
+          {activeView === 'rawda-students' && <RawdaStudentsRosterView />}
+          {activeView === 'rawda-cohorts' && <RawdaCohortsKanbanView />}
+
+          {/* Group 2: المالية والمصاريف التشغيلية */}
+          {activeView === 'rawda-daily-expenses' && <RawdaDailyExpensesView />}
+          {activeView === 'rawda-budget-variance' && <RawdaBudgetVarianceView />}
+
+          {/* Group 3: حركة الخزينة والسيولة */}
+          {activeView === 'rawda-cash-drawer' && <RawdaCashDrawerView />}
+          {activeView === 'rawda-cash-handover' && <RawdaCashHandoverView />}
+
+          {/* Group 4: التموين وإطعام الروضة */}
+          {activeView === 'rawda-bread-tracking' && <RawdaBreadTrackingView />}
+          {activeView === 'rawda-meat-provisions' && <RawdaMeatProvisionsView />}
+
+          {/* ========================================================= */}
+          {/* CENTER VIEWS (Section 3 of docs/frontend.md)             */}
+          {/* ========================================================= */}
+          {/* Group 1: البرامج بنظام الدفعات */}
+          {activeView === 'center-support-classes' && (
+            <CenterInstallmentProgramsView defaultProgram="support-classes" />
+          )}
+          {activeView === 'center-languages' && (
+            <CenterInstallmentProgramsView defaultProgram="languages" />
+          )}
+          {activeView === 'center-robotics' && (
+            <CenterInstallmentProgramsView defaultProgram="robotics" />
+          )}
+          {activeView === 'center-school-languages' && (
+            <CenterInstallmentProgramsView defaultProgram="school-languages" />
+          )}
+
+          {/* Group 2: الأنشطة التخصصية والنوادي */}
+          {activeView === 'center-soroban' && <CenterSorobanView />}
+          {activeView === 'center-quran' && <CenterQuranView />}
+          {activeView === 'center-preparatory' && <CenterPreparatoryView />}
+          {activeView === 'center-summer-camp' && <CenterSummerCampView />}
+          {activeView === 'center-soroban-championships' && <CenterSorobanChampionshipsView />}
+          {activeView === 'center-timetable' && <CenterTimetableView />}
+
+          {/* Group 3: الموارد البشرية والأجور */}
+          {activeView === 'center-fixed-payroll' && <CenterFixedPayrollView />}
+          {activeView === 'center-trainer-payroll' && <CenterTrainerPayrollView />}
+
+          {/* Group 4: الخزينة، النفقات ودليل الأسعار */}
+          {activeView === 'center-daily-expenses' && <CenterDailyExpensesView />}
+          {activeView === 'center-cash-handover' && <CenterCashHandoverView />}
+          {activeView === 'center-pricing-policy' && <CenterPricingPolicyView />}
+
+          {/* ========================================================= */}
+          {/* SUPER ADMIN COMPREHENSIVE TOOLS                           */}
+          {/* ========================================================= */}
           {activeView === 'excel-grid' && (
             <div className="space-y-3">
               <HeroBanner
                 selectedBranch={selectedBranch}
-                onOpenStudentModal={() => setIsStudentModalOpen(true)}
-                onOpenDrawerModal={() => setIsDrawerModalOpen(true)}
+                onOpenStudentModal={() => setActiveView(selectedBranch === 'CENTER' ? 'center-support-classes' : 'rawda-students')}
+                onOpenDrawerModal={() => setActiveView(selectedBranch === 'CENTER' ? 'center-daily-expenses' : 'rawda-cash-drawer')}
               />
               <MetricGrid selectedBranch={selectedBranch} />
               <ExcelDataGrid
@@ -136,135 +190,19 @@ export function App() {
             </div>
           )}
 
-          {/* View 2: Professional Analytics & Executive Statistics */}
           {activeView === 'analytics' && (
             <AnalyticsDashboard selectedBranch={selectedBranch} />
           )}
-
-          {/* View 3: Daily Treasury & Cash Register Ledger */}
-          {activeView === 'treasury' && (
-            <div className="space-y-3">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-start">
-                <div className="lg:col-span-2">
-                  <CashDrawerOverview
-                    selectedBranch={selectedBranch}
-                    onOpenVoucherModal={() => setIsDrawerModalOpen(true)}
-                  />
-                </div>
-                <div>
-                  <ProgramsOverview selectedBranch={selectedBranch} />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* View 4: Academic Programs & Cohorts */}
-          {activeView === 'programs' && (
-            <div className="space-y-3">
-              <ProgramsOverview selectedBranch={selectedBranch} />
-            </div>
-          )}
-
-          {/* View 5: HR & Staff Payroll Template */}
-          {activeView === 'payroll' && (
-            <PayrollOverview selectedBranch={selectedBranch} />
-          )}
-
-          {/* View 6: Kitchen & Provisions Template */}
-          {activeView === 'provisions' && (
-            <ProvisionsOverview selectedBranch={selectedBranch} />
-          )}
-
-          {/* View 7: Academic Cycles & Years (backend/apis/academic_years.py) */}
-          {activeView === 'academic-years' && (
-            <AcademicYearsView selectedBranch={selectedBranch} />
-          )}
-
-          {/* View 8: Multi-Tenant Branches & Facilities (backend/apis/branches.py) */}
-          {activeView === 'branches' && (
-            <BranchesView
-              selectedBranch={selectedBranch}
-              onSelectBranch={setSelectedBranch}
-            />
-          )}
-
-          {/* View 9: System Audit Trail & Diffs (backend/apis/audit.py) */}
-          {activeView === 'audit-trail' && (
-            <AuditLogsView selectedBranch={selectedBranch} />
-          )}
-
-          {/* View 10: Authentication & Security (backend/apis/auth.py) */}
-          {activeView === 'auth-security' && (
-            <AuthSecurityView selectedBranch={selectedBranch} />
-          )}
-
-          {/* View 11: Invoices & Payments (backend/apis/invoices.py & payments.py) */}
-          {activeView === 'invoices-payments' && (
-            <InvoicesPaymentsView selectedBranch={selectedBranch} />
-          )}
-
-          {/* View 12: Budgets & Expenses (backend/apis/budgets.py & expenses.py) */}
-          {activeView === 'budgets-expenses' && (
-            <BudgetsExpensesView
-              selectedBranch={selectedBranch}
-              onSelectBranch={setSelectedBranch}
-            />
-          )}
-
-          {/* View 13: Cash Handovers & Registers (backend/apis/handovers.py & registers.py) */}
-          {activeView === 'handovers' && (
-            <HandoversView
-              selectedBranch={selectedBranch}
-              onSelectBranch={setSelectedBranch}
-            />
-          )}
-
-          {/* View 14: Pricing Plans & Tariffs (backend/apis/pricing_plans.py) */}
-          {activeView === 'pricing-plans' && (
-            <PricingPlansView selectedBranch={selectedBranch} />
-          )}
-
-          {/* View 15: Enrollments & Student Commitments (backend/apis/enrollments.py) */}
-          {activeView === 'enrollments' && (
-            <EnrollmentsView selectedBranch={selectedBranch} />
-          )}
-
-          {/* View 16: Groups, Levels & Classrooms (backend/apis/groups.py, levels.py & classrooms.py) */}
-          {activeView === 'groups-levels' && (
-            <GroupsLevelsView selectedBranch={selectedBranch} />
-          )}
-
-          {/* View 17: Schedules & Sessions Attendance (backend/apis/schedules.py & sessions.py) */}
-          {activeView === 'schedules-sessions' && (
-            <SchedulesSessionsView selectedBranch={selectedBranch} />
-          )}
-
-          {/* View 18: Competitions & Tournaments (backend/apis/competitions.py) */}
-          {activeView === 'competitions' && (
-            <CompetitionsView selectedBranch={selectedBranch} />
-          )}
-
-          {/* View 19: Guardians & Parents (backend/apis/guardians.py) */}
-          {activeView === 'guardians' && (
-            <GuardiansView selectedBranch={selectedBranch} />
-          )}
-
-          {/* View 20: System Health & Metadata (backend/apis/system.py) */}
-          {activeView === 'system-health' && (
-            <SystemHealthView selectedBranch={selectedBranch} />
-          )}
         </main>
 
-        {/* Spatial Knowledge Workspace Blue Status Footer - Slim Low-Profile System Bar */}
+        {/* Status Footer */}
         <footer className="h-7 text-xs bg-slate-100/90 text-slate-600 border-t border-slate-200 flex items-center justify-between px-3 select-none flex-shrink-0">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0" />
-            <span className="font-semibold text-slate-800">قاعدة البيانات: متزامنة</span>
+            <span className="font-semibold text-slate-800">قاعدة البيانات: متزامنة ومطابقة لمواصفات 3abaqira</span>
             <span className="text-slate-300">•</span>
-            <span className="hidden sm:inline text-slate-600">منظومة الإدارة المركزية لأكاديمية وروضة الأطفال العباقرة</span>
-            <span className="text-slate-300 hidden sm:inline">•</span>
-            <span className="text-blue-900 font-semibold text-[11px]">
-              المقر: {selectedBranch === 'CENTER' ? 'المركز الأكاديمي' : selectedBranch === 'RAWDA' ? 'الروضة والحضانة' : 'كافة الفروع'}
+            <span className="hidden sm:inline text-slate-600">
+              {selectedBranch === 'CENTER' ? 'المركز الأكاديمي والتعليمي (بحاية)' : 'روضة وحضانة الأطفال العباقرة'}
             </span>
           </div>
 
@@ -286,15 +224,7 @@ export function App() {
         </div>
       )}
 
-      {/* 4. Interactive Dialog Modals */}
-      <StudentRegistrationModal
-        isOpen={isStudentModalOpen}
-        onClose={() => setIsStudentModalOpen(false)}
-      />
-      <CashDrawerModal
-        isOpen={isDrawerModalOpen}
-        onClose={() => setIsDrawerModalOpen(false)}
-      />
+      {/* Auth Modal */}
       <AuthLoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}

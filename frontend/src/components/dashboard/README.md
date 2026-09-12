@@ -3,7 +3,15 @@
 This directory contains the operational dashboard views, spreadsheet grids, and template interfaces for the 3abaqira Enterprise Platform.
 All views have been streamlined to remove raw technical strings (API endpoints, SQL logs, developer tags) in favor of clear Arabic enterprise business terminology, and integrate with the role-based branch authority system.
 
-## Files
+## Subdirectories & Modules
+
+| Subdirectory | Purpose |
+| :--- | :--- |
+| [common/](file:///C:/Users/moham/Desktop/3abaqira/frontend/src/components/dashboard/common) | Reusable dashboard architecture components enforcing Section 1.3 of `docs/frontend.md`: `StandardViewLayout` (Breadcrumbs, 4 KPI cards, Action Bar, Table container, Month toggle, CSV/Print) and `ReceiptVoucherModal`. |
+| [rawda/](file:///C:/Users/moham/Desktop/3abaqira/frontend/src/components/dashboard/rawda) | Complete Kindergarten & Daycare suite implementing all 8 screens across the 4 groups in Section 2 of `docs/frontend.md` (`RawdaStudentsRosterView`, `RawdaCohortsKanbanView`, `RawdaDailyExpensesView`, `RawdaBudgetVarianceView`, `RawdaCashDrawerView`, `RawdaCashHandoverView`, `RawdaBreadTrackingView`, `RawdaMeatProvisionsView`). |
+| [center/](file:///C:/Users/moham/Desktop/3abaqira/frontend/src/components/dashboard/center) | Complete Academic Center suite implementing all 15 screens across the 4 groups in Section 3 of `docs/frontend.md` (`CenterInstallmentProgramsView`, `CenterSorobanView`, `CenterQuranView`, `CenterPreparatoryView`, `CenterSummerCampView`, `CenterSorobanChampionshipsView`, `CenterTimetableView`, `CenterFixedPayrollView`, `CenterTrainerPayrollView`, `CenterDailyExpensesView`, `CenterCashHandoverView`, `CenterPricingPolicyView`). |
+
+## Root Files
 
 - **`ExcelDataGrid.jsx`**: High-density Excel-like data grid engine featuring 26 columns, comfortable cell padding (`py-2.5` to `py-3`), elevated student name typography (`text-sm font-semibold`), soft separators (`border-slate-100/200`), sticky headers with backdrop blur, sticky `<tfoot>` integrating live financial calculations (SUM Due, SUM Paid, Remaining, Collection Rate), consolidated bottom workbook sheet tabs (`all_students.xlsx`, `center.xlsx`, `rawda.xlsx`), **Fullscreen & Focus View** (`isFullscreen`) with zero-clipping expansion and Escape key exit, **Inline Cell Editing** on double click for all dynamic data fields, **Quick Financial Payment / Cash Receipt Modal** (`تسجيل دفعة وقبض مالي`), and **Add New Student Modal** (`تسجيل قيد جديد`) updating roster totals in real-time.
 - **`AnalyticsDashboard.jsx`**: Professional executive business intelligence and statistics dashboard designed without AI spectrum tropes (no purple glowing orbs/neon), featuring monthly cash flow velocity curves, isolated KPI counters with min-h guardrails, zero-clipping wrapped departmental expense breakdowns, direct branch comparison (Center vs. Rawda), and a comprehensive program financial pivot table.

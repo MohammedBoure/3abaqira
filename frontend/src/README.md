@@ -6,7 +6,7 @@ This directory contains the root React components, styling systems, mock dataset
 
 | File / Folder | Purpose |
 | :--- | :--- |
-| [App.jsx](file:///C:/Users/moham/Desktop/3abaqira/frontend/src/App.jsx) | Main application component orchestrating the streamlined Spatial Knowledge Workspace Blue layout: collapsible sidebar with branch authority access control, top utility navigation header with breadcrumbs and live search, edge-to-edge spreadsheet and operational workspace with zero redundant intermediary bars, complete 20-view enterprise module interfaces, and pinned status footer. |
+| [App.jsx](file:///C:/Users/moham/Desktop/3abaqira/frontend/src/App.jsx) | Main application component orchestrating the complete UI/UX specification defined in `docs/frontend.md`: mandatory 2-state context switcher (Rawda Kindergarten vs Academic Center), full suite of 8 Rawda interfaces, 15 Center interfaces, unified `StandardViewLayout` (Breadcrumb & Title, 4 KPI cards, Action Bar, interactive data tables, 11-month toggle, and dynamic modal generation), Super Admin comprehensive tools, and pinned system status footer. |
 
 | [main.jsx](file:///C:/Users/moham/Desktop/3abaqira/frontend/src/main.jsx) | DOM entrypoint mounting the application with `ReactDOM.createRoot` and loading global styles. |
 | [components/](file:///C:/Users/moham/Desktop/3abaqira/frontend/src/components) | Reusable UI components categorized into 3D, branding, common sharp enterprise primitives, dashboard & spreadsheet modules, and navigation layouts. |
