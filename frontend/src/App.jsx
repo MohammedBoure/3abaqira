@@ -131,6 +131,7 @@ export function App() {
               <ExcelDataGrid
                 selectedBranch={selectedBranch}
                 onSelectBranch={setSelectedBranch}
+                onSelectView={setActiveView}
               />
             </div>
           )}

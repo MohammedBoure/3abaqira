@@ -64,7 +64,7 @@ const ALL_COLUMNS = [
   { id: 'notes', labelAr: 'ملاحظات إدارية', labelEn: 'Notes', width: 'w-56 text-slate-600 truncate', category: 'personal' },
 ];
 
-export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
+export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch, onSelectView }) {
   const [studentsList, setStudentsList] = useState(MOCK_STUDENTS_ROSTER);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -1212,6 +1212,28 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
             <Building2 className="w-3 h-3 text-blue-800" />
             <span>rawda.xlsx (الروضة والحضانة)</span>
           </button>
+
+          {onSelectView && (
+            <>
+              <button
+                onClick={() => onSelectView('handovers')}
+                className="px-3 py-1 text-xs font-semibold flex items-center gap-1.5 border-e border-slate-200 text-emerald-800 hover:bg-emerald-50 hover:text-emerald-950 transition-colors bg-emerald-50/40"
+                title="فتح جدول التسليم اليومي والسنوي"
+              >
+                <ArrowLeftRight className="w-3 h-3 text-emerald-700" />
+                <span>tasleem.xlsx (التسليم)</span>
+              </button>
+
+              <button
+                onClick={() => onSelectView('budgets-expenses')}
+                className="px-3 py-1 text-xs font-semibold flex items-center gap-1.5 border-e border-slate-200 text-rose-800 hover:bg-rose-50 hover:text-rose-950 transition-colors bg-rose-50/40"
+                title="فتح جدول المصاريف اليومية"
+              >
+                <FileSpreadsheet className="w-3 h-3 text-rose-700" />
+                <span>masareef.xlsx (المصاريف)</span>
+              </button>
+            </>
+          )}
         </div>
 
         {/* Active Cell Coordinates & Quick Tip */}
