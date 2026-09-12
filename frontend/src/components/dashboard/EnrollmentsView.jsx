@@ -74,7 +74,7 @@ export function EnrollmentsView() {
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <UserPlus className="w-3.5 h-3.5" />
-            <span>STUDENT ENROLLMENTS & COHORT ADMISSIONS / backend/apis/enrollments.py</span>
+            <span>سجل الاشتراكات والعقود الطلابية المعتمدة</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             سجل تسجيل وترسيم الطلاب (Student Enrollments)
@@ -89,7 +89,7 @@ export function EnrollmentsView() {
           className="button button-primary text-xs"
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>ترسيم تسجيل طالب جديد (POST /enrollments)</span>
+          <span>ترسيم تسجيل طالب جديد</span>
         </button>
       </div>
 
@@ -188,7 +188,7 @@ export function EnrollmentsView() {
 
         <div className="excel-status-bar p-2 text-slate-600 flex items-center justify-between text-[11px]">
           <span>إجمالي التسجيلات المعروضة: <strong>{filtered.length}</strong></span>
-          <span className="text-blue-900 font-mono">FastAPI: /enrollments</span>
+          <span className="text-slate-600 font-medium">سجلات انتساب رسمية وموثقة</span>
         </div>
       </div>
 
@@ -200,7 +200,7 @@ export function EnrollmentsView() {
               <div className="flex items-center gap-2">
                 <UserPlus className="w-4 h-4 text-blue-900" />
                 <h3 className="font-bold text-sm text-slate-900">
-                  ترسيم تسجيل طالب في فوج (POST /enrollments)
+                  ترسيم تسجيل طالب في فوج دراسي
                 </h3>
               </div>
               <button

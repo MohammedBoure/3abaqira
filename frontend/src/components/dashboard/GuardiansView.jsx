@@ -87,7 +87,7 @@ export function GuardiansView() {
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <Users className="w-3.5 h-3.5" />
-            <span>GUARDIANS & PARENTS REGISTRY / backend/apis/guardians.py</span>
+            <span>دليل أولياء الأمور وجهات الاتصال الرسمية</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             سجل أولياء الأمور وجهات الاتصال (Guardians Master Directory)

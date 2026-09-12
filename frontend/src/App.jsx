@@ -25,6 +25,8 @@ import { CompetitionsView } from './components/dashboard/CompetitionsView';
 import { GuardiansView } from './components/dashboard/GuardiansView';
 import { SystemHealthView } from './components/dashboard/SystemHealthView';
 import { StudentRegistrationModal, CashDrawerModal } from './components/dashboard/PreviewModals';
+import { AuthLoginModal } from './components/common/AuthLoginModal';
+import { MOCK_AUTH_USERS } from './mock/mockData';
 import {
   Database,
   Cpu,
@@ -50,12 +52,41 @@ import {
 } from 'lucide-react';
 
 export function App() {
+  const [currentUser, setCurrentUser] = useState(MOCK_AUTH_USERS[0]); // mohammed_admin (SUPER_ADMIN)
   const [selectedBranch, setSelectedBranch] = useState('ALL');
   const [activeView, setActiveView] = useState('excel-grid');
   const [currentLang, setCurrentLang] = useState('ar');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
   const [isDrawerModalOpen, setIsDrawerModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [toastMsg, setToastMsg] = useState('');
+
+  const showToast = (msg) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(''), 3500);
+  };
+
+  // Branch Selection with Role-Based Authority Enforcement
+  const handleSelectBranch = (branchId) => {
+    const isAdmin = currentUser.role === 'SUPER_ADMIN' || currentUser.branch_id === 'ALL';
+    if (!isAdmin && currentUser.branch_id !== branchId) {
+      showToast(
+        `عذراً، حسابك الحالي (${currentUser.full_name}) مقيد بمقر [${currentUser.branch_name_ar}]. صلاحية التنقل بين المقرات مقتصرة على الإدارة العامة.`
+      );
+      return;
+    }
+    setSelectedBranch(branchId);
+  };
+
+  // Account Switching
+  const handleSelectUser = (user) => {
+    setCurrentUser(user);
+    if (user.branch_id !== 'ALL') {
+      setSelectedBranch(user.branch_id);
+    }
+    showToast(`تم تفعيل حساب: ${user.full_name} (${user.role_label_ar})`);
+  };
 
   // Toggle Language / Direction
   const toggleLanguage = () => {
@@ -71,84 +102,84 @@ export function App() {
 
   const viewHeaders = {
     'excel-grid': {
-      title: 'سجل جداول البيانات الموحد (Master Spreadsheet Ledger)',
-      eyebrow: 'SPREADSHEET SYSTEM / EXCEL ENGINE',
+      title: 'سجل جداول البيانات الشامل (Master Spreadsheet Ledger)',
+      eyebrow: 'منظومة الجداول والبيانات الشاملة',
     },
     'analytics': {
       title: 'منظومة الإحصائيات والتحليلات القيادية (Executive Analytics)',
-      eyebrow: 'BUSINESS INTELLIGENCE / CHARTS',
+      eyebrow: 'لوحة المؤشرات والذكاء المؤسسي',
     },
     'treasury': {
       title: 'حركة الصندوق والخزينة اليومية (Treasury & Cash Flow)',
-      eyebrow: 'FINANCIAL LEDGER / CASH DESK',
+      eyebrow: 'سجل المقبوضات والسيولة اليومية',
     },
     'programs': {
-      title: 'دليل البرامج والمستويات الأكاديمية (Academic Programs)',
-      eyebrow: 'CURRICULUM & COHORTS',
+      title: 'دليل البرامج والمستويات التعليمية (Academic Programs)',
+      eyebrow: 'المناهج والبرامج التدريبية المعتمدة',
     },
     'payroll': {
-      title: 'سجل الأجور والرواتب المستحقة (Payroll & Staff Compensation)',
-      eyebrow: 'HUMAN RESOURCES / SALARIES',
+      title: 'سجل الأجور والرواتب المستحقة (Payroll & Compensation)',
+      eyebrow: 'إدارة الموارد البشرية ومستحقات الأساتذة',
     },
     'provisions': {
-      title: 'تموين ومطعم الروضة (Provisions & Kitchen Supplies)',
-      eyebrow: 'LOGISTICS & INVENTORY',
+      title: 'تموين ومطعم الروضة والحضانة (Provisions & Meals)',
+      eyebrow: 'لوجستيات التغذية والإعاشة اليومية',
     },
     'academic-years': {
-      title: 'إدارة المواسم والسنوات الأكاديمية (Academic Cycles & Fiscal Years)',
-      eyebrow: 'FISCAL CYCLES / backend/apis/academic_years.py',
+      title: 'إدارة المواسم والسنوات الدراسية (Academic Cycles)',
+      eyebrow: 'الدورات والسنوات المالية والتعليمية',
     },
     'branches': {
-      title: 'إدارة الفروع والمقرات والقاعات الدراسية (Campuses & Facilities)',
-      eyebrow: 'MULTI-TENANT CAMPUSES / backend/apis/branches.py',
+      title: 'إدارة المقرات، الفروع والقاعات الدراسية (Campuses & Rooms)',
+      eyebrow: 'المقرات والمرافق التعليمية',
     },
     'audit-trail': {
-      title: 'سجل الرقابة والتتبع الأمني للنظام (System Audit Trail & Diffs)',
-      eyebrow: 'AUDIT & COMPLIANCE / backend/apis/audit.py',
+      title: 'سجل العمليات والرقابة الإدارية (System Audit Trail)',
+      eyebrow: 'التدقيق الإداري وتتبع التعديلات',
     },
     'auth-security': {
-      title: 'إدارة الهوية، الصلاحيات والأمان (Authentication & Security)',
-      eyebrow: 'SECURITY & JWT / backend/apis/auth.py',
+      title: 'إدارة الهوية، الصلاحيات والمستخدمين (Access Control)',
+      eyebrow: 'الأمان وإدارة صلاحيات الموظفين',
     },
     'invoices-payments': {
-      title: 'سجل الفواتير، الأقساط وسندات القبض (Invoices & Payments Ledger)',
-      eyebrow: 'FINANCE / backend/apis/invoices.py & payments.py',
+      title: 'سجل الفواتير، الأقساط وسندات القبض (Invoices & Receipts)',
+      eyebrow: 'الفوترة ومتابعة استحقاقات الأولياء',
     },
     'budgets-expenses': {
-      title: 'الميزانية التقديرية وسجل النفقات (Budgets & Expense Variances)',
-      eyebrow: 'COST CONTROL / backend/apis/budgets.py & expenses.py',
+      title: 'الميزانية التقديرية وسجل النفقات (Budgets & Expenses)',
+      eyebrow: 'الموازنة وسندات المصاريف التشغيلية',
     },
     'handovers': {
-      title: 'ترحيل وتسليم سيولة الصندوق والخزينة (Cash Handovers)',
-      eyebrow: 'SAFE CUSTODY / backend/apis/handovers.py & registers.py',
+      title: 'ترحيل وتسليم عهدة الصندوق والخزينة (Cash Handovers)',
+      eyebrow: 'تسليم وأمانات الخزينة المركزية',
     },
     'pricing-plans': {
-      title: 'خطط التسعير وهيكلة الأقساط والتخفيضات (Pricing Plans & Tariffs)',
-      eyebrow: 'REVENUE ARCHITECTURE / backend/apis/pricing_plans.py',
+      title: 'خطط التسعير وهيكلة الأقساط والتخفيضات (Pricing Plans)',
+      eyebrow: 'تعريفات الاشتراكات وقواعد الخصومات',
     },
     'enrollments': {
-      title: 'تسجيل الاشتراكات والعقود المالية (Enrolled Student Commitments)',
-      eyebrow: 'CONTRACTS / backend/apis/enrollments.py',
+      title: 'تسجيل الاشتراكات والعقود المعتمدة (Student Commitments)',
+      eyebrow: 'عقود وانتسابات الطلاب بالأفواج',
     },
     'groups-levels': {
-      title: 'الأفواج، المستويات وتوزيع القاعات الدراسية (Groups, Levels & Rooms)',
-      eyebrow: 'PEDAGOGY / backend/apis/groups.py, levels.py & classrooms.py',
+      title: 'الأفواج، المستويات وتوزيع القاعات (Groups & Levels)',
+      eyebrow: 'الهيكل البيداغوجي وتوزيع القاعات',
     },
     'schedules-sessions': {
       title: 'التوقيت الأسبوعي، تتبع الحصص والحضور (Schedules & Sessions)',
-      eyebrow: 'TIMETABLE & ATTENDANCE / backend/apis/schedules.py & sessions.py',
+      eyebrow: 'الجدول الزمني ومتابعة حضور الحصص',
     },
     'competitions': {
-      title: 'المسابقات والبطولات وتوليد الوصولات (Competitions & Events)',
-      eyebrow: 'TOURNAMENTS / backend/apis/competitions.py',
+      title: 'المسابقات والبطولات وتوليد وصولات المشاركة (Competitions)',
+      eyebrow: 'البطولات والفعاليات الرسمية',
     },
     'guardians': {
-      title: 'سجل أولياء الأمور وجهات الاتصال (Guardians Master Directory)',
-      eyebrow: 'PARENTS & CONTACTS / backend/apis/guardians.py',
+      title: 'دليل أولياء الأمور وجهات الاتصال (Guardians Directory)',
+      eyebrow: 'دليل الاتصال بأولياء الأمور والأوصياء',
     },
     'system-health': {
-      title: 'صحة الخادم، قاعدة البيانات والإعدادات (System Telemetry & Metadata)',
-      eyebrow: 'INFRASTRUCTURE / backend/apis/system.py',
+      title: 'حالة النظام، قاعدة البيانات والبارامترات (System Telemetry)',
+      eyebrow: 'جاهزية النظام والاتصال المركزي',
     },
   };
 
@@ -162,7 +193,9 @@ export function App() {
         activeView={activeView}
         onSelectView={setActiveView}
         selectedBranch={selectedBranch}
-        onSelectBranch={setSelectedBranch}
+        onSelectBranch={handleSelectBranch}
+        currentUser={currentUser}
+        onOpenLoginModal={() => setIsLoginModalOpen(true)}
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
       />
@@ -172,7 +205,7 @@ export function App() {
         {/* Sharp Top Navigation Bar */}
         <Navbar
           selectedBranch={selectedBranch}
-          onSelectBranch={setSelectedBranch}
+          onSelectBranch={handleSelectBranch}
           currentLang={currentLang}
           onToggleLang={toggleLanguage}
           activeView={activeView}
@@ -180,6 +213,8 @@ export function App() {
           onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
           onOpenStudentModal={() => setIsStudentModalOpen(true)}
           onOpenDrawerModal={() => setIsDrawerModalOpen(true)}
+          currentUser={currentUser}
+          onOpenLoginModal={() => setIsLoginModalOpen(true)}
         />
 
         {/* Board Heading with Margin View Switcher */}
@@ -391,28 +426,32 @@ export function App() {
         <footer className="workspace-status select-none">
           <div className="flex items-center gap-2">
             <span className="status-dot" />
-            <span className="font-semibold text-slate-800">قاعدة البيانات: MySQL (abaqira)</span>
+            <span className="font-semibold text-slate-800">قاعدة البيانات: نشطة ومتزامنة</span>
             <span className="status-separator">•</span>
-            <span className="hidden sm:inline">نظام التخزين المتكامل لجميع الواجهات والـ APIs</span>
+            <span className="hidden sm:inline">منظومة الإدارة المركزية لأكاديمية وروضة الأطفال العباقرة</span>
             <span className="status-separator hidden sm:inline">•</span>
-            <span className="text-blue-900 font-mono text-[10px]">3abaqira Spatial Blue v2.4</span>
+            <span className="text-blue-900 font-semibold text-[11px]">
+              المقر: {selectedBranch === 'CENTER' ? 'المركز الأكاديمي' : selectedBranch === 'RAWDA' ? 'الروضة والحضانة' : 'كافة الفروع'}
+            </span>
           </div>
 
-          <div className="flex items-center gap-3 font-mono text-[10px]">
+          <div className="flex items-center gap-3 text-[11px]">
             <span className="flex items-center gap-1 text-slate-700">
-              <Table className="w-3 h-3 text-blue-900" />
-              Excel Engine: 26 cols
+              <UserCheck className="w-3.5 h-3.5 text-blue-900" />
+              {currentUser.full_name} ({currentUser.role_label_ar})
             </span>
             <span className="status-separator hidden md:inline">•</span>
-            <span className="hidden md:flex items-center gap-1 text-slate-600">
-              <Cpu className="w-3 h-3 text-blue-900" />
-              WebGL Canvas: Active
-            </span>
-            <span className="status-separator">•</span>
-            <span className="text-emerald-700 font-semibold">100% Full Width</span>
+            <span className="text-emerald-700 font-semibold">حالة الحساب: مصادق عليه</span>
           </div>
         </footer>
       </div>
+
+      {/* Toast Notification */}
+      {toastMsg && (
+        <div className="fixed bottom-12 end-4 z-50 bg-blue-950 text-white px-3.5 py-2.5 text-xs shadow-xl border border-blue-800 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
+          <span>{toastMsg}</span>
+        </div>
+      )}
 
       {/* 4. Interactive Dialog Modals */}
       <StudentRegistrationModal
@@ -422,6 +461,12 @@ export function App() {
       <CashDrawerModal
         isOpen={isDrawerModalOpen}
         onClose={() => setIsDrawerModalOpen(false)}
+      />
+      <AuthLoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        currentUser={currentUser}
+        onSelectUser={handleSelectUser}
       />
     </div>
   );

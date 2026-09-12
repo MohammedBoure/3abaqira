@@ -103,7 +103,7 @@ export function AcademicYearsView() {
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <CalendarRange className="w-3.5 h-3.5" />
-            <span>FISCAL & ACADEMIC CYCLES / backend/apis/academic_years.py</span>
+            <span>المواسم والدورات الأكاديمية والمالية</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             إدارة المواسم والسنوات الأكاديمية (Academic Years)
@@ -357,10 +357,10 @@ export function AcademicYearsView() {
           <div className="flex items-center gap-2">
             <span>عدد السجلات المعروضة: <strong>{filteredYears.length}</strong></span>
             <span>•</span>
-            <span className="text-blue-900 font-mono">FastAPI Router: /academic-years</span>
+            <span className="text-slate-600 font-medium">حالة المواسم: معتمدة وموثقة</span>
           </div>
           <div className="text-[10px] text-slate-400">
-            الحماية الأمنية: يتطلب صلاحيات ADMIN أو DIRECTOR لتعديل النطاقات
+            الحماية والأمان: يتطلب صلاحيات الإدارة العامة لتعديل النطاقات
           </div>
         </div>
       </div>
@@ -373,7 +373,7 @@ export function AcademicYearsView() {
               <div className="flex items-center gap-2">
                 <CalendarRange className="w-4 h-4 text-blue-900" />
                 <h3 className="font-bold text-sm text-slate-900">
-                  إضافة موسم أكاديمي ومالي جديد (POST /academic-years)
+                  إضافة موسم أكاديمي ومالي جديد
                 </h3>
               </div>
               <button
@@ -479,7 +479,7 @@ export function AcademicYearsView() {
             <div className="p-3 border-b border-amber-200 bg-amber-50 flex items-center gap-2 text-amber-900">
               <AlertCircle className="w-4 h-4 text-amber-700" />
               <h3 className="font-bold text-sm">
-                تأكيد تبديل الموسم النشط (POST /{confirmActiveModal.year_id}/set-current)
+                تأكيد تبديل وتعيين الموسم الدراسي النشط
               </h3>
             </div>
 

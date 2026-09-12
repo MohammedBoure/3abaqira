@@ -140,13 +140,13 @@ export function BranchesView({ selectedBranch: globalSelectedBranch, onSelectBra
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <Building2 className="w-3.5 h-3.5" />
-            <span>CAMPUSES & FACILITIES / backend/apis/branches.py</span>
+            <span>المقرات والمرافق التعليمية المعتمدة</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             إدارة الفروع والمقرات والقاعات الدراسية (Branches & Facilities)
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            إدارة النطاقات التشغيلية (Multi-Tenant)، توزيع القاعات والمخابر، متابعة التجهيزات ونسب استغلال المقاعد.
+            إدارة المقرات والمرافق، توزيع القاعات والمخابر، متابعة التجهيزات ونسب استغلال المقاعد.
           </p>
         </div>
 
@@ -163,7 +163,7 @@ export function BranchesView({ selectedBranch: globalSelectedBranch, onSelectBra
             className="button button-primary text-xs"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>تسجيل فرع تشغيلي جديد (POST /branches)</span>
+            <span>تسجيل فرع تشغيلي جديد</span>
           </button>
         </div>
       </div>
@@ -347,8 +347,8 @@ export function BranchesView({ selectedBranch: globalSelectedBranch, onSelectBra
               قاعات ومخابر: {selectedBranchData.name_ar} ({selectedBranchData.classrooms.length} قاعات)
             </h4>
           </div>
-          <span className="text-[11px] text-slate-500 font-mono">
-            FastAPI: GET /branches/{selectedBranchData.branch_id}/classrooms
+          <span className="text-xs text-slate-500 font-medium">
+            سجل القاعات المعتمد
           </span>
         </div>
 
@@ -432,7 +432,7 @@ export function BranchesView({ selectedBranch: globalSelectedBranch, onSelectBra
               <div className="flex items-center gap-2">
                 <Building2 className="w-4 h-4 text-blue-900" />
                 <h3 className="font-bold text-sm text-slate-900">
-                  تسجيل مقر أو فرع تشغيلي جديد (POST /branches)
+                  تسجيل مقر أو فرع تشغيلي جديد
                 </h3>
               </div>
               <button

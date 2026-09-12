@@ -61,7 +61,7 @@ export function GroupsLevelsView() {
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <GraduationCap className="w-3.5 h-3.5" />
-            <span>ACADEMIC GROUPS & CURRICULUM LEVELS / backend/apis/groups.py & levels.py</span>
+            <span>الهيكل البيداغوجي والأفواج الدراسية المعتمدة</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             إدارة الأفواج، المراحل والمستويات الأكاديمية (Groups & Levels)
@@ -94,7 +94,7 @@ export function GroupsLevelsView() {
             className="button button-primary text-xs"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>إنشاء فوج دراسي (POST /groups)</span>
+            <span>إنشاء فوج دراسي جديد</span>
           </button>
         </div>
       </div>
@@ -200,7 +200,7 @@ export function GroupsLevelsView() {
 
           <div className="excel-status-bar p-2 text-slate-600 flex items-center justify-between text-[11px]">
             <span>عدد الأفواج: <strong>{groups.length}</strong></span>
-            <span className="text-blue-900 font-mono">FastAPI: /groups</span>
+            <span className="text-slate-600 font-medium">أفواج معتمدة وموزعة على القاعات</span>
           </div>
         </div>
       ) : (
@@ -245,7 +245,7 @@ export function GroupsLevelsView() {
 
           <div className="excel-status-bar p-2 text-slate-600 flex items-center justify-between text-[11px]">
             <span>إجمالي المستويات: <strong>{levels.length}</strong></span>
-            <span className="text-blue-900 font-mono">FastAPI: /levels</span>
+            <span className="text-slate-600 font-medium">مستويات معتمدة في البرامج</span>
           </div>
         </div>
       )}
@@ -258,7 +258,7 @@ export function GroupsLevelsView() {
               <div className="flex items-center gap-2">
                 <Plus className="w-4 h-4 text-blue-900" />
                 <h3 className="font-bold text-sm text-slate-900">
-                  إنشاء وتحديد فوج دراسي (POST /groups)
+                  إنشاء وتحديد فوج دراسي جديد
                 </h3>
               </div>
               <button

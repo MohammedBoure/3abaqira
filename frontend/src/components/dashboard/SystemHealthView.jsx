@@ -74,7 +74,7 @@ export function SystemHealthView() {
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <Activity className="w-3.5 h-3.5" />
-            <span>SYSTEM HEALTH & CONFIGURATION / backend/apis/system.py</span>
+            <span>حالة الخادم وقاعدة البيانات المركزية</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             صحة الخادم، قاعدة البيانات والإعدادات (System Telemetry & Metadata)

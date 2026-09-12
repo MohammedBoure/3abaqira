@@ -78,7 +78,7 @@ export function PricingPlansView() {
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <Coins className="w-3.5 h-3.5" />
-            <span>PRICING MATRICES & TUITION PLANS / backend/apis/pricing_plans.py</span>
+            <span>خطط الرسوم والاشتراكات المعيارية</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             خطط التسعير ومصفوفة الخصومات (Pricing Plans & Tuition Matrices)
@@ -93,7 +93,7 @@ export function PricingPlansView() {
           className="button button-primary text-xs"
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>إضافة خطة تسعير جديدة (POST /pricing-plans)</span>
+          <span>إضافة خطة تسعير جديدة</span>
         </button>
       </div>
 
@@ -244,7 +244,7 @@ export function PricingPlansView() {
 
         <div className="excel-status-bar p-2 text-slate-600 flex items-center justify-between text-[11px]">
           <span>إجمالي خطط التسعير: <strong>{plans.length} خطط</strong></span>
-          <span className="text-blue-900 font-mono">FastAPI: /pricing-plans</span>
+          <span className="text-slate-600 font-medium">تعريفات معتمدة سارية المفعول</span>
         </div>
       </div>
 
@@ -256,7 +256,7 @@ export function PricingPlansView() {
               <div className="flex items-center gap-2">
                 <Coins className="w-4 h-4 text-blue-900" />
                 <h3 className="font-bold text-sm text-slate-900">
-                  إضافة خطة تسعير جديدة (POST /pricing-plans)
+                  إضافة خطة تسعير جديدة
                 </h3>
               </div>
               <button

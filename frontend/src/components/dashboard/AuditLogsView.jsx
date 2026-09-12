@@ -82,7 +82,7 @@ export function AuditLogsView() {
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <ShieldAlert className="w-3.5 h-3.5" />
-            <span>AUDIT LOGGING & COMPLIANCE / backend/apis/audit.py</span>
+            <span>سجل الرقابة الإدارية وتدقيق العمليات</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             سجل الرقابة والتتبع الأمني للنظام (System Audit Trail)
@@ -98,7 +98,7 @@ export function AuditLogsView() {
             className="button button-primary text-xs"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>تسجيل قيد تدقيق يدوي (POST /logs)</span>
+            <span>تسجيل قيد تدقيق وملاحظة إدارية</span>
           </button>
         </div>
       </div>
@@ -310,10 +310,10 @@ export function AuditLogsView() {
           <div className="flex items-center gap-2">
             <span>عدد العمليات المعروضة: <strong>{filteredLogs.length}</strong></span>
             <span>•</span>
-            <span className="text-blue-900 font-mono">FastAPI Router: /audit/logs</span>
+            <span className="text-slate-600 font-medium">حالة السجل: محمي وموثق تلقائياً</span>
           </div>
-          <div className="text-[10px] text-slate-400 font-mono">
-            Requires: SUPER_ADMIN or ADMIN role
+          <div className="text-[10px] text-slate-500">
+            صلاحية الاطلاع: الإدارة العامة ورؤساء الأقسام
           </div>
         </div>
       </div>
@@ -467,7 +467,7 @@ export function AuditLogsView() {
               <div className="flex items-center gap-2">
                 <Plus className="w-4 h-4 text-blue-900" />
                 <h3 className="font-bold text-sm text-slate-900">
-                  تسجيل قيد تدقيق ومراقبة يدوي (POST /audit/logs)
+                  تسجيل قيد تدقيق وملاحظة إدارية
                 </h3>
               </div>
               <button

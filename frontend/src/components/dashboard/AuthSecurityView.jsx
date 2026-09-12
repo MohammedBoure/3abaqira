@@ -119,7 +119,7 @@ export function AuthSecurityView() {
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <KeyRound className="w-3.5 h-3.5" />
-            <span>IDENTITY & JWT TOKEN LIFECYCLE / backend/apis/auth.py</span>
+            <span>منظومة الهوية والأمان وصلاحيات النظام</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             إدارة الهوية، الصلاحيات والأمان (Authentication & Security)
@@ -261,7 +261,7 @@ export function AuthSecurityView() {
               <div className="flex items-center gap-2 pb-2 border-b border-slate-200">
                 <Lock className="w-4 h-4 text-blue-900" />
                 <h3 className="font-bold text-sm text-slate-900">
-                  تعديل كلمة مرور الحساب (POST /auth/change-password)
+                  تعديل كلمة مرور الحساب
                 </h3>
               </div>
 
@@ -460,7 +460,7 @@ export function AuthSecurityView() {
 
           <div className="excel-status-bar p-2 text-slate-600 flex items-center justify-between text-[11px]">
             <span>إجمالي الحسابات المسجلة: <strong>{users.length}</strong></span>
-            <span className="text-blue-900 font-mono">FastAPI: /auth/login, /auth/token</span>
+            <span className="text-slate-600 font-medium">جلسات مشفرة ومؤمنة بالكامل</span>
           </div>
         </div>
       )}

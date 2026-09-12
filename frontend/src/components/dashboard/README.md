@@ -1,6 +1,7 @@
 # Dashboard & Module Components (`frontend/src/components/dashboard/`)
 
 This directory contains the operational dashboard views, spreadsheet grids, and template interfaces for the 3abaqira Enterprise Platform.
+All views have been streamlined to remove raw technical strings (API endpoints, SQL logs, developer tags) in favor of clear Arabic enterprise business terminology, and integrate with the role-based branch authority system.
 
 ## Files
 

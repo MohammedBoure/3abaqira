@@ -135,7 +135,7 @@ export function SchedulesSessionsView() {
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <Calendar className="w-3.5 h-3.5" />
-            <span>SCHEDULES & CONDUCTION / backend/apis/schedules.py & sessions.py</span>
+            <span>الجداول الزمنية وتتبع الحصص والحضور</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             التوقيت الأسبوعي، تتبع الحصص والحضور (Schedules & Sessions)

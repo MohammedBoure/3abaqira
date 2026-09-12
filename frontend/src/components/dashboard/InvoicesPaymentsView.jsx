@@ -238,7 +238,7 @@ export function InvoicesPaymentsView({ selectedBranch = 'ALL' }) {
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <Receipt className="w-3.5 h-3.5" />
-            <span>INVOICING & PAYMENTS LEDGER / backend/apis/invoices.py & payments.py</span>
+            <span>دفتر الفوترة والتحصيل المالي المعتمد</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             سجل الفواتير، الأقساط وسندات القبض (Invoices & Payments)
@@ -271,7 +271,7 @@ export function InvoicesPaymentsView({ selectedBranch = 'ALL' }) {
             className="button button-primary text-xs"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>تسجيل سند قبض (POST /payments)</span>
+            <span>تسجيل سند قبض جديد</span>
           </button>
         </div>
       </div>
@@ -471,7 +471,7 @@ export function InvoicesPaymentsView({ selectedBranch = 'ALL' }) {
 
           <div className="excel-status-bar p-2 text-slate-600 flex items-center justify-between text-[11px]">
             <span>عدد الأقساط المعروضة: <strong>{filteredInvoices.length}</strong> (انقر بالزر الأيمن على السطر لإجراءات إضافية)</span>
-            <span className="text-blue-900 font-mono">FastAPI: /invoices, /invoices/{'{id}'}/credit-payment</span>
+            <span className="text-slate-600 font-medium">حالة الربط: متزامن مع قيود الخزينة</span>
           </div>
         </div>
       ) : (
@@ -548,7 +548,7 @@ export function InvoicesPaymentsView({ selectedBranch = 'ALL' }) {
 
           <div className="excel-status-bar p-2 text-slate-600 flex items-center justify-between text-[11px]">
             <span>إجمالي سندات القبض: <strong>{payments.length} سند</strong></span>
-            <span className="text-blue-900 font-mono">FastAPI: GET /payments, POST /payments</span>
+            <span className="text-slate-600 font-medium">سندات موثقة ومرحلة مالياً</span>
           </div>
         </div>
       )}
@@ -561,7 +561,7 @@ export function InvoicesPaymentsView({ selectedBranch = 'ALL' }) {
               <div className="flex items-center gap-2">
                 <Receipt className="w-4 h-4 text-blue-900" />
                 <h3 className="font-bold text-sm text-slate-900">
-                  تسجيل سند قبض وإيصال مالي (POST /payments)
+                  تسجيل سند قبض وإيصال مالي معتمد
                 </h3>
               </div>
               <button

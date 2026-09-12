@@ -69,7 +69,7 @@ export function HandoversView() {
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <ArrowRightLeft className="w-3.5 h-3.5" />
-            <span>DRAWER REMITTANCES & CASH HANDOVERS / backend/apis/handovers.py</span>
+            <span>ترحيل السيولة النقدية وأمانات الخزينة</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             سجل تسليم السيولة والترحيل للخزينة (Cash Handovers & Safe Remittance)
@@ -84,7 +84,7 @@ export function HandoversView() {
           className="button button-primary text-xs"
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>تسجيل أمر تسليم سيولة (POST /cash-handovers)</span>
+          <span>تسجيل أمر تسليم سيولة</span>
         </button>
       </div>
 
@@ -194,7 +194,7 @@ export function HandoversView() {
 
         <div className="excel-status-bar p-2 text-slate-600 flex items-center justify-between text-[11px]">
           <span>إجمالي عمليات الترحيل: <strong>{handovers.length}</strong></span>
-          <span className="text-blue-900 font-mono">FastAPI: /cash-handovers</span>
+          <span className="text-slate-600 font-medium">عمليات ترحيل موثقة ومصادق عليها</span>
         </div>
       </div>
 
@@ -206,7 +206,7 @@ export function HandoversView() {
               <div className="flex items-center gap-2">
                 <ArrowRightLeft className="w-4 h-4 text-blue-900" />
                 <h3 className="font-bold text-sm text-slate-900">
-                  أمر تسليم سيولة للخزينة (POST /cash-handovers)
+                  أمر تسليم سيولة للخزينة المركزية
                 </h3>
               </div>
               <button

@@ -161,7 +161,7 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL' }) {
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <TrendingDown className="w-3.5 h-3.5" />
-            <span>OPERATIONAL EXPENSES & BUDGET VARIANCES / backend/apis/expenses.py & budgets.py</span>
+            <span>سجل النفقات التشغيلية ومراقبة الموازنات</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
             سجل النفقات التشغيلية والموازنات التقديرية (Expenses & Budgets)
@@ -201,7 +201,7 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL' }) {
             className="button button-primary text-xs"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>تسجيل سند صرف (POST /expenses)</span>
+            <span>تسجيل سند صرف جديد</span>
           </button>
         </div>
       </div>
@@ -313,7 +313,7 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL' }) {
 
           <div className="excel-status-bar p-2 text-slate-600 flex items-center justify-between text-[11px]">
             <span>إجمالي النفقات المعروضة: <strong>{filteredExpenses.length} سند</strong> (انقر بالزر الأيمن للمزيد من الإجراءات)</span>
-            <span className="text-blue-900 font-mono">FastAPI: /expenses</span>
+            <span className="text-slate-600 font-medium">حالة السندات: معتمدة ومرحلة في الميزانية</span>
           </div>
         </div>
       )}
@@ -418,7 +418,7 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL' }) {
               <div className="flex items-center gap-2">
                 <TrendingDown className="w-4 h-4 text-rose-700" />
                 <h3 className="font-bold text-sm text-slate-900">
-                  تسجيل سند صرف ونفقة تشغيلية (POST /expenses)
+                  تسجيل سند صرف ونفقة تشغيلية معتمدة
                 </h3>
               </div>
               <button

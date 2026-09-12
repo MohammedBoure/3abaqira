@@ -21,6 +21,8 @@ export function Navbar({
   onToggleSidebar,
   onOpenStudentModal,
   onOpenDrawerModal,
+  currentUser,
+  onOpenLoginModal,
 }) {
   const viewTitles = {
     'excel-grid': 'سجل جداول البيانات الموحد (Excel Grid)',
@@ -92,11 +94,34 @@ export function Navbar({
 
       {/* Right: Actions & Controls */}
       <div className="flex items-center gap-2">
-        {/* Save & Database Status */}
+        {/* Clean System Status */}
         <div className="hidden xl:flex items-center gap-1.5 text-[11px] text-slate-500 pe-2 border-e border-slate-200">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
-          <span className="font-mono text-slate-600">MySQL: abaqira</span>
+          <span className="text-slate-700 font-medium">النظام: نشط ومتزامن</span>
         </div>
+
+        {/* User Account Switcher Button */}
+        <button
+          onClick={onOpenLoginModal}
+          className="h-7 px-2 flex items-center gap-2 border border-slate-300 bg-slate-50 hover:bg-blue-50/80 hover:border-blue-900 transition-colors text-xs"
+          title="انقر لتبديل الحساب أو تغيير صلاحيات المقر"
+        >
+          <div className="w-5 h-5 bg-blue-950 text-white flex items-center justify-center font-mono font-bold text-[10px]">
+            {currentUser?.full_name?.split(' ').map((n) => n[0]).join('') || 'U'}
+          </div>
+          <div className="hidden md:flex flex-col text-start leading-none">
+            <span className="font-bold text-slate-900 text-[11px] truncate max-w-[110px]">
+              {currentUser?.full_name || 'تسجيل الدخول'}
+            </span>
+            <span className="text-[9px] text-slate-500 font-normal">
+              {currentUser?.branch_id === 'ALL'
+                ? 'إدارة عامة'
+                : currentUser?.branch_id === 'CENTER'
+                ? 'مقر المركز'
+                : 'مقر الروضة'}
+            </span>
+          </div>
+        </button>
 
         {/* Language Switcher */}
         <button
