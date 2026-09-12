@@ -4,6 +4,8 @@ An enterprise management and database migration system for **3abaqira Academy & 
 
 ## Project Overview
 
+- path of frontend prototype: https://genius-sms.me
+
 This repository transitions the organization's administration from legacy Excel spreadsheets (`center.xlsx` and `rawda.xlsx`) to a scalable, unified relational database and enterprise software suite.
 
 ## Directory Structure & Architecture
