@@ -42,7 +42,7 @@ export function HeroBanner({ selectedBranch = 'ALL', onOpenStudentModal, onOpenD
 
             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-semibold bg-emerald-50 text-emerald-900 border border-emerald-300">
               <ShieldCheck className="w-3 h-3 text-emerald-700" />
-              <span>قاعدة البيانات: MySQL (abaqira)</span>
+              <span>حالة المزامنة: متصل ومتزامن</span>
             </span>
 
             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-mono text-slate-600 bg-slate-100 border border-slate-200">

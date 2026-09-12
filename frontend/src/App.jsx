@@ -27,29 +27,8 @@ import { SystemHealthView } from './components/dashboard/SystemHealthView';
 import { StudentRegistrationModal, CashDrawerModal } from './components/dashboard/PreviewModals';
 import { AuthLoginModal } from './components/common/AuthLoginModal';
 import { MOCK_AUTH_USERS } from './mock/mockData';
-import {
-  Database,
-  Cpu,
-  Table,
-  BarChart3,
-  Coins,
-  Users,
-  UtensilsCrossed,
-  GraduationCap,
-  CalendarRange,
-  Building2,
-  ShieldAlert,
-  KeyRound,
-  Receipt,
-  CreditCard,
-  Layers,
-  ArrowLeftRight,
-  TrendingUp,
-  Calendar,
-  Trophy,
-  Activity,
-  UserCheck,
-} from 'lucide-react';
+import { UserCheck } from 'lucide-react';
+
 
 export function App() {
   const [currentUser, setCurrentUser] = useState(MOCK_AUTH_USERS[0]); // mohammed_admin (SUPER_ADMIN)
@@ -100,88 +79,7 @@ export function App() {
     document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
   }, [currentLang]);
 
-  const viewHeaders = {
-    'excel-grid': {
-      title: 'سجل جداول البيانات الشامل (Master Spreadsheet Ledger)',
-      eyebrow: 'منظومة الجداول والبيانات الشاملة',
-    },
-    'analytics': {
-      title: 'منظومة الإحصائيات والتحليلات القيادية (Executive Analytics)',
-      eyebrow: 'لوحة المؤشرات والذكاء المؤسسي',
-    },
-    'treasury': {
-      title: 'حركة الصندوق والخزينة اليومية (Treasury & Cash Flow)',
-      eyebrow: 'سجل المقبوضات والسيولة اليومية',
-    },
-    'programs': {
-      title: 'دليل البرامج والمستويات التعليمية (Academic Programs)',
-      eyebrow: 'المناهج والبرامج التدريبية المعتمدة',
-    },
-    'payroll': {
-      title: 'سجل الأجور والرواتب المستحقة (Payroll & Compensation)',
-      eyebrow: 'إدارة الموارد البشرية ومستحقات الأساتذة',
-    },
-    'provisions': {
-      title: 'تموين ومطعم الروضة والحضانة (Provisions & Meals)',
-      eyebrow: 'لوجستيات التغذية والإعاشة اليومية',
-    },
-    'academic-years': {
-      title: 'إدارة المواسم والسنوات الدراسية (Academic Cycles)',
-      eyebrow: 'الدورات والسنوات المالية والتعليمية',
-    },
-    'branches': {
-      title: 'إدارة المقرات، الفروع والقاعات الدراسية (Campuses & Rooms)',
-      eyebrow: 'المقرات والمرافق التعليمية',
-    },
-    'audit-trail': {
-      title: 'سجل العمليات والرقابة الإدارية (System Audit Trail)',
-      eyebrow: 'التدقيق الإداري وتتبع التعديلات',
-    },
-    'auth-security': {
-      title: 'إدارة الهوية، الصلاحيات والمستخدمين (Access Control)',
-      eyebrow: 'الأمان وإدارة صلاحيات الموظفين',
-    },
-    'invoices-payments': {
-      title: 'سجل الفواتير، الأقساط وسندات القبض (Invoices & Receipts)',
-      eyebrow: 'الفوترة ومتابعة استحقاقات الأولياء',
-    },
-    'budgets-expenses': {
-      title: 'الميزانية التقديرية وسجل النفقات (Budgets & Expenses)',
-      eyebrow: 'الموازنة وسندات المصاريف التشغيلية',
-    },
-    'handovers': {
-      title: 'ترحيل وتسليم عهدة الصندوق والخزينة (Cash Handovers)',
-      eyebrow: 'تسليم وأمانات الخزينة المركزية',
-    },
-    'pricing-plans': {
-      title: 'خطط التسعير وهيكلة الأقساط والتخفيضات (Pricing Plans)',
-      eyebrow: 'تعريفات الاشتراكات وقواعد الخصومات',
-    },
-    'enrollments': {
-      title: 'تسجيل الاشتراكات والعقود المعتمدة (Student Commitments)',
-      eyebrow: 'عقود وانتسابات الطلاب بالأفواج',
-    },
-    'groups-levels': {
-      title: 'الأفواج، المستويات وتوزيع القاعات (Groups & Levels)',
-      eyebrow: 'الهيكل البيداغوجي وتوزيع القاعات',
-    },
-    'schedules-sessions': {
-      title: 'التوقيت الأسبوعي، تتبع الحصص والحضور (Schedules & Sessions)',
-      eyebrow: 'الجدول الزمني ومتابعة حضور الحصص',
-    },
-    'competitions': {
-      title: 'المسابقات والبطولات وتوليد وصولات المشاركة (Competitions)',
-      eyebrow: 'البطولات والفعاليات الرسمية',
-    },
-    'guardians': {
-      title: 'دليل أولياء الأمور وجهات الاتصال (Guardians Directory)',
-      eyebrow: 'دليل الاتصال بأولياء الأمور والأوصياء',
-    },
-    'system-health': {
-      title: 'حالة النظام، قاعدة البيانات والبارامترات (System Telemetry)',
-      eyebrow: 'جاهزية النظام والاتصال المركزي',
-    },
-  };
+
 
   return (
     <div className="relative h-screen w-screen text-slate-800 flex font-arabic bg-[#f8fafc] overflow-hidden">
@@ -217,79 +115,7 @@ export function App() {
           onOpenLoginModal={() => setIsLoginModalOpen(true)}
         />
 
-        {/* Board Heading with Margin View Switcher */}
-        <div className="px-3 sm:px-4 pt-2 pb-2 border-b border-slate-200/80 bg-white/70 backdrop-blur-xs flex flex-col md:flex-row md:items-center justify-between gap-2 flex-shrink-0 z-10 select-none">
-          <div>
-            <div className="eyebrow flex items-center gap-1.5">
-              <span>3ABAQIRA SPATIAL</span>
-              <span>/</span>
-              <span className="text-blue-900 font-bold">{viewHeaders[activeView]?.eyebrow || 'MODULE'}</span>
-            </div>
-            <h1 className="text-xs sm:text-sm font-bold font-serif text-slate-900 tracking-tight mt-0.5">
-              {viewHeaders[activeView]?.title || 'منظومة إدارة العباقرة'}
-            </h1>
-          </div>
 
-          {/* Quick Segmented Switcher */}
-          <div className="view-switch overflow-x-auto max-w-full">
-            <button
-              onClick={() => setActiveView('excel-grid')}
-              className={activeView === 'excel-grid' ? 'active' : ''}
-              title="سجل الجداول والطلاب"
-            >
-              <Table className="w-3.5 h-3.5" />
-              <span>جداول البيانات (Excel)</span>
-            </button>
-            <button
-              onClick={() => setActiveView('invoices-payments')}
-              className={activeView === 'invoices-payments' ? 'active' : ''}
-              title="الفواتير والمدفوعات"
-            >
-              <Receipt className="w-3.5 h-3.5" />
-              <span>الفواتير والأقساط</span>
-            </button>
-            <button
-              onClick={() => setActiveView('schedules-sessions')}
-              className={activeView === 'schedules-sessions' ? 'active' : ''}
-              title="التوقيت والحضور"
-            >
-              <Calendar className="w-3.5 h-3.5" />
-              <span>التوقيت والحصص</span>
-            </button>
-            <button
-              onClick={() => setActiveView('analytics')}
-              className={activeView === 'analytics' ? 'active' : ''}
-              title="مؤشرات الأداء"
-            >
-              <BarChart3 className="w-3.5 h-3.5" />
-              <span>التحليلات</span>
-            </button>
-            <button
-              onClick={() => setActiveView('treasury')}
-              className={activeView === 'treasury' ? 'active' : ''}
-              title="الصندوق والخزينة"
-            >
-              <Coins className="w-3.5 h-3.5" />
-              <span>الخزينة</span>
-            </button>
-            <button
-              onClick={() => setActiveView('branches')}
-              className={activeView === 'branches' ? 'active' : ''}
-              title="الفروع والمقرات"
-            >
-              <Building2 className="w-3.5 h-3.5" />
-              <span>الفروع</span>
-            </button>
-            <button
-              onClick={() => setActiveView('system-health')}
-              className={activeView === 'system-health' ? 'active' : ''}
-              title="صحة الخادم والبارامترات"
-            >
-              <Activity className="w-3.5 h-3.5" />
-              <span>النظام (System)</span>
-            </button>
-          </div>
-        </div>
 
         {/* Scrollable Workspace Body */}
         <main className="flex-1 overflow-y-auto px-2.5 sm:px-4 py-3 space-y-3 min-w-0">
