@@ -16,6 +16,7 @@ import {
   Copy,
   Printer,
   Filter,
+  Table as TableIcon,
 } from 'lucide-react';
 import { ContextMenu } from '../common/ContextMenu';
 import {
@@ -23,12 +24,13 @@ import {
   MOCK_EXPENSE_CATEGORIES,
   MOCK_BUDGET_VARIANCES,
 } from '../../mock/mockData';
+import { ExpensesLedgerGrid } from './ExpensesLedgerGrid';
 
-export function BudgetsExpensesView({ selectedBranch = 'ALL' }) {
+export function BudgetsExpensesView({ selectedBranch = 'ALL', onSelectBranch }) {
   const [expenses, setExpenses] = useState(MOCK_EXPENSES_LIST);
   const [categories, setCategories] = useState(MOCK_EXPENSE_CATEGORIES);
   const [variances, setVariances] = useState(MOCK_BUDGET_VARIANCES);
-  const [subTab, setSubTab] = useState('expenses'); // 'expenses' | 'budgets' | 'categories'
+  const [subTab, setSubTab] = useState('daily-ledger'); // 'daily-ledger' | 'expenses' | 'budgets' | 'categories'
   const [searchTerm, setSearchTerm] = useState('');
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
@@ -174,6 +176,13 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL' }) {
         <div className="flex flex-wrap items-center gap-2">
           <div className="view-switch text-xs">
             <button
+              onClick={() => setSubTab('daily-ledger')}
+              className={subTab === 'daily-ledger' ? 'active' : ''}
+            >
+              <TableIcon className="w-3 h-3" />
+              <span>جدول المصاريف اليومية (Excel)</span>
+            </button>
+            <button
               onClick={() => setSubTab('expenses')}
               className={subTab === 'expenses' ? 'active' : ''}
             >
@@ -206,11 +215,22 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL' }) {
         </div>
       </div>
 
-      {/* 2. Telemetry Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-        <div className="bg-white border border-slate-300 p-3 border-s-4 border-s-rose-700 shadow-xs">
-          <span className="eyebrow">MONTHLY ACTUAL SPENT</span>
-          <div className="text-xl font-bold font-mono text-rose-800 mt-1">
+      {/* Sub-Tab 1: Excel Daily Expenses Ledger (المصاريف اليومية) */}
+      {subTab === 'daily-ledger' && (
+        <ExpensesLedgerGrid
+          selectedBranch={selectedBranch}
+          onSelectBranch={onSelectBranch}
+        />
+      )}
+
+      {/* Other Sub-Tabs: Telemetry Cards & Classic Ledger */}
+      {subTab !== 'daily-ledger' && (
+        <>
+          {/* 2. Telemetry Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+            <div className="bg-white border border-slate-300 p-3 border-s-4 border-s-rose-700 shadow-xs">
+              <span className="eyebrow">MONTHLY ACTUAL SPENT</span>
+              <div className="text-xl font-bold font-mono text-rose-800 mt-1">
             {totalSpent.toLocaleString()} دج
           </div>
           <div className="text-[11px] text-slate-500 mt-1">
@@ -408,6 +428,8 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL' }) {
             ))}
           </div>
         </div>
+      )}
+      </>
       )}
 
       {/* Modal: Record Expense */}

@@ -36,7 +36,7 @@ export function Navbar({
     'audit-trail': 'سجل الرقابة والتتبع الأمني (Audit Trail)',
     'auth-security': 'إدارة الهوية والصلاحيات والأمان (Auth & Security)',
     'invoices-payments': 'سجل الفواتير وسندات القبض (Invoices & Payments)',
-    'budgets-expenses': 'الميزانية التقديرية وسجل النفقات (Budgets & Expenses)',
+    'budgets-expenses': 'المصاريف اليومية وسندات الصرف (Daily Expenses & Budgets)',
     'handovers': 'التسليم وسجل ترحيل العهدة (Delivery & Safe Remittance)',
     'pricing-plans': 'خطط التسعير والأقساط المعيارية (Pricing Plans)',
     'enrollments': 'تسجيل اشتراكات الطلاب المعتمدة (Enrollments)',

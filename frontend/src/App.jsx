@@ -204,7 +204,10 @@ export function App() {
 
           {/* View 12: Budgets & Expenses (backend/apis/budgets.py & expenses.py) */}
           {activeView === 'budgets-expenses' && (
-            <BudgetsExpensesView selectedBranch={selectedBranch} />
+            <BudgetsExpensesView
+              selectedBranch={selectedBranch}
+              onSelectBranch={setSelectedBranch}
+            />
           )}
 
           {/* View 13: Cash Handovers & Registers (backend/apis/handovers.py & registers.py) */}

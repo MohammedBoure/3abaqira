@@ -56,7 +56,7 @@ export function Sidebar({
   const finModules = [
     { id: 'invoices-payments', labelAr: 'الفواتير وسندات القبض', icon: Receipt, tag: 'تحصيل' },
     { id: 'treasury', labelAr: 'حركة الخزينة والصندوق', icon: Coins, tag: 'سيولة' },
-    { id: 'budgets-expenses', labelAr: 'الميزانية وسندات الصرف', icon: TrendingUp, tag: 'نفقات' },
+    { id: 'budgets-expenses', labelAr: 'المصاريف اليومية والصرف', icon: TrendingUp, tag: 'مصاريف' },
     { id: 'handovers', labelAr: 'التسليم وترحيل العهدة', icon: ArrowLeftRight, tag: 'تسليم' },
     { id: 'pricing-plans', labelAr: 'خطط التسعير والأقساط', icon: CreditCard, tag: 'تعريفات' },
     { id: 'payroll', labelAr: 'سجل الأجور والرواتب', icon: Wallet, tag: 'رواتب' },
