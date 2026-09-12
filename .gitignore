@@ -32,4 +32,5 @@ node_modules/
 dist/
 .vite/
 
-
+# Office Temporary Lock Files
+~$*

@@ -37,7 +37,7 @@ export function Navbar({
     'auth-security': 'إدارة الهوية والصلاحيات والأمان (Auth & Security)',
     'invoices-payments': 'سجل الفواتير وسندات القبض (Invoices & Payments)',
     'budgets-expenses': 'الميزانية التقديرية وسجل النفقات (Budgets & Expenses)',
-    'handovers': 'ترحيل سيولة الصندوق والخزينة (Cash Handovers)',
+    'handovers': 'التسليم وسجل ترحيل العهدة (Delivery & Safe Remittance)',
     'pricing-plans': 'خطط التسعير والأقساط المعيارية (Pricing Plans)',
     'enrollments': 'تسجيل اشتراكات الطلاب المعتمدة (Enrollments)',
     'groups-levels': 'الأفواج، المستويات وتوزيع القاعات (Groups & Levels)',

@@ -10,10 +10,14 @@ import {
   Building2,
   X,
   FileCheck,
+  Table as TableIcon,
+  Receipt,
 } from 'lucide-react';
 import { MOCK_HANDOVERS } from '../../mock/mockData';
+import { DeliveryLedgerGrid } from './DeliveryLedgerGrid';
 
-export function HandoversView() {
+export function HandoversView({ selectedBranch = 'ALL', onSelectBranch }) {
+  const [activeTab, setActiveTab] = useState('DELIVERY_GRID'); // 'DELIVERY_GRID' | 'VOUCHERS'
   const [handovers, setHandovers] = useState(MOCK_HANDOVERS);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -64,29 +68,69 @@ export function HandoversView() {
 
   return (
     <div className="space-y-3 font-arabic">
-      {/* 1. Header */}
+      {/* 1. Header with Tab Controls */}
       <div className="bg-white border border-slate-300 p-3 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs">
         <div>
           <div className="eyebrow flex items-center gap-1.5 text-blue-900">
             <ArrowRightLeft className="w-3.5 h-3.5" />
-            <span>ترحيل السيولة النقدية وأمانات الخزينة</span>
+            <span>التسليم وترحيل السيولة النقدية والعهدة</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
-            سجل تسليم السيولة والترحيل للخزينة (Cash Handovers & Safe Remittance)
+            التسليم (سجل تسليم السيولة والترحيل للخزينة)
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            توثيق حركات تسليم مبالغ الصناديق اليومية من أمناء الصندوق والمشرفين إلى الخزينة الآمنة مع مطابقة الأرصدة.
+            جدول إكسيل المعتمد لتوثيق التسليم اليومي والشهري وتتبع إيصالات ومبالغ الترحيل للخزينة.
           </p>
         </div>
 
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="button button-primary text-xs"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>تسجيل أمر تسليم سيولة</span>
-        </button>
+        {/* View Switcher Tabs */}
+        <div className="flex items-center gap-1 border border-slate-300 bg-slate-100 p-0.5">
+          <button
+            onClick={() => setActiveTab('DELIVERY_GRID')}
+            className={`px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+              activeTab === 'DELIVERY_GRID'
+                ? 'bg-blue-900 text-white shadow-xs'
+                : 'text-slate-700 hover:bg-white/80'
+            }`}
+          >
+            <TableIcon className="w-3.5 h-3.5" />
+            <span>جدول التسليم السنوي (Excel)</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('VOUCHERS')}
+            className={`px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+              activeTab === 'VOUCHERS'
+                ? 'bg-blue-900 text-white shadow-xs'
+                : 'text-slate-700 hover:bg-white/80'
+            }`}
+          >
+            <Receipt className="w-3.5 h-3.5" />
+            <span>سندات الترحيل المعتمدة</span>
+          </button>
+        </div>
       </div>
+
+      {/* Tab 1: Delivery Excel Grid Component */}
+      {activeTab === 'DELIVERY_GRID' && (
+        <DeliveryLedgerGrid
+          selectedBranch={selectedBranch}
+          onSelectBranch={onSelectBranch}
+        />
+      )}
+
+      {/* Tab 2: Classic Vouchers & Summary */}
+      {activeTab === 'VOUCHERS' && (
+        <div className="space-y-3">
+          <div className="flex justify-end">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="button button-primary text-xs"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>تسجيل أمر تسليم سيولة جديد</span>
+            </button>
+          </div>
 
       {/* 2. Key Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -197,6 +241,8 @@ export function HandoversView() {
           <span className="text-slate-600 font-medium">عمليات ترحيل موثقة ومصادق عليها</span>
         </div>
       </div>
+    </div>
+  )}
 
       {/* Modal: New Handover */}
       {isModalOpen && (

@@ -209,7 +209,10 @@ export function App() {
 
           {/* View 13: Cash Handovers & Registers (backend/apis/handovers.py & registers.py) */}
           {activeView === 'handovers' && (
-            <HandoversView selectedBranch={selectedBranch} />
+            <HandoversView
+              selectedBranch={selectedBranch}
+              onSelectBranch={setSelectedBranch}
+            />
           )}
 
           {/* View 14: Pricing Plans & Tariffs (backend/apis/pricing_plans.py) */}
