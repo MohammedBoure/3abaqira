@@ -537,17 +537,17 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
         </div>
       </div>
 
-      {/* 2. Primary Excel Spreadsheet Table View */}
+      {/* 2. Primary Excel Spreadsheet Table View - Comfortable Density & Soft Borders */}
       <div
         ref={tableContainerRef}
-        className="w-full overflow-x-auto overflow-y-auto max-h-[calc(100vh-270px)] border-b border-slate-300 relative select-text"
+        className="w-full overflow-x-auto overflow-y-auto max-h-[calc(100vh-230px)] border-b border-slate-200/90 relative select-text"
       >
-        <table className="excel-table text-xs border-collapse">
-          {/* Header Row */}
-          <thead>
+        <table className="excel-table text-xs border-collapse w-full">
+          {/* Sticky Header Row */}
+          <thead className="sticky top-0 z-30 bg-slate-50/95 backdrop-blur-xs shadow-xs border-b border-slate-200/90">
             <tr>
               {/* Select All Checkbox */}
-              <th className="excel-th w-10 text-center sticky start-0 z-30 bg-slate-100 border-e border-slate-300">
+              <th className="excel-th w-10 text-center sticky start-0 z-30 bg-slate-100/95 border-e border-slate-200 py-2.5 sm:py-3 px-2">
                 <button
                   onClick={toggleSelectAll}
                   className="flex items-center justify-center w-full"
@@ -567,8 +567,8 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
                   <th
                     key={col.id}
                     onContextMenu={(e) => handleContextMenu(e, null, col, col.labelAr)}
-                    className={`excel-th ${col.width} ${
-                      isPinned ? 'sticky z-20 bg-slate-100 border-e border-slate-300' : ''
+                    className={`excel-th py-2.5 sm:py-3 px-3 ${col.width} ${
+                      isPinned ? 'sticky z-20 bg-slate-100/95 border-e border-slate-200' : ''
                     }`}
                     style={
                       isPinned && cIndex === 1
@@ -578,8 +578,8 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
                         : {}
                     }
                   >
-                    <div className="flex flex-col text-start">
-                      <span>{col.labelAr}</span>
+                    <div className="flex flex-col text-start leading-tight">
+                      <span className="font-semibold text-slate-800 text-xs">{col.labelAr}</span>
                       <span className="text-[9px] text-slate-400 font-latin font-normal">
                         {col.labelEn}
                       </span>
@@ -589,13 +589,13 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
               })}
 
               {/* Action Column */}
-              <th className="excel-th w-16 text-center sticky end-0 z-20 bg-slate-100 border-l border-slate-300">
+              <th className="excel-th w-16 text-center sticky end-0 z-20 bg-slate-100/95 border-s border-slate-200 py-2.5 sm:py-3 px-2">
                 إجراءات
               </th>
             </tr>
           </thead>
 
-          {/* Table Body */}
+          {/* Table Body with Comfortable Dense Padding & Soft Separators */}
           <tbody>
             {filteredData.length > 0 ? (
               filteredData.map((row, rIndex) => {
@@ -605,12 +605,12 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
                     key={row.id}
                     onContextMenu={(e) => handleContextMenu(e, row, visibleColumns[0], row.fullNameAr)}
                     className={`
-                      ${isSelected ? 'bg-blue-100/50' : rIndex % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'}
+                      ${isSelected ? 'bg-blue-100/60' : rIndex % 2 === 0 ? 'bg-white' : 'even:bg-slate-50/40'}
                       hover:bg-blue-50/70 transition-colors
                     `}
                   >
                     {/* Row Selector Checkbox */}
-                    <td className="excel-td text-center sticky start-0 z-20 bg-inherit border-e border-slate-300">
+                    <td className="excel-td text-center sticky start-0 z-20 bg-inherit border-e border-slate-200/80 py-2.5 sm:py-3 px-2">
                       <button
                         onClick={() => toggleSelectRow(row.id)}
                         className="flex items-center justify-center w-full"
@@ -642,8 +642,8 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
                           onClick={() => setActiveCell({ rowIndex: rIndex, colIndex: cIndex })}
                           onContextMenu={(e) => handleContextMenu(e, row, col, rawValue)}
                           className={`
-                            excel-td ${col.width}
-                            ${isPinned ? 'sticky z-10 bg-inherit border-e border-slate-300' : ''}
+                            excel-td py-2.5 sm:py-3 px-3 ${col.width}
+                            ${isPinned ? 'sticky z-10 bg-inherit border-e border-slate-200/80' : ''}
                             ${isCurrentCell ? 'excel-cell-active' : ''}
                           `}
                           style={
@@ -654,17 +654,28 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
                               : {}
                           }
                         >
-                          {col.isStatus ? (
+                          {col.id === 'fullNameAr' ? (
+                            <div className="flex flex-col text-start leading-tight">
+                              <span className="text-sm font-semibold text-slate-900 leading-snug">
+                                {row.fullNameAr}
+                              </span>
+                              <span className="text-[11px] text-slate-500 font-mono tabular-nums">
+                                {row.studentCode}
+                              </span>
+                            </div>
+                          ) : col.isStatus ? (
                             <StatusBadge status={rawValue} />
                           ) : (
-                            <span>{displayVal ?? '-'}</span>
+                            <span className={col.isCurrency ? 'font-mono font-bold text-slate-900 tabular-nums' : 'text-xs text-slate-800'}>
+                              {displayVal ?? '-'}
+                            </span>
                           )}
                         </td>
                       );
                     })}
 
                     {/* Action Controls */}
-                    <td className="excel-td py-1 px-1.5 text-center sticky end-0 z-10 bg-inherit border-l border-slate-300">
+                    <td className="excel-td py-2 px-1.5 text-center sticky end-0 z-10 bg-inherit border-s border-slate-200/80">
                       <div className="flex items-center justify-center gap-1">
                         <button
                           onClick={() => setInspectStudent(row)}
@@ -696,11 +707,83 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
               </tr>
             )}
           </tbody>
+
+          {/* Sticky Table Footer: Live Aggregations & Financial Totals */}
+          <tfoot className="sticky bottom-0 z-30 bg-slate-100/95 backdrop-blur-xs border-t-2 border-slate-300 text-xs font-semibold shadow-xs select-none">
+            <tr>
+              {/* Checkbox Column Count */}
+              <td className="excel-td py-2 px-2 text-center sticky start-0 z-30 bg-slate-100 border-e border-slate-200 font-mono text-[11px] text-slate-600 tabular-nums">
+                {filteredData.length}
+              </td>
+
+              {/* Column-by-column totals matching column alignments */}
+              {visibleColumns.map((col, cIndex) => {
+                const isPinned = col.pinned;
+                let cellTotal = null;
+
+                if (col.id === 'fullNameAr') {
+                  cellTotal = (
+                    <span className="font-bold text-slate-900 text-xs">
+                      المجموع ({stats.count} طالب)
+                    </span>
+                  );
+                } else if (col.id === 'agreedFee') {
+                  cellTotal = (
+                    <span className="font-bold font-mono text-slate-900 tabular-nums">
+                      {stats.sumAgreed.toLocaleString('fr-DZ')} دج
+                    </span>
+                  );
+                } else if (col.id === 'totalPaid') {
+                  cellTotal = (
+                    <span className="font-bold font-mono text-emerald-800 tabular-nums">
+                      {stats.sumPaid.toLocaleString('fr-DZ')} دج
+                    </span>
+                  );
+                } else if (col.id === 'remainingBalance') {
+                  cellTotal = (
+                    <span className="font-bold font-mono text-rose-800 tabular-nums">
+                      {stats.sumRemaining.toLocaleString('fr-DZ')} دج
+                    </span>
+                  );
+                } else if (col.id === 'paymentStatus') {
+                  cellTotal = (
+                    <span className="text-[11px] font-mono font-bold text-blue-900 tabular-nums">
+                      تحصيل: {stats.collectionRate}%
+                    </span>
+                  );
+                }
+
+                return (
+                  <td
+                    key={`foot-${col.id}`}
+                    className={`
+                      excel-td py-2 px-3 text-xs ${col.width}
+                      ${isPinned ? 'sticky z-20 bg-slate-100 border-e border-slate-200' : ''}
+                    `}
+                    style={
+                      isPinned && cIndex === 1
+                        ? { insetInlineStart: '2.5rem' }
+                        : isPinned && cIndex === 2
+                        ? { insetInlineStart: '9.5rem' }
+                        : {}
+                    }
+                  >
+                    {cellTotal}
+                  </td>
+                );
+              })}
+
+              {/* Action Column Footer */}
+              <td className="excel-td py-2 px-2 text-center sticky end-0 z-20 bg-slate-100 border-s border-slate-200">
+                -
+              </td>
+            </tr>
+          </tfoot>
         </table>
       </div>
 
       {/* 3. Excel Workbook Sheet Tabs Bar (Just like Microsoft Excel) */}
-      <div className="border-b border-slate-300 bg-slate-200 flex items-center justify-between px-2 overflow-x-auto select-none">
+      <div className="border-t border-slate-200/90 bg-slate-100/90 flex items-center justify-between px-2.5 py-1 select-none overflow-x-auto">
         <div className="flex items-center">
           <span className="text-[10px] text-slate-500 font-bold px-2 py-1 font-mono uppercase">
             WORKBOOK SHEETS:
@@ -708,10 +791,10 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
 
           <button
             onClick={() => onSelectBranch?.('ALL')}
-            className={`px-3 py-1 text-xs font-semibold flex items-center gap-1.5 border-e border-slate-300 transition-colors ${
+            className={`px-3 py-1 text-xs font-semibold flex items-center gap-1.5 border-e border-slate-200 transition-colors ${
               selectedBranch === 'ALL'
                 ? 'bg-white text-blue-950 border-t-2 border-t-blue-900 shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                : 'text-slate-600 hover:bg-slate-200/60 hover:text-slate-900'
             }`}
           >
             <TableIcon className="w-3 h-3 text-blue-900" />
@@ -720,10 +803,10 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
 
           <button
             onClick={() => onSelectBranch?.('CENTER')}
-            className={`px-3 py-1 text-xs font-semibold flex items-center gap-1.5 border-e border-slate-300 transition-colors ${
+            className={`px-3 py-1 text-xs font-semibold flex items-center gap-1.5 border-e border-slate-200 transition-colors ${
               selectedBranch === 'CENTER'
                 ? 'bg-white text-blue-950 border-t-2 border-t-blue-900 shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                : 'text-slate-600 hover:bg-slate-200/60 hover:text-slate-900'
             }`}
           >
             <Building2 className="w-3 h-3 text-blue-800" />
@@ -732,10 +815,10 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
 
           <button
             onClick={() => onSelectBranch?.('RAWDA')}
-            className={`px-3 py-1 text-xs font-semibold flex items-center gap-1.5 border-e border-slate-300 transition-colors ${
+            className={`px-3 py-1 text-xs font-semibold flex items-center gap-1.5 border-e border-slate-200 transition-colors ${
               selectedBranch === 'RAWDA'
                 ? 'bg-white text-blue-950 border-t-2 border-t-blue-900 shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                : 'text-slate-600 hover:bg-slate-200/60 hover:text-slate-900'
             }`}
           >
             <Building2 className="w-3 h-3 text-blue-800" />
@@ -743,52 +826,13 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch }) {
           </button>
         </div>
 
-        <div className="text-[10px] text-slate-500 font-mono hidden md:block">
-          جاهز للإدخال والتحرير • انقر بالزر الأيمن على أي خلية
-        </div>
-      </div>
-
-      {/* 4. Live Formula & Aggregation Status Ribbon (Excel Bottom Bar) */}
-      <div className="excel-status-bar p-2 px-3 flex flex-wrap items-center justify-between gap-3 text-slate-700 select-none">
-        {/* Active Cell Coordinates */}
-        <div className="flex items-center gap-3">
-          <span className="bg-white px-2 py-0.5 border border-slate-300 font-bold text-blue-900">
+        {/* Active Cell Coordinates & Quick Tip */}
+        <div className="flex items-center gap-2.5 text-xs text-slate-500 font-mono hidden md:flex">
+          <span className="bg-white px-2 py-0.5 border border-slate-200 text-blue-900 font-bold tabular-nums shadow-2xs">
             الخلية: R{activeCell.rowIndex + 1}C{activeCell.colIndex + 1}
           </span>
-          <span>
-            السجلات: <strong className="text-slate-900">{stats.count}</strong>
-            {selectedRowIds.size > 0 && ` (محدد: ${selectedRowIds.size})`}
-          </span>
-        </div>
-
-        {/* Real-time Financial Calculations */}
-        <div className="flex items-center gap-4 flex-wrap text-xs">
-          <span>
-            إجمالي المستحق (SUM Due):{' '}
-            <strong className="text-slate-900 font-mono">
-              {stats.sumAgreed.toLocaleString('fr-DZ')} دج
-            </strong>
-          </span>
-          <span className="text-slate-300">|</span>
-          <span>
-            المبالغ المحصلة (SUM Paid):{' '}
-            <strong className="text-emerald-800 font-mono">
-              {stats.sumPaid.toLocaleString('fr-DZ')} دج
-            </strong>
-          </span>
-          <span className="text-slate-300">|</span>
-          <span>
-            المستحقات المتأخرة (Remaining):{' '}
-            <strong className="text-rose-800 font-mono">
-              {stats.sumRemaining.toLocaleString('fr-DZ')} دج
-            </strong>
-          </span>
-          <span className="text-slate-300">|</span>
-          <span>
-            نسبة التحصيل (Collection Rate):{' '}
-            <strong className="text-blue-900 font-mono">
-              {stats.collectionRate}%
-            </strong>
+          <span className="text-[11px] text-slate-500">
+            انقر بالزر الأيمن للقائمة التفاعلية
           </span>
         </div>
       </div>

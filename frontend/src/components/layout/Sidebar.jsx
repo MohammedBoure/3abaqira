@@ -187,7 +187,9 @@ export function Sidebar({
       <div className="flex-1 overflow-y-auto p-2.5 space-y-3.5">
         {/* Operations & Attendance */}
         <div>
-          <span className="eyebrow px-2 block mb-1">OPERATIONS & SHEETS</span>
+          <span className="text-xs uppercase font-bold tracking-wider text-slate-500 px-2 block mb-1.5">
+            OPERATIONS & SHEETS
+          </span>
           <nav className="space-y-0.5">
             {opModules.map((item) => {
               const Icon = item.icon;
@@ -196,11 +198,13 @@ export function Sidebar({
                 <button
                   key={item.id}
                   onClick={() => onSelectView(item.id)}
-                  className={`nav-item ${isActive ? 'nav-active' : ''}`}
+                  className={`nav-item group ${isActive ? 'nav-active' : ''}`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-900' : 'text-slate-500'}`} />
-                  <span className="truncate flex-1">{item.labelAr}</span>
-                  <span className={`tag ${isActive ? 'tag-blue' : ''} text-[9px] font-mono py-0`}>
+                  <Icon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-blue-600' : 'text-slate-500'}`} />
+                  <span className={`truncate flex-1 text-xs ${isActive ? 'font-semibold text-blue-700' : 'font-medium text-slate-700 group-hover:text-slate-900'}`}>
+                    {item.labelAr}
+                  </span>
+                  <span className={`tag text-[9px] font-mono py-0 px-1.5 rounded-[3px] ${isActive ? 'bg-blue-100 text-blue-800 font-bold border-blue-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
                     {item.tag}
                   </span>
                 </button>
@@ -211,7 +215,9 @@ export function Sidebar({
 
         {/* Financial & Accounting */}
         <div>
-          <span className="eyebrow px-2 block mb-1">FINANCE & BILLING</span>
+          <span className="text-xs uppercase font-bold tracking-wider text-slate-500 px-2 block mb-1.5">
+            FINANCE & BILLING
+          </span>
           <nav className="space-y-0.5">
             {finModules.map((item) => {
               const Icon = item.icon;
@@ -220,11 +226,13 @@ export function Sidebar({
                 <button
                   key={item.id}
                   onClick={() => onSelectView(item.id)}
-                  className={`nav-item ${isActive ? 'nav-active' : ''}`}
+                  className={`nav-item group ${isActive ? 'nav-active' : ''}`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-900' : 'text-slate-500'}`} />
-                  <span className="truncate flex-1">{item.labelAr}</span>
-                  <span className={`tag ${isActive ? 'tag-blue' : ''} text-[9px] font-mono py-0`}>
+                  <Icon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-blue-600' : 'text-slate-500'}`} />
+                  <span className={`truncate flex-1 text-xs ${isActive ? 'font-semibold text-blue-700' : 'font-medium text-slate-700 group-hover:text-slate-900'}`}>
+                    {item.labelAr}
+                  </span>
+                  <span className={`tag text-[9px] font-mono py-0 px-1.5 rounded-[3px] ${isActive ? 'bg-blue-100 text-blue-800 font-bold border-blue-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
                     {item.tag}
                   </span>
                 </button>
@@ -235,7 +243,9 @@ export function Sidebar({
 
         {/* Academic & Curriculum */}
         <div>
-          <span className="eyebrow px-2 block mb-1">ACADEMIC & CURRICULUM</span>
+          <span className="text-xs uppercase font-bold tracking-wider text-slate-500 px-2 block mb-1.5">
+            ACADEMIC & CURRICULUM
+          </span>
           <nav className="space-y-0.5">
             {academicModules.map((item) => {
               const Icon = item.icon;
@@ -244,11 +254,13 @@ export function Sidebar({
                 <button
                   key={item.id}
                   onClick={() => onSelectView(item.id)}
-                  className={`nav-item ${isActive ? 'nav-active' : ''}`}
+                  className={`nav-item group ${isActive ? 'nav-active' : ''}`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-900' : 'text-slate-500'}`} />
-                  <span className="truncate flex-1">{item.labelAr}</span>
-                  <span className={`tag ${isActive ? 'tag-blue' : ''} text-[9px] font-mono py-0`}>
+                  <Icon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-blue-600' : 'text-slate-500'}`} />
+                  <span className={`truncate flex-1 text-xs ${isActive ? 'font-semibold text-blue-700' : 'font-medium text-slate-700 group-hover:text-slate-900'}`}>
+                    {item.labelAr}
+                  </span>
+                  <span className={`tag text-[9px] font-mono py-0 px-1.5 rounded-[3px] ${isActive ? 'bg-blue-100 text-blue-800 font-bold border-blue-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
                     {item.tag}
                   </span>
                 </button>
@@ -259,7 +271,9 @@ export function Sidebar({
 
         {/* System & Telemetry */}
         <div>
-          <span className="eyebrow px-2 block mb-1">SYSTEM & GOVERNANCE</span>
+          <span className="text-xs uppercase font-bold tracking-wider text-slate-500 px-2 block mb-1.5">
+            SYSTEM & GOVERNANCE
+          </span>
           <nav className="space-y-0.5">
             {sysModules.map((item) => {
               const Icon = item.icon;
@@ -268,11 +282,13 @@ export function Sidebar({
                 <button
                   key={item.id}
                   onClick={() => onSelectView(item.id)}
-                  className={`nav-item ${isActive ? 'nav-active' : ''}`}
+                  className={`nav-item group ${isActive ? 'nav-active' : ''}`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-900' : 'text-slate-500'}`} />
-                  <span className="truncate flex-1">{item.labelAr}</span>
-                  <span className={`tag ${isActive ? 'tag-blue' : ''} text-[9px] font-mono py-0`}>
+                  <Icon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-blue-600' : 'text-slate-500'}`} />
+                  <span className={`truncate flex-1 text-xs ${isActive ? 'font-semibold text-blue-700' : 'font-medium text-slate-700 group-hover:text-slate-900'}`}>
+                    {item.labelAr}
+                  </span>
+                  <span className={`tag text-[9px] font-mono py-0 px-1.5 rounded-[3px] ${isActive ? 'bg-blue-100 text-blue-800 font-bold border-blue-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
                     {item.tag}
                   </span>
                 </button>

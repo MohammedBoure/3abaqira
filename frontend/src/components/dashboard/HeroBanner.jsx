@@ -25,7 +25,7 @@ export function HeroBanner({ selectedBranch = 'ALL', onOpenStudentModal, onOpenD
       : 'نطاق موحد: كافة المقرات (273 مسجل)';
 
   return (
-    <div className="relative rounded-none p-4 sm:p-5 bg-white border border-slate-300 shadow-xs">
+    <div className="relative rounded-none p-4 sm:p-5 bg-white border border-slate-200/90 shadow-xs">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           {/* Top meta tags */}

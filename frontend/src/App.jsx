@@ -248,26 +248,26 @@ export function App() {
           )}
         </main>
 
-        {/* Spatial Knowledge Workspace Blue Status Footer */}
-        <footer className="workspace-status select-none">
+        {/* Spatial Knowledge Workspace Blue Status Footer - Slim Low-Profile System Bar */}
+        <footer className="h-7 text-xs bg-slate-100/90 text-slate-600 border-t border-slate-200 flex items-center justify-between px-3 select-none flex-shrink-0">
           <div className="flex items-center gap-2">
-            <span className="status-dot" />
-            <span className="font-semibold text-slate-800">قاعدة البيانات: نشطة ومتزامنة</span>
-            <span className="status-separator">•</span>
-            <span className="hidden sm:inline">منظومة الإدارة المركزية لأكاديمية وروضة الأطفال العباقرة</span>
-            <span className="status-separator hidden sm:inline">•</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 flex-shrink-0" />
+            <span className="font-semibold text-slate-800">قاعدة البيانات: متزامنة</span>
+            <span className="text-slate-300">•</span>
+            <span className="hidden sm:inline text-slate-600">منظومة الإدارة المركزية لأكاديمية وروضة الأطفال العباقرة</span>
+            <span className="text-slate-300 hidden sm:inline">•</span>
             <span className="text-blue-900 font-semibold text-[11px]">
               المقر: {selectedBranch === 'CENTER' ? 'المركز الأكاديمي' : selectedBranch === 'RAWDA' ? 'الروضة والحضانة' : 'كافة الفروع'}
             </span>
           </div>
 
-          <div className="flex items-center gap-3 text-[11px]">
-            <span className="flex items-center gap-1 text-slate-700">
+          <div className="flex items-center gap-2.5 text-[11px]">
+            <span className="flex items-center gap-1 text-slate-700 font-medium">
               <UserCheck className="w-3.5 h-3.5 text-blue-900" />
               {currentUser.full_name} ({currentUser.role_label_ar})
             </span>
-            <span className="status-separator hidden md:inline">•</span>
-            <span className="text-emerald-700 font-semibold">حالة الحساب: مصادق عليه</span>
+            <span className="text-slate-300 hidden md:inline">•</span>
+            <span className="text-emerald-700 font-semibold hidden md:inline">مصادق عليه</span>
           </div>
         </footer>
       </div>

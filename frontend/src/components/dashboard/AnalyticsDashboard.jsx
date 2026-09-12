@@ -83,72 +83,80 @@ export function AnalyticsDashboard({ selectedBranch = 'ALL' }) {
       {/* 2. Razor-Sharp Executive KPI Tiles */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {/* Tile 1: Cash Collections */}
-        <div className="p-3.5 bg-white border border-slate-300 border-s-4 border-s-emerald-700 shadow-xs">
+        <div className="p-3.5 bg-white border border-slate-200/90 border-s-4 border-s-emerald-700 shadow-xs">
           <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-            <span className="font-semibold uppercase tracking-wider">المبالغ المحصلة فعلياً</span>
-            <CheckCircle className="w-4 h-4 text-emerald-700" />
+            <span className="font-semibold uppercase tracking-wider text-[11px]">المبالغ المحصلة فعلياً</span>
+            <CheckCircle className="w-4 h-4 text-emerald-700 flex-shrink-0" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight">
-            {totalPaid.toLocaleString('fr-DZ')} دج
+          <div className="flex flex-col gap-1 min-h-[54px] justify-center">
+            <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight tabular-nums leading-none">
+              {totalPaid.toLocaleString('fr-DZ')} دج
+            </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
-            <span className="text-emerald-700 font-bold font-mono">
+          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] min-h-[24px]">
+            <span className="text-emerald-700 font-bold font-mono tabular-nums">
               {collectionRate}% نسبة التحصيل
             </span>
-            <span className="text-slate-500 font-mono">
+            <span className="text-slate-500 font-mono tabular-nums">
               من {totalAgreed.toLocaleString('fr-DZ')} دج
             </span>
           </div>
         </div>
 
         {/* Tile 2: Outstanding Arrears */}
-        <div className="p-3.5 bg-white border border-slate-300 border-s-4 border-s-amber-600 shadow-xs">
+        <div className="p-3.5 bg-white border border-slate-200/90 border-s-4 border-s-amber-600 shadow-xs">
           <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-            <span className="font-semibold uppercase tracking-wider">الأقساط والمستحقات المتبقية</span>
-            <AlertTriangle className="w-4 h-4 text-amber-600" />
+            <span className="font-semibold uppercase tracking-wider text-[11px]">الأقساط والمستحقات المتبقية</span>
+            <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight">
-            {totalRemaining.toLocaleString('fr-DZ')} دج
+          <div className="flex flex-col gap-1 min-h-[54px] justify-center">
+            <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight tabular-nums leading-none">
+              {totalRemaining.toLocaleString('fr-DZ')} دج
+            </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] min-h-[24px]">
             <span className="text-amber-800 font-medium">
               موزعة على 4 دفعات مجدولة
             </span>
-            <span className="text-slate-500 font-mono">
+            <span className="text-slate-500 font-mono tabular-nums">
               {MOCK_STUDENTS_ROSTER.filter((s) => s.remainingBalance > 0).length} ملفات غير مسددة
             </span>
           </div>
         </div>
 
         {/* Tile 3: Student Enrollment & Headcount */}
-        <div className="p-3.5 bg-white border border-slate-300 border-s-4 border-s-blue-900 shadow-xs">
+        <div className="p-3.5 bg-white border border-slate-200/90 border-s-4 border-s-blue-900 shadow-xs">
           <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-            <span className="font-semibold uppercase tracking-wider">إجمالي الطلاب والاشتراكات</span>
-            <Users className="w-4 h-4 text-blue-900" />
+            <span className="font-semibold uppercase tracking-wider text-[11px]">إجمالي الطلاب والاشتراكات</span>
+            <Users className="w-4 h-4 text-blue-900 flex-shrink-0" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight">
-            273 مسجل
+          <div className="flex flex-col gap-1 min-h-[54px] justify-center">
+            <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight tabular-nums leading-none">
+              273 مسجل
+            </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
-            <span className="text-blue-900 font-medium">
+          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] min-h-[24px]">
+            <span className="text-blue-900 font-medium tabular-nums">
               88.4% استغلال المقاعد
             </span>
-            <span className="text-slate-500 font-mono">
+            <span className="text-slate-500 font-mono tabular-nums">
               السعة الإجمالية: 310
             </span>
           </div>
         </div>
 
         {/* Tile 4: Net Operational Margin */}
-        <div className="p-3.5 bg-white border border-slate-300 border-s-4 border-s-slate-800 shadow-xs">
+        <div className="p-3.5 bg-white border border-slate-200/90 border-s-4 border-s-slate-800 shadow-xs">
           <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-            <span className="font-semibold uppercase tracking-wider">السيولة الصافية للصندوق</span>
-            <Wallet className="w-4 h-4 text-slate-800" />
+            <span className="font-semibold uppercase tracking-wider text-[11px]">السيولة الصافية للصندوق</span>
+            <Wallet className="w-4 h-4 text-slate-800 flex-shrink-0" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight">
-            184,500 دج
+          <div className="flex flex-col gap-1 min-h-[54px] justify-center">
+            <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight tabular-nums leading-none">
+              184,500 دج
+            </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+          <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] min-h-[24px]">
             <span className="text-slate-700 font-medium font-mono">
               رصيد الخزينة المعتمد
             </span>
@@ -390,29 +398,31 @@ export function AnalyticsDashboard({ selectedBranch = 'ALL' }) {
           </div>
         </div>
 
-        {/* Departmental Expense Ledger Breakdown */}
-        <div className="p-4 bg-white border border-slate-300 shadow-xs">
+        {/* Departmental Expense Ledger Breakdown - Zero Clipping Guardrails */}
+        <div className="p-4 bg-white border border-slate-200/90 shadow-xs min-h-fit">
           <div className="flex items-center justify-between pb-3 border-b border-slate-200">
             <h3 className="text-sm font-bold text-slate-900 font-display">
               توزيع النفقات والأعباء التشغيلية (Expense Breakdown)
             </h3>
-            <span className="text-xs font-mono font-bold text-rose-800">
+            <span className="text-xs font-mono font-bold text-rose-800 tabular-nums">
               المجموع: 671,100 دج
             </span>
           </div>
 
           <div className="mt-3 divide-y divide-slate-100">
             {MOCK_ANALYTICS_DATA.departmentCostBreakdown.map((item) => (
-              <div key={item.nameAr} className="py-2 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-slate-600" />
-                  <span className="font-medium text-slate-800">{item.nameAr}</span>
+              <div key={item.nameAr} className="py-2.5 flex items-center justify-between text-xs gap-3">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <span className="w-2 h-2 bg-slate-600 flex-shrink-0" />
+                  <span className="font-medium text-slate-800 whitespace-normal break-words leading-relaxed">
+                    {item.nameAr}
+                  </span>
                 </div>
-                <div className="flex items-center gap-3 font-mono">
-                  <span className="text-slate-900 font-bold">
+                <div className="flex items-center gap-3 font-mono flex-shrink-0 tabular-nums">
+                  <span className="text-slate-900 font-bold tabular-nums">
                     {item.amount.toLocaleString('fr-DZ')} دج
                   </span>
-                  <span className="px-1.5 py-0.5 text-[10px] bg-slate-100 border border-slate-200 text-slate-600">
+                  <span className="px-1.5 py-0.5 text-[10px] bg-slate-100 border border-slate-200 text-slate-600 font-bold tabular-nums">
                     {item.percentage}%
                   </span>
                 </div>
