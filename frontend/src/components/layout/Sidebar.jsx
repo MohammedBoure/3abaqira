@@ -100,10 +100,7 @@ export function Sidebar({
       groupTitle: 'البرامج بنظام الدفعات',
       groupEn: 'INSTALLMENT COURSES',
       items: [
-        { id: 'center-support-classes', labelAr: 'دروس الدعم العلمي والأدبي', icon: GraduationCap, tag: 'دعم' },
-        { id: 'center-languages', labelAr: 'برنامج اللغات - دورات المستويات', icon: BookOpen, tag: 'لغات' },
-        { id: 'center-robotics', labelAr: 'نادي الروبوتيك والذكاء الاصطناعي', icon: Layers, tag: 'STEM' },
-        { id: 'center-school-languages', labelAr: 'دعم مناهج اللغات المدرسية', icon: BookOpen, tag: 'مناهج' },
+        { id: 'center-installment-programs', labelAr: 'البرامج بنظام الدفعات (دعم، لغات، STEM)', icon: GraduationCap, tag: 'دفعات' },
       ],
     },
     {
@@ -185,7 +182,10 @@ export function Sidebar({
         <div className="flex flex-col gap-1 w-full items-center flex-1">
           {currentGroups.flatMap((g) => g.items).map((item) => {
             const Icon = item.icon;
-            const isActive = activeView === item.id;
+            const isActive =
+              activeView === item.id ||
+              (item.id === 'center-installment-programs' &&
+                ['center-installment-programs', 'center-support-classes', 'center-languages', 'center-robotics', 'center-school-languages'].includes(activeView));
             return (
               <button
                 key={item.id}
@@ -288,7 +288,10 @@ export function Sidebar({
             <nav className="space-y-0.5">
               {group.items.map((item) => {
                 const Icon = item.icon;
-                const isActive = activeView === item.id;
+                const isActive =
+                  activeView === item.id ||
+                  (item.id === 'center-installment-programs' &&
+                    ['center-installment-programs', 'center-support-classes', 'center-languages', 'center-robotics', 'center-school-languages'].includes(activeView));
                 return (
                   <button
                     key={item.id}

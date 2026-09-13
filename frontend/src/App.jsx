@@ -171,6 +171,9 @@ export function App() {
           {/* CENTER VIEWS (Section 3 of docs/frontend.md)             */}
           {/* ========================================================= */}
           {/* Group 1: البرامج بنظام الدفعات */}
+          {activeView === 'center-installment-programs' && (
+            <CenterInstallmentProgramsView defaultProgram="support-classes" />
+          )}
           {activeView === 'center-support-classes' && (
             <CenterInstallmentProgramsView defaultProgram="support-classes" />
           )}
