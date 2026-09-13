@@ -109,9 +109,9 @@ export function Sidebar({
       items: [
         { id: 'center-soroban', labelAr: 'سجل السوروبان والحساب الذهني', icon: Award, tag: 'سوروبان' },
         { id: 'center-quran', labelAr: 'برنامج تحفيظ القرآن الكريم', icon: BookOpen, tag: 'سداسي' },
-        { id: 'center-preparatory', labelAr: 'القسم التحضيري المدرسي (2025)', icon: GraduationCap, tag: 'تحضيري' },
+        { id: 'center-preparatory', labelAr: 'القسم التحضيري المدرسي', icon: GraduationCap, tag: 'تحضيري' },
         { id: 'center-summer-camp', labelAr: 'النادي والمخيم الصيفي', icon: Sun, tag: 'دفعتين' },
-        { id: 'center-soroban-championships', labelAr: 'سجل بطولات السوروبان', icon: Trophy, tag: 'بطولات' },
+        { id: 'center-soroban-championships', labelAr: 'البطولات', icon: Trophy, tag: 'بطولات' },
         { id: 'center-timetable', labelAr: 'جدول توقيت الأفواج والقاعات', icon: Calendar, tag: 'توقيت' },
       ],
     },
