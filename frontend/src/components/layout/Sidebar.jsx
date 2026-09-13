@@ -64,8 +64,8 @@ export function Sidebar({
       groupTitle: 'التمدرس وشؤون الأطفال',
       groupEn: 'STUDENT AFFAIRS',
       items: [
-        { id: 'rawda-students', labelAr: 'سجل الأطفال والتسجيل السنوي', icon: Users, tag: 'تسجيل' },
-        { id: 'rawda-cohorts', labelAr: 'تنظيم وقاعات الأفواج (10 قاعات)', icon: Layers, tag: 'كانبان' },
+        { id: 'rawda-students', labelAr: 'المداخيل و التسجيلات', icon: Users, tag: 'تسجيل' },
+        { id: 'rawda-cohorts', labelAr: 'تقسيم الأفواج', icon: Layers, tag: 'أفواج' },
       ],
     },
     {
