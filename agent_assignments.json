@@ -1,10 +1,15 @@
 {
-  "updated_at": "2026-11-05T23:58:00Z",
+  "updated_at": "2026-11-06T00:40:00Z",
   "project": "Genius Kids Academy ERP (3abaqira)",
   "reference_specification": "Genius Kids Academy — Full System Report.pdf",
   "orchestration_lead": "agy1",
-  "latest_release_commit": "9cd511a",
+  "latest_release_commit": "30a53d0",
   "overall_status": "completed_and_verified",
+  "test_metrics": {
+    "backend_pytest_tests_passed": 49,
+    "frontend_integration_audit_tests_passed": 26,
+    "vite_production_build_errors": 0
+  },
   "assignments": {
     "agy11": {
       "domain": "backend",
@@ -13,7 +18,7 @@
       "effort": "high",
       "scope": "Core Person & IAM (dynamic permission catalog, roles, activation on payment, audit log) + Academy Module (workshops, sequence rules, clash-checked timetable slots, sessions & attendance, absence justifications, makeup sessions, dynamic evaluations with double-blind review)",
       "status": "completed",
-      "verification": "28/28 unit and integration tests passed",
+      "verification": "28/28 core, IAM & academy tests passed",
       "merge_status": "merged_into_develop_and_main"
     },
     "agy12": {
@@ -23,7 +28,7 @@
       "effort": "high",
       "scope": "Kindergarten Module (age bands, numbered books, daily logs A/B/C ratings, monthly reports with approval, incident logs, orthophonist notes, menu) + HR (staff, multi-branch, attendance, applications) + Comm (parent notes, notification queue) + Finance (price plans, dynamic overrides with reason, installment invoices, sequential cash receipts, voids, cash box, handovers, daily summary) + Migration (staging rows, ambiguous match review)",
       "status": "completed",
-      "verification": "all routers and schemas integrated and verified",
+      "verification": "21/21 kindergarten, HR, communication, finance & migration tests passed (49/49 backend total)",
       "merge_status": "merged_into_develop_and_main"
     },
     "agy51": {

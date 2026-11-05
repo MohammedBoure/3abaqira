@@ -107,7 +107,7 @@ graph TD
 
 | Test Suite | Scope | Status | Details |
 |------------|-------|--------|---------|
-| **Backend Pytest** | Database 3NF models, API endpoints, clash detection, linear progression, finance voids | **28 / 28 Passed** | Executed in clean virtual environment |
+| **Backend Pytest** | 3NF models, API endpoints, clash detection, linear progression, KG logs, HR, Comm, Finance receipts & voids, Excel migration engine | **49 / 49 Passed** | Executed in clean isolated test environment |
 | **Frontend Integration Audit** | 13 branches, all 9 module views, modals, RTL layout, mock data integrity | **26 / 26 Passed** | Executed via Node.js automated audit suite |
 | **Vite Production Build** | React compilation, CSS bundling, asset tree tree-shaking | **0 Errors** | Production bundle generated in `frontend/dist` |
 
