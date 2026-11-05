@@ -1,0 +1,47 @@
+{
+  "updated_at": "2026-11-05T16:22:00Z",
+  "project": "Genius Kids Academy ERP (3abaqira)",
+  "reference_specification": "Genius Kids Academy — Full System Report.pdf",
+  "assignments": {
+    "agy11": {
+      "domain": "backend",
+      "branch": "backend/agy11-core-iam-acad",
+      "base_branch": "develop",
+      "effort": "high",
+      "scope": "Core Person & IAM (dynamic permission catalog, roles, activation on payment, audit log) + Academy Module (workshops, sequence rules, clash-checked timetable slots, sessions & attendance, absence justifications, makeup sessions, dynamic evaluations with double-blind review)",
+      "status": "pending_dispatch"
+    },
+    "agy12": {
+      "domain": "backend",
+      "branch": "backend/agy12-kg-comm-fin-mig",
+      "base_branch": "develop",
+      "effort": "high",
+      "scope": "Kindergarten Module (age bands, numbered books, daily logs A/B/C ratings, monthly reports with approval, incident logs, orthophonist notes, menu) + HR (staff, multi-branch, attendance, applications) + Comm (parent notes, notification queue) + Finance (price plans, dynamic overrides with reason, installment invoices, sequential cash receipts, voids, cash box, handovers, daily summary) + Migration (staging rows, ambiguous match review)",
+      "status": "pending_dispatch"
+    },
+    "agy51": {
+      "domain": "frontend",
+      "branch": "frontend/agy51-academy-and-core-ui",
+      "base_branch": "develop",
+      "effort": "medium",
+      "scope": "UI Hub for 13 branches & Academic Year + Core/Family Hub (Student/Person, Guardians, Pickup Authorization, Medical) + Academy Workstation (Workshops, Clash-checked Timetable, Session Attendance with absence call logs, Make-up queue, Dynamic Evaluation Studio with reviewer workflow) + Staff HR center",
+      "status": "pending_dispatch"
+    },
+    "agy52": {
+      "domain": "frontend",
+      "branch": "frontend/agy52-kg-and-finance-ui",
+      "base_branch": "develop",
+      "effort": "medium",
+      "scope": "UI for Kindergarten Workstation (Age bands, Daily Logs A/B/C, Monthly Report Approval, Incidents, Orthophonist notes, Weekly Menu) + Treasury & Finance Desk (Dynamic Overrides, Invoices/Installments, Sequential Cash Receipts & Voids, Daily Drawer, Handovers, Daily Summary) + Parent Notes & Notification queue + Data Migration console",
+      "status": "pending_dispatch"
+    },
+    "agy100": {
+      "domain": "frontend",
+      "branch": "frontend/agy100-system-integration-audit",
+      "base_branch": "develop",
+      "effort": "medium",
+      "scope": "Full-system UI integration audit: unified navigation, workspace switcher, Arabic RTL layout integrity, high-density Excel compatibility, printable Arabic receipts & report cards, end-to-end verification against the Full System Report",
+      "status": "pending_dispatch"
+    }
+  }
+}
