@@ -2,17 +2,25 @@
 
 This directory contains the server-side architecture, API services, business logic, and database persistence layers for the **3abaqira Enterprise Management Platform** (أكاديمية وروضة الأطفال العباقرة).
 
+---
+
 ## Directory Architecture
 
 ```
 backend/
-├── app.py                         # Main FastAPI REST application entrypoint mounting apis
-├── requirements.txt               # Python dependencies (FastAPI, Uvicorn, PyJWT, bcrypt, SQLAlchemy)
+├── app.py                         # Main FastAPI REST application entrypoint mounting all modular apis
+├── requirements.txt               # Python dependencies (FastAPI, Uvicorn, PyJWT, bcrypt, SQLAlchemy, openpyxl, pandas)
 ├── README.md                      # Backend service overview and architecture
 ├── apis/                          # Modular REST API routers and security infrastructure
 │   ├── README.md                  # API documentation and endpoint catalog
 │   ├── __init__.py                # Master api_router consolidating all domain endpoints
 │   ├── security.py                # JWT token lifecycle, bcrypt hashing, RBAC guards
+│   ├── auth.py                    # Authentication endpoints (/api/auth)
+│   ├── kindergarten.py            # Kindergarten age bands, books, daily logs, reports & menus (/api/kg)
+│   ├── hr.py                      # HR staff profiles, positions, multi-branch, attendance & hiring (/api/hr)
+│   ├── communication.py           # Parent two-way notes, time window policy & notification queue (/api/comm)
+│   ├── finance.py                 # Fee plans, price overrides, invoices, gapless receipts, voiding, RTL (/api/fin)
+│   ├── migration.py               # Data migration staging batches, ambiguous queue & reconciliation (/api/mig)
 │   ├── core_persons.py            # Core Person, Student, Medical & Pickup authorizations (/api/core)
 │   ├── iam.py                     # IAM accounts, dynamic role builder, payment activation (/api/iam)
 │   ├── organizations.py           # 13 branches, academic years, rooms & equipment (/api/org)
@@ -26,6 +34,11 @@ backend/
 ├── database/                      # Unified database connectivity, pooling, migrations & managers
 │   ├── README.md                  # Database layer overview and FastAPI usage
 │   ├── __init__.py                # Dynamic manager registry & FastAPI dependencies
+│   ├── kindergarten_manager.py    # Kindergarten developmental logs (A/B/C), monthly review, habits & menus
+│   ├── hr_manager.py              # HR staff positions, multi-branch assignments, biometric attendance, hiring pipeline
+│   ├── communication_manager.py   # Two-way parent notes, window policy toggle, multi-channel notification queue
+│   ├── finance_manager.py         # Fee plans, price overrides, installment invoices, gapless receipts, voiding, RTL docs
+│   ├── migration_manager.py       # Staging batches/rows, Arabic normalization (٩->ج), compound splitting, cohort matching
 │   ├── core_audit_manager.py      # Sensitive action audit logging (grades, prices, voids, medical)
 │   ├── core_person_manager.py     # Unified person master, student profile, medical, guardians & pickups
 │   ├── iam_manager.py             # IAM accounts, role builder, permission catalog & fee activation
@@ -41,6 +54,7 @@ backend/
 └── tests/                         # Pytest automated test suites
     ├── README.md                  # Test suite overview, runner instructions & guidelines
     ├── conftest.py                # Database test fixtures
+    ├── test_kg_comm_fin_mig.py    # Complete test suite for Kindergarten, HR, Comm, Finance & Migration
     ├── test_core_and_iam.py       # Core Person, IAM, role permissions & sensitive action audit tests
     ├── test_org_infrastructure.py # 13 physical branches, academic years & room equipment tests
     ├── test_academy_progression_and_clash.py # Workshops, 1-book-per-course, pass rules & timetable clash tests
@@ -48,73 +62,83 @@ backend/
     └── test_api_endpoints.py      # FastAPI HTTP integration tests via TestClient
 ```
 
+---
+
 ## Architectural Highlights
 
-### 1. Unified Core Person & Specialization
-- Single identity master (`core_person`) for all personas (STUDENT, GUARDIAN, INSTRUCTOR, STAFF).
-- Student specialization (`core_student`) with school grade and enrollment status.
-- Confidential medical profiles (`core_student_medical`) with mandatory, automated audit logging (`MEDICAL_VIEW`) on every access.
-- Flexible guardian relationships (`core_guardian_link`) with primary contact and legal custody flags.
-- Authorized pickup registries (`core_pickup_authorization`) with relationship and verification notes.
+### 1. Kindergarten Module (`kg`)
+- **Age Bands & Cohorts**: Seeded age bands (`BEBE`, `PETITE`, `MOYENNE`, `GRANDE`) with age-in-months boundary validation.
+- **Numbered Books**: Sequential assignment and return tracking of physical curriculum books (`kg_child_book`).
+- **Strict Daily Logs**: Mandatory strict ratings (`A`, `B`, `C`) across 8 predefined developmental categories: `breakfast`, `lunch`, `snack`, `sleep`, `study`, `interaction`, `crying`, `clothes_change`, plus teacher observations.
+- **Monthly Progress Reports**: Draft creation by classroom educator and strict administrative approval workflow (`approved_by_admin_id != author_teacher_id`) before parental visibility is unlocked.
+- **Incident Logs**: Detailed logs (`MINOR`, `BEHAVIORAL`, `MEDICAL`, `INJURY`) with parental notification and action tracking.
+- **Specialist Observations**: Role-based confidentiality flags for speech therapists (orthophonists) and developmental specialists.
+- **Habit Profiles & Menus**: Child dietary preferences, pacifier habits, calming methods, and 4-week rotating cafeteria menus.
 
-### 2. IAM & Fee Payment Account Activation Lifecycle
-- Credentials secured with bcrypt password hashing.
-- Accounts start in `PENDING` status upon creation and transition to `ACTIVE` automatically upon first-level fee payment confirmation.
-- Dynamic permission catalog (`iam_permission`) and dynamic role builder (`iam_role`, `iam_role_permission`).
-- Branch-scoped and global role assignments (`iam_person_role`) with multi-branch effective permission aggregation.
+### 2. HR & Staffing Module (`hr`)
+- **Staff Positions**: Structured catalog across teaching, administration, daycare nannies, cooks, cleaning, maintenance, and orthophonists.
+- **Multi-Branch Profiles & Assignments**: Primary and secondary branch allocations with primary branch exclusivity checks (`hr_staff_assignment`).
+- **Staff Attendance Tracking**: Records clock-in and clock-out with source verification (`BIOMETRIC`, `RFID_CARD`, `MANUAL`).
+- **Recruitment Pipeline**: Full candidate journey tracking: `APPLIED` -> `SCREENED` -> `INTERVIEW_SCHEDULED` -> `INTERVIEWED` -> `OFFERED` -> `HIRED` / `REJECTED`.
 
-### 3. Sensitive Action Audit Logging
-- Immutable change logs in `core_audit_log`.
-- Mandatory justification reason strings enforced for:
-  - **Grade Changes**: Prior score, new score, and reviewer rationale.
-  - **Price Overrides**: Discount justification on standard fees.
-  - **Payment Voids**: Explanation for cancellation of financial transactions.
-  - **Medical Views**: Confidential health record inspections.
+### 3. Communication Module (`comm`)
+- **Two-Way Parent Notes**: Bidirectional notes with urgent flags, response requirements, and acknowledgment tracking.
+- **Admin Time Window Policy Toggle**: Branch-level configuration enabling or restricting parent note submissions outside operational hours (`window_start_time`, `window_end_time`, `allowed_days`).
+- **Multi-Channel Outbound Queue**: Central notification dispatch queue supporting `SMS`, `WHATSAPP`, `TELEGRAM`, and `EMAIL` with background worker pull/status callback API.
 
-### 4. Organization Infrastructure
-- Pre-seeded with **13 physical branches across Algeria** (`BR-01` to `BR-13`) categorized by operational types (Main, Secondary, Franchise, Satellite).
-- Strict non-overlapping date validation for academic cycles with enforcement of exactly one active fiscal year.
-- Multi-classroom inventory with room capacities and tracked equipment.
+### 4. Finance Module (`fin`)
+- **Multi-Tier Fee Plans**: Standard tuition, annual discount packages, and administrative registration plans.
+- **Dynamic Price Overrides**: Discount authorization with mandatory reason string and author employee attribution; audited automatically.
+- **Installment Invoices**: Single upfront and multi-tranche installment schedules (`fin_installment`) with automated balance updates.
+- **Gapless Sequential Receipts**: Thread-safe, non-skipping receipt numbering per branch and fiscal year (`REC-{BRANCH}-{YEAR}-{SEQ:06d}`).
+- **Non-Destructive Payment Voiding**: Payments are never physically deleted; marked `is_voided = TRUE` with mandatory justification reason, voided timestamp, and author user attribution. Automatically rolls back invoice amounts and registers.
+- **Cash Drawer & Remittances**: Daily cash box management, categorized expense tracking, and cash handovers to head office or owners (`cash_handovers`).
+- **Daily Financial Summary**: Real-time aggregated view of opening balance, cash collected, operational expenses, remittances, and net remaining cash.
+- **Arabic RTL Document Generation**: Generates official print-ready HTML documents in Arabic with RTL styling, currency formatting in Algerian Dinars (`د.ج`), and official Academy branding.
 
-### 5. Academy Workshops & Sequential Curriculum
-- **12 Pre-Seeded Workshops**: Soroban, Robotics & IoT, English Language, French Language, Coding & AI, Speedcubing, Mental Arithmetic, Quranic Memorization, Little Scientist, Graphic Design, Chess & Strategy, and Gymnastics & Sports.
-- Strict **one-book-per-course** mapping and **one open book per workshop** rule.
-- Dynamic pass rules (e.g. Soroban requiring passing 3 tests at >= 80/100 threshold).
-- Sequential level advancement: students advance only upon passing; failure marks enrollment as `FAILED_REPEATING`. Exceptions handled via administrative placement notes.
+### 5. Data Migration Module (`mig`)
+- **Staging Batches & Rows**: Secure staging area for ingesting legacy Excel (`.xlsx`), CSV, and JSON data.
+- **Arabic Text Normalization**:
+  - Global user rule compliance: maps Arabic character "٩" (U+0669) strictly to "ج".
+  - Strips diacritics / tashkeel (`Fatha`, `Damma`, `Kasra`, `Sukun`, `Shadda`, `Tanween`).
+  - Unifies Alef variants (`أ`, `إ`, `آ` -> `ا`) and Teh Marbuta / Ha (`ة` -> `ه`).
+- **Smart Arabic Compound Name Splitting**:
+  - Accurately splits compound given names (e.g. `عبد الرحمن`, `محمد أمين`, `فاطمة الزهراء`) and compound surnames (e.g. `بن علي`, `أولاد أحمد`).
+  - Flags ambiguous names (e.g. mononyms, unresolved patronymics) for human operator review in `mig_import_row` (`is_ambiguous = TRUE`).
+- **Cohort Label Matching**: Matches informal or legacy French/Arabic labels (e.g. `p.section 2`, `m.section`, `القسم التحضيري`) to official kindergarten age bands.
+- **Conversion & Traceability**: Converts validated staging rows into production `students`, recording legacy reference mappings in `mig_legacy_ref`.
+- **Financial Reconciliation**: Calculates batch-level financial totals against ledger records to detect reconciliation variances.
 
-### 6. Timetable Clash Detection
-- `AcadTimetableManager` prevents timetable collisions before writing to the database:
-  - **Trainer Double-Booking**: A trainer cannot be scheduled in two locations at the same time.
-  - **Room Double-Booking**: A classroom cannot host two groups during overlapping hours.
-  - **Group Double-Booking**: A student cohort cannot have two sessions simultaneously.
-  - **Branch Mismatch Isolation**: A group belonging to Branch A cannot be assigned a room in Branch B.
+### 6. Core Person, IAM & Academy Infrastructure
+- Unified identity master (`core_person`) and student profile with confidential medical data and audit logging.
+- IAM accounts with fee payment activation lifecycle (`PENDING` -> `ACTIVE`).
+- 13 pre-seeded physical branches across Algeria.
+- 12 pre-seeded Academy workshops with strict one-book-per-course mapping and one open book rule.
+- Multi-dimensional timetable clash detection.
+- Absence tracking with automatic make-up session credits and telephone call logging.
+- Typed evaluation schemas and double-blind review validation (`reviewer != corrector`).
+- Pedagogical material access control restricted to enrolled students.
 
-### 7. Attendance, Absence Telephone Calls & Make-ups
-- Attendance tracking per session (`PRESENT`, `ABSENT`, `EXCUSED`, `LATE`).
-- Absence automatically generates an owed make-up credit in `acad_makeup`.
-- Mandatory **telephone call logging** (`acad_absence_call_log`) capturing verbal explanations from parents.
-- Make-up scheduling, attendance tracking, and credit redemption lifecycle.
+---
 
-### 8. Dynamic Typed Evaluations & Double-Blind Review
-- Dynamic evaluation templates (`acad_eval_template`) with custom typed fields (`NUMERIC`, `TEXT`, `BOOLEAN`, `SCALE_1_5`).
-- Strict **double-blind review workflow**: the reviewing instructor must be distinct from the initial corrector (`reviewer_person_id != corrector_person_id`).
-- Discrepancies and score overrides require mandatory audit reasons.
+## Running Automated Tests
 
-### 9. Digital Material Access Control
-- Pedagogical materials (`acad_material`) access restricted to students actively enrolled in the corresponding course. Non-enrolled students are denied access with HTTP 403 Forbidden.
-
-## Running Tests
-
-All 28 automated integration tests can be executed via:
+All 49 unit and integration tests across the complete platform can be executed via:
 
 ```bash
-PYTHONPATH=. /home/pluto/Desktop/venv/ai/bin/pytest backend/tests -v
+python3 -m pytest backend/tests/ -v
+```
+
+To run only the Kindergarten, HR, Communication, Finance, and Migration test suite:
+
+```bash
+python3 -m pytest backend/tests/test_kg_comm_fin_mig.py -v
 ```
 
 ## Running the Development Server
 
 ```bash
-/home/pluto/Desktop/venv/ai/bin/uvicorn backend.app:app --reload --port 8000
+python3 -m uvicorn backend.app:app --reload --port 8000
 ```
 
 - **OpenAPI Documentation**: `http://localhost:8000/docs`

@@ -299,22 +299,44 @@ class FinanceManager:
         Creates an invoice linked to an enrollment and establishes its installment schedule.
         Upfront payment = 1 installment; split payment = multiple installments.
         """
+        clean_branch = branch_id.strip().upper()
         try:
             with self.db.get_db_connection() as conn:
                 cursor = conn.cursor()
+
+                # Disambiguate period_label to avoid colliding on UNIQUE (enrollment_id, installment_number, period_label)
+                if not period_label:
+                    cursor.execute(
+                        "SELECT COUNT(*) as c FROM invoices WHERE enrollment_id = %s;",
+                        (enrollment_id,),
+                    )
+                    c_row = _dict_fetchone(cursor)
+                    c_val = (c_row["c"] if c_row else 0) + 1
+                    effective_period_label = f"{datetime.now().year}-{datetime.now().month:02d}#{c_val}"
+                else:
+                    cursor.execute(
+                        "SELECT 1 FROM invoices WHERE enrollment_id = %s AND installment_number = 1 AND period_label = %s;",
+                        (enrollment_id, period_label),
+                    )
+                    if _dict_fetchone(cursor):
+                        effective_period_label = f"{period_label}-{int(datetime.now().timestamp()) % 100000}"
+                    else:
+                        effective_period_label = period_label
+
                 # 1. Create main invoice record
                 cursor.execute(
                     """
                     INSERT INTO invoices (
-                        enrollment_id, installment_number, period_label,
+                        branch_id, enrollment_id, installment_number, period_label,
                         due_date, amount_due, amount_paid, status, notes
-                    ) VALUES (%s, %s, %s, %s, %s, 0.00, 'UNPAID', %s)
+                    ) VALUES (%s, %s, %s, %s, %s, %s, 0.00, 'UNPAID', %s)
                     RETURNING *;
                     """,
                     (
+                        clean_branch,
                         enrollment_id,
                         1,
-                        period_label if period_label else f"{datetime.now().year}-{datetime.now().month:02d}",
+                        effective_period_label,
                         installments[0].get("due_date", date.today()) if installments else date.today(),
                         total_amount,
                         notes,
@@ -542,10 +564,11 @@ class FinanceManager:
                     cursor.execute(
                         """
                         UPDATE daily_cash_registers
-                        SET total_revenues = GREATEST(0.00, total_revenues - %s), updated_at = CURRENT_TIMESTAMP
+                        SET total_revenues = CASE WHEN total_revenues - %s < 0 THEN 0.00 ELSE total_revenues - %s END,
+                            updated_at = CURRENT_TIMESTAMP
                         WHERE register_id = %s;
                         """,
-                        (amount, register_id),
+                        (amount, amount, register_id),
                     )
 
                 conn.commit()
@@ -590,7 +613,7 @@ class FinanceManager:
                     """
                     INSERT INTO cash_handovers (
                         branch_id, register_id, handover_date, receipt_voucher_no,
-                        amount, transferred_by_employee_id, received_by_name, status, notes
+                        amount, transferred_by_employee_id, received_by_name, status, remarks
                     ) VALUES (%s, %s, CURRENT_DATE, %s, %s, %s, %s, 'CONFIRMED', %s)
                     RETURNING *;
                     """,
@@ -707,19 +730,19 @@ class FinanceManager:
                         b.phone AS branch_phone,
                         b.address AS branch_address
                     FROM invoices inv
-                    JOIN student_enrollments se ON inv.enrollment_id = se.enrollment_id
-                    JOIN students s ON se.student_id = s.student_id
-                    JOIN groups g ON se.group_id = g.group_id
-                    JOIN levels l ON g.level_id = l.level_id
-                    JOIN programs p ON l.program_id = p.program_id
-                    JOIN branches b ON p.branch_id = b.branch_id
+                    LEFT JOIN student_enrollments se ON inv.enrollment_id = se.enrollment_id
+                    LEFT JOIN students s ON se.student_id = s.student_id
+                    LEFT JOIN groups g ON se.group_id = g.group_id
+                    LEFT JOIN levels l ON g.level_id = l.level_id
+                    LEFT JOIN programs p ON l.program_id = p.program_id
+                    LEFT JOIN branches b ON inv.branch_id = b.branch_id
                     WHERE inv.invoice_id = %s;
                     """,
                     (invoice_id,),
                 )
                 inv = _dict_fetchone(cursor)
                 if not inv:
-                    return "<html><body dir='rtl'><h1>الفاتورة غير موجودة</h1></body></html>"
+                    return '<html dir="rtl"><body dir="rtl"><h1>الفاتورة غير موجودة</h1></body></html>'
 
                 cursor.execute(
                     "SELECT * FROM fin_installment WHERE invoice_id = %s ORDER BY installment_number ASC;",
@@ -809,12 +832,12 @@ class FinanceManager:
                         e.full_name AS collector_name
                     FROM payments pay
                     JOIN invoices inv ON pay.invoice_id = inv.invoice_id
-                    JOIN student_enrollments se ON inv.enrollment_id = se.enrollment_id
-                    JOIN students s ON se.student_id = s.student_id
-                    JOIN groups g ON se.group_id = g.group_id
-                    JOIN levels l ON g.level_id = l.level_id
-                    JOIN programs p ON l.program_id = p.program_id
-                    JOIN branches b ON p.branch_id = b.branch_id
+                    LEFT JOIN student_enrollments se ON inv.enrollment_id = se.enrollment_id
+                    LEFT JOIN students s ON se.student_id = s.student_id
+                    LEFT JOIN groups g ON se.group_id = g.group_id
+                    LEFT JOIN levels l ON g.level_id = l.level_id
+                    LEFT JOIN programs p ON l.program_id = p.program_id
+                    LEFT JOIN branches b ON pay.branch_id = b.branch_id
                     LEFT JOIN employees e ON pay.collected_by_employee_id = e.employee_id
                     WHERE pay.payment_id = %s;
                     """,

@@ -26,6 +26,9 @@ archive_view.flag
 *.sqlite
 *.sqlite3
 3abaqira_dev.db
+*.db-journal
+*.db-wal
+*.db-shm
 
 # Frontend Dependencies & Build Artifacts
 node_modules/

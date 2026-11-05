@@ -287,7 +287,7 @@ ENROLLMENT_INVOICE_TABLE_QUERIES = [
         enrollment_id SERIAL PRIMARY KEY,
         branch_id VARCHAR(20) NOT NULL REFERENCES branches(branch_id) ON DELETE RESTRICT,
         student_id INTEGER NOT NULL REFERENCES students(student_id) ON DELETE RESTRICT,
-        group_id INTEGER NOT NULL REFERENCES groups(group_id) ON DELETE RESTRICT,
+        group_id INTEGER REFERENCES groups(group_id) ON DELETE SET NULL,
         pricing_plan_id INTEGER REFERENCES pricing_plans(pricing_plan_id) ON DELETE RESTRICT,
         academic_year_id INTEGER NOT NULL REFERENCES academic_years(academic_year_id) ON DELETE RESTRICT,
         enrollment_date DATE NOT NULL DEFAULT CURRENT_DATE,

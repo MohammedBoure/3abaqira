@@ -105,6 +105,12 @@ class KindergartenManager:
                     """
                     INSERT INTO kg_age_band (code, name_ar, name_en, min_age_months, max_age_months, description)
                     VALUES (%s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (code) DO UPDATE
+                    SET name_ar = EXCLUDED.name_ar,
+                        name_en = EXCLUDED.name_en,
+                        min_age_months = EXCLUDED.min_age_months,
+                        max_age_months = EXCLUDED.max_age_months,
+                        description = EXCLUDED.description
                     RETURNING *;
                     """,
                     (code.strip().upper(), name_ar.strip(), name_en.strip(), min_age_months, max_age_months, description),
@@ -161,6 +167,11 @@ class KindergartenManager:
                     INSERT INTO kg_child_book (
                         student_id, age_band_id, book_number, title, book_type, level_label, status, notes
                     ) VALUES (%s, %s, %s, %s, %s, %s, 'ASSIGNED', %s)
+                    ON CONFLICT (student_id, book_number) DO UPDATE
+                    SET title = EXCLUDED.title,
+                        status = 'ASSIGNED',
+                        return_date = NULL,
+                        notes = EXCLUDED.notes
                     RETURNING *;
                     """,
                     (student_id, age_band_id, book_number.strip(), title.strip(), clean_type, level_label, notes),
@@ -519,6 +530,7 @@ class KindergartenManager:
                         clothes_change = EXCLUDED.clothes_change,
                         teacher_notes = EXCLUDED.teacher_notes,
                         status = EXCLUDED.status,
+                        visible_to_parents = FALSE,
                         updated_at = CURRENT_TIMESTAMP
                     RETURNING *;
                     """,

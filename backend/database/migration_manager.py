@@ -47,7 +47,7 @@ COMPOUND_NAME_PREFIXES = {
     "عبد", "محمد", "سيدي", "نور", "تقي", "سيف", "شمس", "علاء", "بهاء", "ضياء", "فخر", "جمال", "صلاح", "عماد"
 }
 COMPOUND_FEMALE_PREFIXES = {
-    "فاطمة", "مريم", "أم", "بنت"
+    "فاطمة", "فاطمه", "مريم", "أم", "ام", "بنت"
 }
 
 
@@ -118,11 +118,13 @@ class MigrationManager:
 
         tokens = norm.split(" ")
         token_count = len(tokens)
+        orig_tokens = full_name.strip().split()
+        src_tokens = orig_tokens if len(orig_tokens) == token_count else tokens
 
         # Single word: Ambiguous (cannot separate given name from family name)
         if token_count == 1:
             return {
-                "first_name": tokens[0],
+                "first_name": src_tokens[0],
                 "last_name": "",
                 "normalized": norm,
                 "confidence": 0.50,
@@ -133,8 +135,8 @@ class MigrationManager:
         # 2 words: Standard First + Last (or Last + First)
         if token_count == 2:
             return {
-                "first_name": tokens[0],
-                "last_name": tokens[1],
+                "first_name": src_tokens[0],
+                "last_name": src_tokens[1],
                 "normalized": norm,
                 "confidence": 0.90,
                 "is_ambiguous": False,
@@ -143,11 +145,11 @@ class MigrationManager:
 
         # 3 words: Check if first two words make a compound name (e.g. عبد الله بوخروبة)
         if token_count == 3:
-            first_two = f"{tokens[0]} {tokens[1]}"
+            first_two = f"{src_tokens[0]} {src_tokens[1]}"
             if tokens[0] in COMPOUND_NAME_PREFIXES or tokens[0] in COMPOUND_FEMALE_PREFIXES:
                 return {
                     "first_name": first_two,
-                    "last_name": tokens[2],
+                    "last_name": src_tokens[2],
                     "normalized": norm,
                     "confidence": 0.95,
                     "is_ambiguous": False,
@@ -156,8 +158,8 @@ class MigrationManager:
             # Check if last two words make a compound surname (e.g. بلقاسم عبد الرحمن)
             if tokens[1] in COMPOUND_NAME_PREFIXES or tokens[1] in COMPOUND_FEMALE_PREFIXES:
                 return {
-                    "first_name": tokens[0],
-                    "last_name": f"{tokens[1]} {tokens[2]}",
+                    "first_name": src_tokens[0],
+                    "last_name": f"{src_tokens[1]} {src_tokens[2]}",
                     "normalized": norm,
                     "confidence": 0.90,
                     "is_ambiguous": False,
@@ -165,21 +167,33 @@ class MigrationManager:
                 }
             # Otherwise 3 tokens without clear compound is slightly ambiguous
             return {
-                "first_name": tokens[0],
-                "last_name": f"{tokens[1]} {tokens[2]}",
+                "first_name": src_tokens[0],
+                "last_name": f"{src_tokens[1]} {src_tokens[2]}",
                 "normalized": norm,
                 "confidence": 0.75,
                 "is_ambiguous": True,
                 "reason": "Three tokens without known compound prefix; human check recommended",
             }
 
+        # 4 words: Check for compound given name + compound patronymic/surname (e.g. عبد الرحمن بن علي)
+        if token_count == 4:
+            if (tokens[0] in COMPOUND_NAME_PREFIXES or tokens[0] in COMPOUND_FEMALE_PREFIXES) and (tokens[2] in ("بن", "بنت", "بو", "ابن", "ولد", "ال") or tokens[2] in COMPOUND_NAME_PREFIXES):
+                return {
+                    "first_name": f"{src_tokens[0]} {src_tokens[1]}",
+                    "last_name": f"{src_tokens[2]} {src_tokens[3]}",
+                    "normalized": norm,
+                    "confidence": 0.95,
+                    "is_ambiguous": False,
+                    "reason": "Compound given name and compound patronymic/surname identified",
+                }
+
         # 4 words or more: Ambiguous, requires verification
         if tokens[0] in COMPOUND_NAME_PREFIXES:
-            first_name = f"{tokens[0]} {tokens[1]}"
-            last_name = " ".join(tokens[2:])
+            first_name = f"{src_tokens[0]} {src_tokens[1]}"
+            last_name = " ".join(src_tokens[2:])
         else:
-            first_name = tokens[0]
-            last_name = " ".join(tokens[1:])
+            first_name = src_tokens[0]
+            last_name = " ".join(src_tokens[1:])
 
         return {
             "first_name": first_name,
@@ -537,7 +551,7 @@ class MigrationManager:
                 cursor.execute(
                     """
                     INSERT INTO students (
-                        full_name_ar, first_name, last_name, notes
+                        full_name_ar, first_name, last_name, medical_notes
                     ) VALUES (%s, %s, %s, %s)
                     RETURNING student_id;
                     """,
