@@ -51,6 +51,13 @@ from .acad_makeup import router as acad_makeup_router
 from .acad_evaluations import router as acad_evaluations_router
 from .acad_materials import router as acad_materials_router
 
+# Kindergarten, HR, Communication, Finance & Migration Sub-Routers (Worker agy12)
+from .kindergarten import router as kindergarten_router
+from .hr import router as hr_router
+from .communication import router as communication_router
+from .finance import router as finance_router
+from .migration import router as migration_router
+
 # Master API Router mounted under '/api'
 api_router = APIRouter(prefix="/api")
 
@@ -93,6 +100,13 @@ api_router.include_router(acad_makeup_router)
 api_router.include_router(acad_evaluations_router)
 api_router.include_router(acad_materials_router)
 
+# Mount Kindergarten, HR, Communication, Finance & Migration Sub-Routers
+api_router.include_router(kindergarten_router)
+api_router.include_router(hr_router)
+api_router.include_router(communication_router)
+api_router.include_router(finance_router)
+api_router.include_router(migration_router)
+
 # Top-level direct health check alias: GET /api/health
 api_router.add_api_route(
     "/health",
@@ -130,4 +144,9 @@ __all__ = [
     "payroll_router",
     "audit_router",
     "system_router",
+    "kindergarten_router",
+    "hr_router",
+    "communication_router",
+    "finance_router",
+    "migration_router",
 ]

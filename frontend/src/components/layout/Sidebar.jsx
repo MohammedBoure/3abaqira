@@ -28,6 +28,10 @@ import {
   ShieldAlert,
   KeyRound,
   Activity,
+  Building2,
+  Briefcase,
+  MessageSquare,
+  FileSpreadsheet,
 } from 'lucide-react';
 
 export function Sidebar({
@@ -339,6 +343,152 @@ export function Sidebar({
             </nav>
           </div>
         ))}
+
+        {/* Complete 9 Modules Enterprise Registry (Full System Scope) */}
+        <div className="pt-2 border-t border-slate-200">
+          <div className="flex items-center justify-between px-2 mb-1">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-blue-900">
+              دليل الوحدات الـ 9 (SYSTEM REPORT)
+            </span>
+            <span className="text-[8px] bg-blue-100 text-blue-900 px-1 font-bold">9 MODULES</span>
+          </div>
+          <div className="space-y-0.5">
+            <button
+              onClick={() => onSelectView('auth-security')}
+              className={`w-full flex items-center justify-between px-2 py-1 text-xs rounded transition-colors text-start ${
+                activeView === 'auth-security' || activeView === 'audit-logs'
+                  ? 'bg-blue-950 text-white font-bold shadow-2xs'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2 truncate">
+                <KeyRound className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+                <span className="truncate">1. الهوية والصلاحيات والرقابة</span>
+              </div>
+              <span className="text-[8px] font-mono px-1 py-0.2 bg-slate-100 text-slate-600 rounded-[2px] shrink-0">M1</span>
+            </button>
+
+            <button
+              onClick={() => onSelectView('branches')}
+              className={`w-full flex items-center justify-between px-2 py-1 text-xs rounded transition-colors text-start ${
+                activeView === 'branches' || activeView === 'academic-years'
+                  ? 'bg-blue-950 text-white font-bold shadow-2xs'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2 truncate">
+                <Building2 className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+                <span className="truncate">2. المقرات (13 فرعاً) والسنوات</span>
+              </div>
+              <span className="text-[8px] font-mono px-1 py-0.2 bg-slate-100 text-slate-600 rounded-[2px] shrink-0">M2</span>
+            </button>
+
+            <button
+              onClick={() => onSelectView('guardians')}
+              className={`w-full flex items-center justify-between px-2 py-1 text-xs rounded transition-colors text-start ${
+                activeView === 'guardians' || activeView === 'core-family-hub'
+                  ? 'bg-blue-950 text-white font-bold shadow-2xs'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2 truncate">
+                <Users className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+                <span className="truncate">3. سجل العائلة والأولياء والاستلام</span>
+              </div>
+              <span className="text-[8px] font-mono px-1 py-0.2 bg-slate-100 text-slate-600 rounded-[2px] shrink-0">M3</span>
+            </button>
+
+            <button
+              onClick={() => onSelectView('staff-hr')}
+              className={`w-full flex items-center justify-between px-2 py-1 text-xs rounded transition-colors text-start ${
+                activeView === 'staff-hr' || activeView === 'staff-hr-center'
+                  ? 'bg-blue-950 text-white font-bold shadow-2xs'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2 truncate">
+                <Briefcase className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+                <span className="truncate">4. الموارد البشرية والتوظيف والحضور</span>
+              </div>
+              <span className="text-[8px] font-mono px-1 py-0.2 bg-slate-100 text-slate-600 rounded-[2px] shrink-0">M4</span>
+            </button>
+
+            <button
+              onClick={() => onSelectView('center-installment-programs')}
+              className={`w-full flex items-center justify-between px-2 py-1 text-xs rounded transition-colors text-start ${
+                activeView === 'center-installment-programs' || activeView === 'academy-workstation'
+                  ? 'bg-blue-950 text-white font-bold shadow-2xs'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2 truncate">
+                <GraduationCap className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+                <span className="truncate">5. محطة عمل الأكاديمية والمستويات</span>
+              </div>
+              <span className="text-[8px] font-mono px-1 py-0.2 bg-slate-100 text-slate-600 rounded-[2px] shrink-0">M5</span>
+            </button>
+
+            <button
+              onClick={() => onSelectView('rawda-console')}
+              className={`w-full flex items-center justify-between px-2 py-1 text-xs rounded transition-colors text-start ${
+                activeView === 'rawda-console' || activeView === 'kindergarten-workstation'
+                  ? 'bg-blue-950 text-white font-bold shadow-2xs'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2 truncate">
+                <Baby className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+                <span className="truncate">6. محطة الروضة والتقارير الشهرية</span>
+              </div>
+              <span className="text-[8px] font-mono px-1 py-0.2 bg-slate-100 text-slate-600 rounded-[2px] shrink-0">M6</span>
+            </button>
+
+            <button
+              onClick={() => onSelectView('communication')}
+              className={`w-full flex items-center justify-between px-2 py-1 text-xs rounded transition-colors text-start ${
+                activeView === 'communication' || activeView === 'communication-center'
+                  ? 'bg-blue-950 text-white font-bold shadow-2xs'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2 truncate">
+                <MessageSquare className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+                <span className="truncate">7. التواصل والإشعارات الموحدة</span>
+              </div>
+              <span className="text-[8px] font-mono px-1 py-0.2 bg-slate-100 text-slate-600 rounded-[2px] shrink-0">M7</span>
+            </button>
+
+            <button
+              onClick={() => onSelectView('invoices-payments')}
+              className={`w-full flex items-center justify-between px-2 py-1 text-xs rounded transition-colors text-start ${
+                activeView === 'invoices-payments' || activeView === 'cash-drawer'
+                  ? 'bg-blue-950 text-white font-bold shadow-2xs'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2 truncate">
+                <Receipt className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+                <span className="truncate">8. المالية وسندات القبض المتسلسلة</span>
+              </div>
+              <span className="text-[8px] font-mono px-1 py-0.2 bg-slate-100 text-slate-600 rounded-[2px] shrink-0">M8</span>
+            </button>
+
+            <button
+              onClick={() => onSelectView('data-migration')}
+              className={`w-full flex items-center justify-between px-2 py-1 text-xs rounded transition-colors text-start ${
+                activeView === 'data-migration' || activeView === 'data-migration-console'
+                  ? 'bg-blue-950 text-white font-bold shadow-2xs'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2 truncate">
+                <FileSpreadsheet className="w-3.5 h-3.5 shrink-0 text-blue-600" />
+                <span className="truncate">9. ترحيل سجلات إكسل ومطابقة الكاش</span>
+              </div>
+              <span className="text-[8px] font-mono px-1 py-0.2 bg-slate-100 text-slate-600 rounded-[2px] shrink-0">M9</span>
+            </button>
+          </div>
+        </div>
 
         {/* Super Admin Comprehensive Tools Section */}
         {isAdmin && (
