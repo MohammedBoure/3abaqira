@@ -417,6 +417,8 @@ class ConnectionManager:
             return s
 
         raw.create_function("TO_CHAR", 2, _to_char)
+        raw.create_function("GREATEST", -1, lambda *args: max(args) if args else None)
+        raw.create_function("LEAST", -1, lambda *args: min(args) if args else None)
         return SQLiteCompatConnection(raw)
 
     def get_raw_connection(self):
