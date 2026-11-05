@@ -1,8 +1,9 @@
 {
-  "updated_at": "2026-11-05T23:35:00Z",
+  "updated_at": "2026-11-05T23:58:00Z",
   "project": "Genius Kids Academy ERP (3abaqira)",
   "reference_specification": "Genius Kids Academy — Full System Report.pdf",
   "orchestration_lead": "agy1",
+  "latest_release_commit": "9cd511a",
   "overall_status": "completed_and_verified",
   "assignments": {
     "agy11": {
