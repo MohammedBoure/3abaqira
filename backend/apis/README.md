@@ -4,118 +4,48 @@ This directory houses the modular, decoupled REST API routers and JWT security i
 
 ## Architecture & Design
 
-Endpoints are segregated into domain-specific modules, mounted together by the master `api_router` in [__init__.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/__init__.py) and served via FastAPI in [app.py](file:///C:/Users/moham/Desktop/3abaqira/backend/app.py).
-
-All mutating, administrative, and sensitive operations are protected using JSON Web Tokens (JWT) using the `HS256` signature algorithm, verified through FastAPI dependency injection.
+Endpoints are segregated into domain-specific modules, mounted together by the master `api_router` in [`__init__.py`](file:///home/pluto/projects/3abaqira/backend/apis/__init__.py) and served via FastAPI in [`app.py`](file:///home/pluto/projects/3abaqira/backend/app.py).
 
 ```
 backend/apis/
-├── __init__.py         # Master API router consolidating all sub-routers under /api
-├── security.py         # JWT token encoding/decoding, bcrypt password hashing & RBAC dependencies
-├── auth.py             # Authentication endpoints (/api/auth/login, /token, /me, /change-password)
-├── users.py            # User administration & role management (/api/users)
-├── branches.py         # Multi-tenant branch operations (/api/branches)
-├── academic_years.py   # Academic cycle management (/api/academic-years)
-├── classrooms.py       # Classroom capacities and floor allocations (/api/classrooms)
-├── guardians.py        # Guardians & parents master directory (/api/guardians)
-├── students.py         # Bilingual student directory & guardian linkages (/api/students)
-├── programs.py         # Educational programs & catalog (/api/programs)
-├── levels.py           # Curriculum stages & sequence ordering (/api/levels)
-├── pricing_plans.py    # Multi-tier pricing matrices & fee computation (/api/pricing-plans)
-├── groups.py           # Student groups, cohorts & class rosters (/api/groups)
-├── schedules.py        # Weekly timetable slots & clash detection (/api/schedules)
-├── sessions.py         # Conducted session logs & student attendance (/api/sessions)
-├── enrollments.py      # Student course enrollments & multi-tier tuition pricing (/api/enrollments)
-├── invoices.py         # Multi-tier invoices, installment tranches & payment credits (/api/invoices)
-├── registers.py        # Daily cash drawers, balances & reconciliation (/api/cash-registers)
-├── payments.py         # Tuition fee payments, receipts & cashier intakes (/api/payments)
-├── handovers.py        # Cash safe remittances & drawer drop vouchers (/api/cash-handovers)
-├── expenses.py         # Operational expenses & categories taxonomy (/api/expenses)
-├── budgets.py          # Budget allocations & variance reporting (/api/budget-variances)
-├── kitchen.py          # Daycare cafeteria procurement & bread logs (/api/kitchen)
-├── competitions.py     # Competition events, participant registrations & receipts (/api/competitions)
-├── payroll.py          # HR monthly payroll runs, automated compensation & vouchers (/api/payroll)
-├── audit.py            # System audit trail logs, before/after diffs & telemetry (/api/audit)
-├── system.py           # System telemetry, metadata configuration & archive status (/api/system)
-└── README.md           # This documentation file
+├── __init__.py               # Master API router consolidating all sub-routers under /api
+├── security.py               # JWT token encoding/decoding, bcrypt password hashing & RBAC dependencies
+├── auth.py                   # Authentication endpoints (/api/auth/login, /token, /me, /change-password)
+├── core_persons.py           # Core Person master, student, medical, guardians & pickups (/api/core)
+├── iam.py                    # IAM accounts, dynamic role builder, fee payment activation (/api/iam)
+├── organizations.py          # 13 branches, non-overlapping academic years, rooms & inventory (/api/org)
+├── acad_workshops.py         # 12 Academy workshop offerings & types (/api/acad/workshops)
+├── acad_courses.py           # Sequential courses, pass rules, one open book & progress (/api/acad/courses)
+├── acad_timetable.py         # Timetable clash detection, group scheduling & slots (/api/acad/timetable)
+├── acad_sessions.py          # Session logs, attendance marking & absence calls (/api/acad/sessions)
+├── acad_makeup.py            # Make-up credits, scheduling & redemption (/api/acad/makeup)
+├── acad_evaluations.py       # Typed templates & double-blind review validation (/api/acad/evaluations)
+├── acad_materials.py         # Enrolled student course material access & download (/api/acad/materials)
+└── README.md                 # This documentation file
 ```
 
 ---
 
-## Directory Contents
+## Core Person, IAM & Academy REST Endpoints
 
-| File | Purpose |
-|------|---------|
-| [__init__.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/__init__.py) | Master API routing registry exporting `api_router` and mounting all domain routers under `/api`. |
-| [security.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/security.py) | Cryptographic security layer handling bcrypt password hashing, JWT token lifecycle, and RBAC guards (`get_current_user`, `require_role`). |
-| [auth.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/auth.py) | Authentication router providing JSON login, OAuth2 password form for Swagger UI, user profile retrieval, and password change endpoints. |
-| [users.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/users.py) | User management router supporting account provisioning, role updates (`SUPER_ADMIN`, `ADMIN`, `DIRECTOR`, `TEACHER`, `STAFF`, `ACCOUNTANT`), and status toggling. |
-| [branches.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/branches.py) | REST router for managing multi-tenant branch locations (`CENTER`, `RAWDA`, etc.) and associated branch classrooms. |
-| [academic_years.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/academic_years.py) | REST router for academic cycle management, date bound validations, and atomic active cycle switching. |
-| [classrooms.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/classrooms.py) | REST router for classroom records, student capacities, and floor allocation. |
-| [guardians.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/guardians.py) | REST router for guardian / parent profiles, contact details, and student ward associations. |
-| [students.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/students.py) | REST router for bilingual student profiles, auto-generated student codes, medical registry, and guardian pickup permissions. |
-| [programs.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/programs.py) | REST router for educational programs, billing classification, and branch-scoped curriculums. |
-| [levels.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/levels.py) | REST router for curriculum progression stages, color tags, age cohorts, and sequence reordering. |
-| [pricing_plans.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/pricing_plans.py) | REST router for tuition matrices, sibling/cash discounts, installment schedules, and fee calculation simulations. |
-| [groups.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/groups.py) | REST router for study groups, cohorts, capacity monitoring, and teacher assignments. |
-| [schedules.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/schedules.py) | REST router for weekly group timetable slots, recurrence rules, and classroom conflict / clash prevention. |
-| [sessions.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/sessions.py) | REST router for conducted session logs, batch student attendance, performance points scoring, and attendance tracking. |
-| [enrollments.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/enrollments.py) | REST router for student enrollments, fee calculation matrices, discounts, cohort roster inspection, and installment schedule generation. |
-| [invoices.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/invoices.py) | REST router for multi-tier invoice installment tranches, due date scheduling, payment crediting, debt overdue scanning, and financial KPI analytics. |
-| [registers.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/registers.py) | REST router for daily cash drawers, opening balances, transaction tracking, and end-of-day closing reconciliation. |
-| [payments.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/payments.py) | REST router for student fee payments, receipt voucher generation, collection summaries, and voiding workflows. |
-| [handovers.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/handovers.py) | REST router for cash safe remittances, drawer drops, voucher sequencing, and confirmation lifecycle updates. |
-| [expenses.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/expenses.py) | REST router for expense categories, operational expense vouchers, daily drawer balance integration, and category summary analytics. |
-| [budgets.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/budgets.py) | REST router for monthly category budget targets, multiplier factors, actual expense syncing, and budget variance reporting. |
-| [kitchen.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/kitchen.py) | REST router for daycare cafeteria procurement, daily bread logs, food provisions orders, and executive kitchen KPI dashboards. |
-| [competitions.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/competitions.py) | REST router for competition events, candidate registrations (`CMP-BRANCH-YYYY-XXXXX`), payment status handling, and participant rosters. |
-| [payroll.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/payroll.py) | REST router for HR monthly payroll runs, automated compensation calculation, allowances/deductions adjustments, and disbursement vouchers (`/api/payroll`). |
-| [audit.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/audit.py) | REST router for system audit trail logs, before/after change diffs, record history, and modification telemetry (`/api/audit`). |
-| [system.py](file:///C:/Users/moham/Desktop/3abaqira/backend/apis/system.py) | REST router providing health telemetry, multi-branch summary overview, application metadata configuration, and historical archive view mode status. |
+| Router File | Mount Prefix | Key Endpoints & Capabilities |
+| :--- | :--- | :--- |
+| [`core_persons.py`](file:///home/pluto/projects/3abaqira/backend/apis/core_persons.py) | `/api/core` | `POST /persons`, `GET /persons`, `POST /students`, `GET /students/{id}`, `PUT /students/{id}/medical`, `GET /students/{id}/medical` (triggers mandatory `MEDICAL_VIEW` audit log), `POST /students/{id}/guardians`, `POST /students/{id}/pickups`. |
+| [`iam.py`](file:///home/pluto/projects/3abaqira/backend/apis/iam.py) | `/api/iam` | `POST /accounts` (initial `PENDING` status), `POST /accounts/fee-payment-activate` (auto-activates account upon tuition/registration payment), `GET /permissions`, `POST /roles`, `POST /accounts/assign-role` (branch-scoped or global assignment), `GET /accounts/{id}/effective-permissions`. |
+| [`organizations.py`](file:///home/pluto/projects/3abaqira/backend/apis/organizations.py) | `/api/org` | `GET /branches` (returns 13 seeded branches with type classifications), `GET /branches/{id}`, `GET /academic-years`, `POST /academic-years` (enforces non-overlapping date spans), `GET /academic-years/current`, `POST /branches/{id}/rooms`, `POST /rooms/{id}/equipment`. |
+| [`acad_workshops.py`](file:///home/pluto/projects/3abaqira/backend/apis/acad_workshops.py) | `/api/acad/workshops` | `GET /workshops` (lists 12 seeded workshops), `POST /workshops`, `GET /workshops/{id}`. |
+| [`acad_courses.py`](file:///home/pluto/projects/3abaqira/backend/apis/acad_courses.py) | `/api/acad` | `POST /courses` (one book per course), `GET /courses/workshop/{id}`, `POST /courses/{id}/rules` (dynamic pass thresholds like Soroban 80/100), `POST /enrollments` (enforces one open book per workshop), `POST /enrollments/{id}/complete` (auto-repeat on fail, sequential advance on pass). |
+| [`acad_timetable.py`](file:///home/pluto/projects/3abaqira/backend/apis/acad_timetable.py) | `/api/acad/timetable` | `POST /groups`, `POST /slots` (triggers multi-dimensional clash prevention for trainer, room, and group overlaps), `POST /clash-check` (pre-flight clash preview). |
+| [`acad_sessions.py`](file:///home/pluto/projects/3abaqira/backend/apis/acad_sessions.py) | `/api/acad` | `POST /sessions` (executes classroom session), `POST /sessions/{id}/attendance` (marks attendance; unexcused absence automatically dispatches make-up credit), `POST /attendance/{id}/call-log` (records mandatory telephone call justification). |
+| [`acad_makeup.py`](file:///home/pluto/projects/3abaqira/backend/apis/acad_makeup.py) | `/api/acad/makeup` | `GET /students/{id}/credits`, `POST /schedule` (books student into make-up session), `POST /{id}/attend` (marks make-up fulfilled and redeems credit). |
+| [`acad_evaluations.py`](file:///home/pluto/projects/3abaqira/backend/apis/acad_evaluations.py) | `/api/acad/evaluations` | `POST /templates` (creates typed evaluation schemas), `POST /templates/{id}/fields`, `POST /events`, `POST /submit-result` (corrector submission), `POST /results/{id}/review` (enforces double-blind rule: `reviewer != corrector`), `POST /results/{id}/override-grade` (logs grade change audit). |
+| [`acad_materials.py`](file:///home/pluto/projects/3abaqira/backend/apis/acad_materials.py) | `/api/acad` | `POST /materials`, `GET /courses/{id}/materials`, `GET /materials/{id}/download` (strictly enforces access control: HTTP 403 Forbidden if student is not actively enrolled). |
 
 ---
 
-## JWT Authentication Flow
+## Sensitive Audit Logging
 
-### 1. Acquiring a Token
-Clients submit credentials to `POST /api/auth/login`:
-```json
-POST /api/auth/login HTTP/1.1
-Content-Type: application/json
-
-{
-  "username": "admin",
-  "password": "Admin@123456"
-}
-```
-
-Response:
-```json
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "token_type": "bearer",
-  "expires_in_seconds": 86400,
-  "user": {
-    "user_id": 1,
-    "username": "admin",
-    "full_name": "System Administrator",
-    "email": "admin@3abaqira.dz",
-    "role": "SUPER_ADMIN",
-    "is_active": true
-  }
-}
-```
-
-### 2. Authenticating Requests
-Include the token in the HTTP `Authorization` header on protected endpoints:
-```http
-GET /api/system/overview HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-
-### 3. Role-Based Access Control (RBAC)
-Protected endpoints enforce role permissions via the `require_role` dependency:
-- `SUPER_ADMIN`: Full unrestricted access to all endpoints including user deletion.
-- `ADMIN` / `DIRECTOR`: Configuration of branches, academic cycles, classrooms, and staff users.
-- `TEACHER` / `STAFF`: Scoped access for attendance, session logs, and student records.
+Every critical administrative and financial action is tracked in `core_audit_log` with an immutable trail and mandatory justification notes:
+- **Grade Overrides**: When updating evaluation scores (`POST /api/acad/evaluations/results/{id}/override-grade`).
+- **Medical File Views**: Triggered on every read of student health profiles (`GET /api/core/students/{id}/medical`).
+- **Price Overrides & Payment Voids**: Mandatory justification text recorded with actor persona, IP, and timestamp.

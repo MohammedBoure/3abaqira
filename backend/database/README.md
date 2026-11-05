@@ -1,77 +1,58 @@
 # Backend Database Layer (`backend/database/`)
 
-This directory serves as the unified data access and persistence layer for the 3abaqira Enterprise Management Platform. It is patterned after the proven modular architecture from `GoldShop2.0/database`, extended for multi-branch operations and integrated with FastAPI.
+This directory serves as the unified data access and persistence layer for the 3abaqira Enterprise Management Platform. It implements multi-branch operations, relational data managers, SQLite/PostgreSQL/MySQL dialect abstraction, and comprehensive audit tracking.
 
 ## Directory Architecture
 
 ```
 backend/database/
-├── __init__.py               # Central registry, dynamic lazy manager loader & FastAPI dependencies (get_db)
-├── README.md                 # Directory documentation
-└── base/                     # Core engine infrastructure
-    ├── __init__.py           # Package entrypoint for base
-    ├── base.py               # Backward-compatibility shim
-    ├── config.py             # Global logging, path helpers, constants & JSON serializers
-    ├── connection.py         # Connection pooling (PostgreSQL/MySQL/SQLite) & SQLAlchemy engine
-    ├── database.py           # Central Database Singleton coordinator
-    ├── schema_initializer.py # Automated fingerprinted DDL execution & migrations
-    ├── tables.py             # Modular DDL table definition queries
-    ├── views_indexes.py      # Analytical reporting views & B-tree performance indexes
-    ├── backup_manager.py     # CSV/ZIP/Excel backup, restore & historical purging
-    ├── archive_view_manager.py # Non-destructive archive view mode
-    └── README.md             # Detailed documentation of the base infrastructure
+├── __init__.py                      # Central registry, dynamic manager loader & FastAPI dependencies
+├── README.md                        # Database layer overview and module documentation
+├── core_audit_manager.py            # Sensitive action audit logging (grades, prices, voids, medical views)
+├── core_person_manager.py           # Core person master, student profile, medical, guardians & pickups
+├── iam_manager.py                   # IAM accounts, role builder, permission catalog & fee payment activation
+├── org_manager.py                   # 13 branches, non-overlapping academic years, rooms & equipment
+├── acad_workshop_manager.py         # 12 workshop catalog & evaluation types
+├── acad_course_manager.py           # Sequential book progression, pass rules (Soroban 80/100), repeat logic
+├── acad_timetable_manager.py        # Clash detection (trainer, room, group, branch mismatch)
+├── acad_makeup_manager.py           # Make-up session ledger, scheduling & attendance fulfillment
+├── acad_session_manager.py          # Session execution, attendance marking & absence telephone logs
+├── acad_evaluation_manager.py       # Dynamic typed templates, double-blind review (corrector != reviewer)
+├── acad_material_manager.py         # Digital course materials access control restricted to enrolled students
+└── base/                            # Core engine infrastructure
+    ├── __init__.py                  # Package entrypoint for base
+    ├── base.py                      # Compatibility shim
+    ├── config.py                    # Global logging, path helpers, constants & JSON serializers
+    ├── connection.py                # Connection pooling & SQLite dialect adaptation
+    ├── database.py                  # Central Database Singleton coordinator
+    ├── schema_initializer.py        # Fingerprinted DDL execution & migrations
+    ├── tables.py                    # DDL table schemas & initial seed catalog
+    ├── views_indexes.py             # Performance indexes & analytical views
+    ├── backup_manager.py            # CSV/ZIP backup, restore & historical purging
+    ├── archive_view_manager.py      # Non-destructive archive view mode
+    └── README.md                    # Detailed documentation of base infrastructure
 ```
 
-## Directory Contents
+## Core Person, IAM & Academy Managers
 
-| File / Folder | Purpose |
-|---------------|---------|
-| [base/](file:///C:/Users/moham/Desktop/3abaqira/backend/database/base) | Core infrastructure containing connection pooling, schema migrations, backup/restore managers, and archive viewing. |
-| [__init__.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/__init__.py) | Package entry point re-exporting `Database`, dynamic domain manager loader (`_MANAGER_EXPORTS`), and FastAPI dependencies (`get_db`, `get_database`). |
-| [branch_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/branch_manager.py) | Data Access Manager for the `branches` table, supporting multi-tenant branch CRUD and status toggles. |
-| [academic_year_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/academic_year_manager.py) | Data Access Manager for the `academic_years` table, supporting fiscal year setup and atomic active cycle switching. |
-| [classroom_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/classroom_manager.py) | Data Access Manager for the `classrooms` table, managing room capacities, floor allocations, and branch room rosters. |
-| [infrastructure_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/infrastructure_manager.py) | Facade manager consolidating multi-branch infrastructure overview and room capacity analytics. |
-| [user_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/user_manager.py) | Data Access Manager for the `users` authentication table, supporting secure credential verification, role-based retrieval, and password management. |
-| [guardian_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/guardian_manager.py) | Data Access Manager for the `guardians` parent directory, contact search, and student linkage queries. |
-| [student_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/student_manager.py) | Data Access Manager for the bilingual `students` directory, code generation, and `student_guardians` junction table. |
-| [program_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/program_manager.py) | Data Access Manager for the `programs` table, managing educational offerings and billing models. |
-| [level_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/level_manager.py) | Data Access Manager for curriculum `levels`, sequence ordering, age cohorts, and visual color tags. |
-| [pricing_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/pricing_manager.py) | Data Access Manager for `pricing_plans` matrices, installment structures, and discount simulations. |
-| [group_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/group_manager.py) | Data Access Manager for `groups` cohorts, capacities, and active student enrollment headcounts. |
-| [schedule_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/schedule_manager.py) | Data Access Manager for `group_schedules` weekly timetable slots, room occupancy, and collision/clash checks. |
-| [attendance_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/attendance_manager.py) | Data Access Manager for `completed_sessions` and `student_attendance` per-session marking, points scoring, and logs. |
-| [enrollment_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/enrollment_manager.py) | Data Access Manager for `student_enrollments` cohorts, tuition fee matrices, sibling/cash discounts, headcount sync, and invoice scheduling. |
-| [invoice_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/invoice_manager.py) | Data Access Manager for `invoices` tranches, scheduled due dates, payment credits, overdue scanning, waivers, and financial analytics. |
-| [cash_register_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/cash_register_manager.py) | Data Access Manager for `daily_cash_registers`, tracking cash drawer opening balances, live revenue/expense/remittance totals, and closing discrepancies. |
-| [payment_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/payment_manager.py) | Data Access Manager for `payments` receipts (الوصل), automated voucher numbers, two-way invoice crediting, and cash drawer synchronization. |
-| [cash_handover_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/cash_handover_manager.py) | Data Access Manager for `cash_handovers` remittances (التسليم), safe drops, physical voucher sequencing, and drawer remittance balance updates. |
-| [expense_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/expense_manager.py) | Data Access Managers for `expense_categories` and `expenses` records, voucher sequencing (`EXP-BRANCH-YYYY-XXXXX`), daily drawer expense sync, and budget variance actuals updates. |
-| [budget_variance_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/budget_variance_manager.py) | Data Access Manager for `budget_variances`, setting monthly category budgets, variable multiplier factors, actual expense syncing, and variance reporting (favorable / unfavorable). |
-| [kitchen_procurement_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/kitchen_procurement_manager.py) | Data Access Managers for `daily_bread_logs`, `provisions_orders`, weekly food orders, expense linkage, and executive cafeteria KPI dashboards. |
-| [competition_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/competition_manager.py) | Data Access Managers for `competitions` events, candidate registrations (`CMP-BRANCH-YYYY-XXXXX`), daily drawer revenue synchronization, and participant rosters. |
-| [employee_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/employee_manager.py) | Data Access Manager for `employees` faculty coaches, administrative directors, and operational staff. |
-| [payroll_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/payroll_manager.py) | Data Access Managers for `payroll_runs` cycles and `payroll_items` line items, automated batch compensation calculation, departmental rollups, and payment voucher issuance. |
-| [audit_log_manager.py](file:///C:/Users/moham/Desktop/3abaqira/backend/database/audit_log_manager.py) | Data Access Managers for `audit_logs` system modifications trail and `AppMetadata` centralized key-value configuration store. |
+| Manager File | Relational Tables Handled | Purpose & Business Logic Enforced |
+| :--- | :--- | :--- |
+| [`core_audit_manager.py`](file:///home/pluto/projects/3abaqira/backend/database/core_audit_manager.py) | `core_audit_log` | Central audit logger for sensitive actions. Mandatory reason strings enforced for `GRADE_CHANGE`, `PRICE_OVERRIDE`, `PAYMENT_VOID`, and `MEDICAL_VIEW`. Captures actor, IP, timestamp, old/new states. |
+| [`core_person_manager.py`](file:///home/pluto/projects/3abaqira/backend/database/core_person_manager.py) | `core_person`, `core_student`, `core_student_medical`, `core_guardian_link`, `core_pickup_authorization` | Master identity registry across all personas (STUDENT, GUARDIAN, INSTRUCTOR, STAFF). Manages student academic profiles, confidential medical data (access auto-logs `MEDICAL_VIEW`), guardian links with custody flags, and authorized pickup individuals with relation tags. |
+| [`iam_manager.py`](file:///home/pluto/projects/3abaqira/backend/database/iam_manager.py) | `iam_account`, `iam_permission`, `iam_role`, `iam_role_permission`, `iam_person_role` | Identity & Access Management. Handles user credentials with bcrypt hashing. Implements **fee payment account activation lifecycle** (`PENDING` -> `ACTIVE` on fee payment). Computes effective permissions dynamically across global and branch-scoped role assignments. |
+| [`org_manager.py`](file:///home/pluto/projects/3abaqira/backend/database/org_manager.py) | `org_branch`, `org_academic_year`, `org_room`, `org_room_equipment` | Organizational hierarchy covering 13 branches across Algeria (Main, Secondary, Franchise, Satellite). Enforces non-overlapping academic cycle date intervals and ensures strictly one current academic year. Manages physical rooms and equipment inventory tracking. |
+| [`acad_workshop_manager.py`](file:///home/pluto/projects/3abaqira/backend/database/acad_workshop_manager.py) | `acad_workshop` | Academy workshops catalog (Soroban, Robotics, Languages, AI, Speedcubing, Quran, Sports, etc.). Manages evaluation methodologies (`EXAM`, `PROJECT`, `ORAL`, `HYBRID`) and active offerings. |
+| [`acad_course_manager.py`](file:///home/pluto/projects/3abaqira/backend/database/acad_course_manager.py) | `acad_course`, `acad_course_rule`, `acad_student_progression` | Curriculum levels enforcing **strict one-book-per-course mapping**, **one open book per workshop** constraint, sequential advancement rules, administrative placement notes, and repeat-book on failure. Configures dynamic pass rules (e.g. Soroban 3 tests with 80/100 threshold). |
+| [`acad_timetable_manager.py`](file:///home/pluto/projects/3abaqira/backend/database/acad_timetable_manager.py) | `acad_group`, `acad_group_slot` | Weekly timetable scheduling engine. Features **multi-dimensional clash detection** (`TimetableClashError`): prevents trainer double-booking, room double-booking, group overlap, and strictly enforces room-to-group branch matching. |
+| [`acad_makeup_manager.py`](file:///home/pluto/projects/3abaqira/backend/database/acad_makeup_manager.py) | `acad_makeup` | Make-up session entitlement and fulfillment ledger. Tracks owed session credits generated automatically from absences or failed evaluations. Manages scheduling, attendance, and credit redemption. |
+| [`acad_session_manager.py`](file:///home/pluto/projects/3abaqira/backend/database/acad_session_manager.py) | `acad_session`, `acad_attendance`, `acad_absence_call_log` | Classroom session delivery and attendance marking. Unexcused absence automatically triggers make-up session generation. Enforces mandatory **absence telephone call logging** capturing verbal parental justifications and follow-up flags. |
+| [`acad_evaluation_manager.py`](file:///home/pluto/projects/3abaqira/backend/database/acad_evaluation_manager.py) | `acad_eval_template`, `acad_eval_field`, `acad_eval_event`, `acad_eval_result`, `acad_eval_result_value` | Dynamic typed evaluation engine. Supports customizable templates with typed fields (`NUMERIC`, `TEXT`, `BOOLEAN`, `SCALE_1_5`). Enforces a strict **double-blind review workflow** (`reviewer_person_id != corrector_person_id`). Automatically logs grade change audits with mandatory justification reasons. |
+| [`acad_material_manager.py`](file:///home/pluto/projects/3abaqira/backend/database/acad_material_manager.py) | `acad_material` | Digital pedagogical resources and course materials. Enforces **strict access control**: file downloads are permitted only to students with active, non-completed enrollments in the specific course. |
 
+## Organizational Infrastructure Seed Data
 
-## FastAPI Integration Pattern
-
-FastAPI route handlers can consume database connections and singleton services effortlessly:
-
-```python
-from fastapi import APIRouter, Depends
-from backend.database import get_db, get_database, Database
-
-router = APIRouter(prefix="/students", tags=["Students"])
-
-@router.get("/")
-def get_students(conn = Depends(get_db)):
-    cursor = conn.cursor()
-    cursor.execute("SELECT student_id, full_name_ar, full_name_fr FROM students WHERE is_active = TRUE;")
-    return cursor.fetchall()
-
-@router.get("/system/status")
-def system_status(db: Database = Depends(get_database)):
-    return db.get_archive_view_status()
-```
+The database initializes with complete baseline seed records:
+- **13 Branches**: `BR-01` to `BR-13` spanning Algiers Central, Oran, Constantine, Annaba, Setif, Batna, Blida, Tlemcen, Bejaia, Biskra, Djelfa, Tizi Ouzou, and Chlef.
+- **Academic Years**: Validated non-overlapping date spans with `2025-2026` set as the active fiscal cycle.
+- **Permissions & Roles**: Complete IAM permission catalog with standard pre-configured roles (`SUPER_ADMIN`, `BRANCH_DIRECTOR`, `INSTRUCTOR`, `ACCOUNTANT`, `STUDENT_GUARDIAN`).
+- **12 Academy Workshops**: Soroban, Robotics & IoT, English Language, French Language, Coding & AI, Speedcubing, Mental Arithmetic, Quranic Memorization, Little Scientist, Graphic Design, Chess & Strategy, and Gymnastics & Sports.

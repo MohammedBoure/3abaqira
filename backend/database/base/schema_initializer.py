@@ -38,6 +38,7 @@ class SchemaInitializer:
 
                 logger.info("🔄 Applying schema migrations and updates...")
                 self._run_queries(cursor, ALL_SCHEMA_QUERIES, "Schema Tables")
+                self._ensure_column_migrations(cursor)
                 self._run_queries(cursor, VIEW_QUERIES, "Reporting Views")
                 self._run_queries(cursor, INDEX_QUERIES, "Performance Indexes", ignore_errors=True)
 
@@ -48,6 +49,20 @@ class SchemaInitializer:
 
         except Exception as err:
             logger.error(f"❌ Failed to initialize schema: {err}")
+
+    def _ensure_column_migrations(self, cursor) -> None:
+        """Adds missing columns idempotently to preexisting tables."""
+        stmts = [
+            "ALTER TABLE payments ADD COLUMN is_voided BOOLEAN NOT NULL DEFAULT 0;",
+            "ALTER TABLE payments ADD COLUMN void_reason TEXT;",
+            "ALTER TABLE payments ADD COLUMN voided_by_user_id INTEGER;",
+            "ALTER TABLE payments ADD COLUMN voided_at TIMESTAMPTZ;"
+        ]
+        for stmt in stmts:
+            try:
+                cursor.execute(stmt)
+            except Exception:
+                pass
 
     @staticmethod
     def _schema_fingerprint() -> str:
@@ -129,11 +144,13 @@ class SchemaInitializer:
                         pass
                     clean_q = re.sub(r'CREATE\s+OR\s+REPLACE\s+VIEW', 'CREATE VIEW', clean_q, flags=re.IGNORECASE)
                 clean_q = clean_q.replace("ILIKE", "LIKE")
+                clean_q = re.sub(r'\b(?:BIG)?SERIAL\s+PRIMARY\s+KEY\b', 'INTEGER PRIMARY KEY AUTOINCREMENT', clean_q, flags=re.IGNORECASE)
 
             elif is_mysql:
                 clean_q = clean_q.replace("TIMESTAMPTZ", "DATETIME")
                 clean_q = clean_q.replace("JSONB", "JSON")
                 clean_q = clean_q.replace("ILIKE", "LIKE")
+                clean_q = re.sub(r'\b(?:BIG)?SERIAL\s+PRIMARY\s+KEY\b', 'INTEGER PRIMARY KEY AUTOINCREMENT', clean_q, flags=re.IGNORECASE)
                 clean_q = clean_q.replace("BIGSERIAL PRIMARY KEY", "SERIAL PRIMARY KEY")
                 clean_q = re.sub(r'DEFAULT\s+CURRENT_DATE', '', clean_q, flags=re.IGNORECASE)
                 clean_q = re.sub(r'CREATE\s+INDEX\s+IF\s+NOT\s+EXISTS', 'CREATE INDEX', clean_q, flags=re.IGNORECASE)

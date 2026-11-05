@@ -39,6 +39,18 @@ from .payroll import router as payroll_router
 from .audit import router as audit_router
 from .system import router as system_router, system_health_check
 
+# Core Person, IAM & Academy Architecture Sub-Routers (Worker agy11)
+from .core_persons import router as core_persons_router
+from .iam import router as iam_router
+from .organizations import router as organizations_router
+from .acad_workshops import router as acad_workshops_router
+from .acad_courses import router as acad_courses_router
+from .acad_timetable import router as acad_timetable_router
+from .acad_sessions import router as acad_sessions_router
+from .acad_makeup import router as acad_makeup_router
+from .acad_evaluations import router as acad_evaluations_router
+from .acad_materials import router as acad_materials_router
+
 # Master API Router mounted under '/api'
 api_router = APIRouter(prefix="/api")
 
@@ -68,6 +80,18 @@ api_router.include_router(competitions_router)
 api_router.include_router(payroll_router)
 api_router.include_router(audit_router)
 api_router.include_router(system_router)
+
+# Mount Academy & Core IAM Sub-Routers
+api_router.include_router(core_persons_router)
+api_router.include_router(iam_router)
+api_router.include_router(organizations_router)
+api_router.include_router(acad_workshops_router)
+api_router.include_router(acad_courses_router)
+api_router.include_router(acad_timetable_router)
+api_router.include_router(acad_sessions_router)
+api_router.include_router(acad_makeup_router)
+api_router.include_router(acad_evaluations_router)
+api_router.include_router(acad_materials_router)
 
 # Top-level direct health check alias: GET /api/health
 api_router.add_api_route(

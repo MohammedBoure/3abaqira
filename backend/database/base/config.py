@@ -145,6 +145,76 @@ TABLE_IMPORT_ORDER = [
     'payroll_runs',
     'payroll_items',
     
+    # Core Person & IAM Infrastructure
+    'core_person',
+    'core_student',
+    'core_student_medical',
+    'core_guardian_link',
+    'core_pickup_authorization',
+    'core_audit_log',
+    'iam_account',
+    'iam_permission',
+    'iam_role',
+    'iam_role_permission',
+    'iam_person_role',
+
+    # Organization Expanded
+    'org_branch',
+    'org_academic_year',
+    'org_room',
+    'org_room_equipment',
+
+    # Academy Module
+    'acad_workshop',
+    'acad_course',
+    'acad_course_rule',
+    'acad_group',
+    'acad_group_slot',
+    'acad_enrollment',
+    'acad_session',
+    'acad_attendance',
+    'acad_eval_template',
+    'acad_eval_field',
+    'acad_eval_event',
+    'acad_eval_result',
+    'acad_eval_result_value',
+    'acad_makeup',
+    'acad_material',
+
+    # Kindergarten Module
+    'kg_age_band',
+    'kg_child_book',
+    'kg_attendance',
+    'kg_daily_log',
+    'kg_monthly_report',
+    'kg_incident',
+    'kg_specialist_note',
+    'kg_child_habit_profile',
+    'kg_menu_entry',
+
+    # HR Staff & Applications
+    'hr_position',
+    'hr_staff',
+    'hr_staff_assignment',
+    'hr_staff_attendance',
+    'hr_staff_application',
+
+    # Communication Module
+    'comm_note_policy',
+    'comm_note',
+    'comm_notification',
+
+    # Finance Extensions
+    'fin_receipt_sequence',
+    'fin_fee_plan',
+    'fin_price_override',
+    'fin_installment',
+
+    # Migration Module
+    'mig_import_batch',
+    'mig_import_row',
+    'mig_legacy_ref',
+
     # System Audits
     'audit_logs',
     'AppMetadata'

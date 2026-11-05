@@ -73,6 +73,26 @@ _MANAGER_EXPORTS = {
     "PayrollItemManager": ("payroll_manager", "PayrollItemManager"),
     "AuditLogManager": ("audit_log_manager", "AuditLogManager"),
     "AppMetadataManager": ("audit_log_manager", "AppMetadataManager"),
+
+    # Core Person, IAM & Academy Architecture (Worker agy11)
+    "CoreAuditManager": ("core_audit_manager", "CoreAuditManager"),
+    "CorePersonManager": ("core_person_manager", "CorePersonManager"),
+    "IAMManager": ("iam_manager", "IAMManager"),
+    "OrgManager": ("org_manager", "OrgManager"),
+    "AcadWorkshopManager": ("acad_workshop_manager", "AcadWorkshopManager"),
+    "AcadCourseManager": ("acad_course_manager", "AcadCourseManager"),
+    "AcadTimetableManager": ("acad_timetable_manager", "AcadTimetableManager"),
+    "AcadMakeupManager": ("acad_makeup_manager", "AcadMakeupManager"),
+    "AcadSessionManager": ("acad_session_manager", "AcadSessionManager"),
+    "AcadEvaluationManager": ("acad_evaluation_manager", "AcadEvaluationManager"),
+    "AcadMaterialManager": ("acad_material_manager", "AcadMaterialManager"),
+
+    # Kindergarten, HR, Communication, Finance & Migration (Worker agy12)
+    "KindergartenManager": ("kindergarten_manager", "KindergartenManager"),
+    "HRManager": ("hr_manager", "HRManager"),
+    "CommunicationManager": ("communication_manager", "CommunicationManager"),
+    "FinanceManager": ("finance_manager", "FinanceManager"),
+    "MigrationManager": ("migration_manager", "MigrationManager"),
 }
 
 
