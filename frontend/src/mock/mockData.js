@@ -8,9 +8,20 @@
  */
 
 export const MOCK_BRANCHES = [
-  { id: 'ALL', nameAr: 'كافة المقرات والفروع', nameEn: 'All Branches', code: 'ALL' },
-  { id: 'CENTER', nameAr: 'أكاديمية الأطفال العباقرة (المركز)', nameEn: '3abaqira Academy - Center', code: 'CENTER' },
-  { id: 'RAWDA', nameAr: 'روضة وحضانة الأطفال العباقرة', nameEn: '3abaqira Kindergarten & Daycare', code: 'RAWDA' },
+  { id: 'ALL', nameAr: 'كافة المقرات والفروع (13 فرع)', nameEn: 'All Branches (13 Branches)', code: 'ALL', branchType: 'ALL' },
+  { id: 'CENTER', nameAr: 'أكاديمية الأطفال العباقرة (المركز الرئيسي - جيجل)', nameEn: 'Genius Kids Academy - Center', code: 'CENTER', branchType: 'ACADEMY' },
+  { id: 'RAWDA', nameAr: 'روضة وحضانة الأطفال العباقرة (المركزية - جيجل)', nameEn: 'Genius Kids Kindergarten & Daycare', code: 'RAWDA', branchType: 'KINDERGARTEN' },
+  { id: 'MILIA_ACADEMY', nameAr: 'أكاديمية العباقرة - فرع الميلية', nameEn: 'Genius Academy - El Milia', code: 'MILIA_ACADEMY', branchType: 'ACADEMY' },
+  { id: 'MILIA_RAWDA', nameAr: 'روضة وحضانة العباقرة - فرع الميلية', nameEn: 'Genius Kindergarten - El Milia', code: 'MILIA_RAWDA', branchType: 'KINDERGARTEN' },
+  { id: 'TAHER_ACADEMY', nameAr: 'أكاديمية العباقرة - فرع الطاهير', nameEn: 'Genius Academy - Taher', code: 'TAHER_ACADEMY', branchType: 'ACADEMY' },
+  { id: 'TAHER_RAWDA', nameAr: 'روضة وحضانة العباقرة - فرع الطاهير', nameEn: 'Genius Kindergarten - Taher', code: 'TAHER_RAWDA', branchType: 'KINDERGARTEN' },
+  { id: 'KAOUS_ACADEMY', nameAr: 'أكاديمية العباقرة - فرع قاوس', nameEn: 'Genius Academy - Kaous', code: 'KAOUS_ACADEMY', branchType: 'ACADEMY' },
+  { id: 'AOUANA_ACADEMY', nameAr: 'أكاديمية العباقرة - فرع العوانة', nameEn: 'Genius Academy - El Aouana', code: 'AOUANA_ACADEMY', branchType: 'ACADEMY' },
+  { id: 'JIJEL_EST_RAWDA', nameAr: 'روضة وحضانة العباقرة - جيجل الشرقية', nameEn: 'Genius Kindergarten - Jijel East', code: 'JIJEL_EST_RAWDA', branchType: 'KINDERGARTEN' },
+  { id: 'JIJEL_OUEST_ACADEMY', nameAr: 'أكاديمية العباقرة - جيجل الغربية', nameEn: 'Genius Academy - Jijel West', code: 'JIJEL_OUEST_ACADEMY', branchType: 'ACADEMY' },
+  { id: 'CHEKFA_ACADEMY', nameAr: 'أكاديمية العباقرة - فرع الشقفة', nameEn: 'Genius Academy - Chekfa', code: 'CHEKFA_ACADEMY', branchType: 'ACADEMY' },
+  { id: 'SIDI_ABDELAZIZ_RAWDA', nameAr: 'روضة وحضانة العباقرة - سيدي عبد العزيز', nameEn: 'Genius Kindergarten - Sidi Abdelaziz', code: 'SIDI_ABDELAZIZ_RAWDA', branchType: 'KINDERGARTEN' },
+  { id: 'ZIAMA_ACADEMY', nameAr: 'أكاديمية العباقرة - فرع زيامة منصورية', nameEn: 'Genius Academy - Ziama Mansouriah', code: 'ZIAMA_ACADEMY', branchType: 'ACADEMY' },
 ];
 
 export const MOCK_METRICS = {

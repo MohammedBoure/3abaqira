@@ -64,6 +64,7 @@ export function Sidebar({
       groupTitle: 'التمدرس وشؤون الأطفال',
       groupEn: 'STUDENT AFFAIRS',
       items: [
+        { id: 'kindergarten-workstation', labelAr: 'محطة روضة الأطفال الشاملة', icon: Baby, tag: 'M6 شاملة' },
         { id: 'rawda-students', labelAr: 'المداخيل و التسجيلات', icon: Users, tag: 'تسجيل' },
         { id: 'rawda-cohorts', labelAr: 'تقسيم الأفواج', icon: Layers, tag: 'أفواج' },
       ],
@@ -72,6 +73,7 @@ export function Sidebar({
       groupTitle: 'المالية والمصاريف التشغيلية',
       groupEn: 'OPERATING EXPENSES',
       items: [
+        { id: 'treasury-finance-desk', labelAr: 'شباك الخزينة والمالية الموحد', icon: Wallet, tag: 'M8 خزينة' },
         { id: 'rawda-daily-expenses', labelAr: 'سجل المصاريف اليومية', icon: TrendingUp, tag: '11 شهر' },
         { id: 'rawda-budget-variance', labelAr: 'ملخص المصاريف وتحليل الموازنة', icon: Coins, tag: 'تقديري/فعلي' },
       ],
@@ -134,7 +136,23 @@ export function Sidebar({
     },
   ];
 
-  const currentGroups = effectiveBranch === 'RAWDA' ? rawdaNavigationGroups : centerNavigationGroups;
+  const enterpriseNavGroup = {
+    groupTitle: 'الإدارة المركزية والنظام الشامل',
+    groupEn: 'ENTERPRISE 9 MODULES',
+    items: [
+      { id: 'core-family-hub', labelAr: 'سجل العائلات والأولياء والمفوضين', icon: Users, tag: 'M3 عائلات' },
+      { id: 'staff-hr', labelAr: 'إدارة الموظفين والتوظيف', icon: UserCheck, tag: 'M4 موظفين' },
+      { id: 'communication', labelAr: 'مركز التواصل والإشعارات', icon: Activity, tag: 'M7 تواصل' },
+      { id: 'data-migration', labelAr: 'منظومة ترحيل ومطابقة إكسل', icon: Table, tag: 'M9 ترحيل' },
+      { id: 'auth-security', labelAr: 'الصلاحيات وتفعيل الحسابات', icon: KeyRound, tag: 'M1 أمان' },
+      { id: 'audit-logs', labelAr: 'سجل الرقابة والعمليات الحساسة', icon: ShieldAlert, tag: 'رقابة' },
+      { id: 'branches', labelAr: 'الفروع الـ 13 ومرافقها', icon: Building, tag: 'M2 فروع' },
+      { id: 'academic-years', labelAr: 'السنوات الأكاديمية والمالية', icon: Calendar, tag: 'سنوات' },
+    ],
+  };
+
+  const branchGroups = effectiveBranch === 'RAWDA' ? rawdaNavigationGroups : centerNavigationGroups;
+  const currentGroups = [...branchGroups, enterpriseNavGroup];
 
   // Collapsed Sidebar rendering
   if (isCollapsed) {
@@ -357,6 +375,36 @@ export function Sidebar({
                   <span>التحليلات والإحصائيات العامة</span>
                 </div>
                 <span className="text-[9px] font-mono px-1 py-0.2 bg-slate-100 text-slate-600">إحصاء</span>
+              </button>
+
+              <button
+                onClick={() => onSelectView('communication-center')}
+                className={`w-full flex items-center justify-between px-2 py-1 text-xs rounded transition-colors ${
+                  activeView === 'communication-center' || activeView === 'parent-notes' || activeView === 'notification-queue'
+                    ? 'bg-blue-900 text-white font-bold'
+                    : 'text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Receipt className="w-3.5 h-3.5 text-blue-600" />
+                  <span>مركز المراسلات والإشعارات (M7)</span>
+                </div>
+                <span className="text-[9px] font-mono px-1 py-0.2 bg-emerald-50 text-emerald-800">SMS/واتساب</span>
+              </button>
+
+              <button
+                onClick={() => onSelectView('data-migration-console')}
+                className={`w-full flex items-center justify-between px-2 py-1 text-xs rounded transition-colors ${
+                  activeView === 'data-migration-console' || activeView === 'data-migration'
+                    ? 'bg-blue-900 text-white font-bold'
+                    : 'text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Table className="w-3.5 h-3.5 text-blue-600" />
+                  <span>ترحيل بيانات الإكسل القديمة (M9)</span>
+                </div>
+                <span className="text-[9px] font-mono px-1 py-0.2 bg-amber-50 text-amber-800">فرز/مطابقة</span>
               </button>
             </div>
           </div>

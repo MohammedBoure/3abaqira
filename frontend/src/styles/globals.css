@@ -328,4 +328,190 @@ body {
   }
 }
 
+/* ==============================================================================
+ * ENTERPRISE PRINT ENGINE & HIGH-FIDELITY STYLESHEETS
+ * ==============================================================================
+ * Specifically configured for:
+ * 1. Sequential Arabic Cash Receipts & Vouchers (سندات القبض المالي المتسلسلة)
+ * 2. Kindergarten Monthly Report Cards & Log Cards (بطاقات المتابعة الشهرية للروضة)
+ * Crisp solid typography, Cairo font rendering, pure black ink economy, zero blur.
+ * ============================================================================== */
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
+  }
+
+  /* Universal print resets */
+  *,
+  *::before,
+  *::after {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html,
+  body {
+    width: 100% !important;
+    height: auto !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-family: var(--font-family-arabic) !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide screen-only interactive chrome */
+  header,
+  aside,
+  footer,
+  nav,
+  .print\\:hidden,
+  .no-print,
+  button:not(.print-include),
+  input,
+  textarea,
+  select,
+  [data-testid="interactive-background"],
+  canvas {
+    display: none !important;
+  }
+
+  /* Unfold modal container for direct printing */
+  .fixed.inset-0 {
+    position: static !important;
+    inset: auto !important;
+    background: transparent !important;
+    padding: 0 !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  /* ==========================================
+   * 1. SEQUENTIAL ARABIC CASH RECEIPTS PRINT STYLES
+   * ========================================== */
+  .receipt-printable-canvas {
+    display: block !important;
+    width: 100% !important;
+    max-width: 180mm !important;
+    margin: 0 auto !important;
+    padding: 6mm 8mm !important;
+    border: 2px solid #0f172a !important;
+    border-radius: 0 !important;
+    background: #ffffff !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .receipt-printable-canvas .receipt-header {
+    border-bottom: 2px solid #0f172a !important;
+    padding-bottom: 4mm !important;
+    margin-bottom: 4mm !important;
+  }
+
+  .receipt-printable-canvas .receipt-number-badge {
+    border: 1.5px solid #0f172a !important;
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    font-family: var(--font-family-mono) !important;
+    font-weight: 700 !important;
+    padding: 2px 6px !important;
+  }
+
+  .receipt-printable-canvas .receipt-grid {
+    border: 1px solid #cbd5e1 !important;
+    margin: 4mm 0 !important;
+  }
+
+  .receipt-printable-canvas .receipt-signatures {
+    border-top: 1px dashed #64748b !important;
+    margin-top: 6mm !important;
+    padding-top: 4mm !important;
+  }
+
+  /* ==========================================
+   * 2. KINDERGARTEN MONTHLY REPORT CARDS PRINT STYLES
+   * ========================================== */
+  .reportcard-printable-canvas {
+    display: block !important;
+    width: 100% !important;
+    max-width: 195mm !important;
+    margin: 0 auto !important;
+    padding: 6mm !important;
+    border: 2px solid #1e3a8a !important;
+    border-radius: 0 !important;
+    background: #ffffff !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .reportcard-printable-canvas .reportcard-header {
+    border-bottom: 2px solid #1e3a8a !important;
+    padding-bottom: 3mm !important;
+    margin-bottom: 4mm !important;
+  }
+
+  .reportcard-printable-canvas .reportcard-meta-table {
+    border: 1px solid #0f172a !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin-bottom: 4mm !important;
+  }
+
+  .reportcard-printable-canvas .reportcard-meta-table td,
+  .reportcard-printable-canvas .reportcard-meta-table th {
+    border: 1px solid #cbd5e1 !important;
+    padding: 4px 8px !important;
+    font-size: 9.5pt !important;
+  }
+
+  .reportcard-printable-canvas .eval-matrix-table {
+    border: 1.5px solid #0f172a !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin-bottom: 4mm !important;
+  }
+
+  .reportcard-printable-canvas .eval-matrix-table th {
+    background-color: #f1f5f9 !important;
+    border: 1px solid #0f172a !important;
+    padding: 5px 6px !important;
+    font-weight: 700 !important;
+    font-size: 9.5pt !important;
+    text-align: center !important;
+  }
+
+  .reportcard-printable-canvas .eval-matrix-table td {
+    border: 1px solid #cbd5e1 !important;
+    padding: 5px 6px !important;
+    font-size: 9pt !important;
+  }
+
+  .reportcard-printable-canvas .eval-badge {
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    line-height: 18px !important;
+    text-align: center !important;
+    font-weight: 700 !important;
+    border-radius: 50% !important;
+    border: 1px solid #0f172a !important;
+  }
+
+  .reportcard-printable-canvas .approval-seal {
+    border: 2px solid #059669 !important;
+    color: #059669 !important;
+    padding: 3px 10px !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+  }
+}
+
 

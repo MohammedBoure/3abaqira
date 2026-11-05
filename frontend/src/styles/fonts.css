@@ -14,11 +14,11 @@
   /* Latin Font Family (English / French) - Default: Inter */
   --font-family-latin: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-  /* Arabic Font Family - Enterprise Clean: IBM Plex Sans Arabic with Readex Pro and Cairo fallback */
-  --font-family-arabic: 'IBM Plex Sans Arabic', 'Readex Pro', 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Arabic Font Family - Enterprise Clean Cairo Typography with IBM Plex & Readex Pro fallbacks */
+  --font-family-arabic: 'Cairo', 'IBM Plex Sans Arabic', 'Readex Pro', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Modern Display / Hero Font Family - Default: Outfit / IBM Plex Sans Arabic */
-  --font-family-display: 'IBM Plex Sans Arabic', 'Outfit', 'Readex Pro', sans-serif;
+  /* Modern Display / Hero Font Family - Cairo / IBM Plex Sans Arabic / Outfit */
+  --font-family-display: 'Cairo', 'IBM Plex Sans Arabic', 'Outfit', sans-serif;
 
   /* Code / Monospace / Tabular Numerics */
   --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;

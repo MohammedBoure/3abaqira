@@ -161,6 +161,162 @@ VIEW_QUERIES = [
         SUM(po.total_amount) AS total_spent
     FROM provisions_orders po
     GROUP BY po.branch_id, po.order_month, po.item_category, po.unit_measure;
+    """,
+    """
+    CREATE OR REPLACE VIEW v_daily_cash_summary AS
+    SELECT 
+        dcr.register_id,
+        dcr.branch_id,
+        b.name_ar AS branch_name,
+        dcr.register_date AS summary_date,
+        dcr.opening_balance,
+        dcr.total_revenues AS total_income,
+        dcr.total_expenses,
+        dcr.total_remitted AS total_handovers,
+        (dcr.opening_balance + dcr.total_revenues - dcr.total_expenses - dcr.total_remitted) AS net_balance,
+        dcr.is_closed,
+        dcr.actual_cash_counted,
+        dcr.discrepancy
+    FROM daily_cash_registers dcr
+    JOIN branches b ON dcr.branch_id = b.branch_id;
+    """,
+    """
+    CREATE OR REPLACE VIEW v_kg_daily_attendance_summary AS
+    SELECT 
+        ka.branch_id,
+        ka.attendance_date,
+        COUNT(ka.kg_attendance_id) AS total_marked,
+        SUM(CASE WHEN ka.status = 'PRESENT' THEN 1 ELSE 0 END) AS present_count,
+        SUM(CASE WHEN ka.status = 'ABSENT' THEN 1 ELSE 0 END) AS absent_count,
+        SUM(CASE WHEN ka.status = 'LATE' THEN 1 ELSE 0 END) AS late_count,
+        SUM(CASE WHEN ka.status = 'EXCUSED' THEN 1 ELSE 0 END) AS excused_count
+    FROM kg_attendance ka
+    GROUP BY ka.branch_id, ka.attendance_date;
+    """,
+    """
+    CREATE OR REPLACE VIEW v_kg_approved_monthly_reports AS
+    SELECT 
+        mr.report_id,
+        mr.student_id,
+        mr.branch_id,
+        mr.month_period,
+        mr.breakfast,
+        mr.lunch,
+        mr.snack,
+        mr.sleep,
+        mr.study,
+        mr.interaction,
+        mr.crying,
+        mr.clothes_change,
+        mr.teacher_notes,
+        mr.admin_feedback,
+        mr.author_staff_id,
+        mr.reviewer_admin_id,
+        mr.status,
+        mr.approved_at,
+        mr.visible_to_parents
+    FROM kg_monthly_report mr
+    WHERE mr.status = 'APPROVED' AND mr.visible_to_parents = TRUE;
+    """,
+    """
+    CREATE OR REPLACE VIEW v_hr_active_assignments AS
+    SELECT 
+        hsa.assignment_id,
+        hsa.employee_id,
+        e.employee_code,
+        e.full_name AS staff_name,
+        hsa.branch_id,
+        hp.code AS position_code,
+        hp.title_ar AS position_title_ar,
+        hp.title_en AS position_title_en,
+        hsa.role_in_branch,
+        hsa.allocation_percentage,
+        hsa.is_primary,
+        hsa.start_date,
+        hsa.end_date,
+        hsa.is_active
+    FROM hr_staff_assignment hsa
+    JOIN employees e ON hsa.employee_id = e.employee_id
+    LEFT JOIN hr_position hp ON hsa.position_id = hp.position_id
+    WHERE hsa.is_active = TRUE;
+    """,
+    """
+    CREATE OR REPLACE VIEW v_mig_staging_progress AS
+    SELECT 
+        b.batch_id,
+        b.filename,
+        b.sheet_name,
+        b.source_branch_id,
+        b.status AS batch_status,
+        b.total_rows,
+        COUNT(r.row_id) AS staged_rows,
+        SUM(CASE WHEN r.match_status = 'EXACT_MATCH' THEN 1 ELSE 0 END) AS exact_matches,
+        SUM(CASE WHEN r.match_status = 'AMBIGUOUS' THEN 1 ELSE 0 END) AS ambiguous_matches,
+        SUM(CASE WHEN r.match_status = 'CONVERTED' THEN 1 ELSE 0 END) AS converted_rows,
+        SUM(CASE WHEN r.match_status = 'REJECTED' THEN 1 ELSE 0 END) AS rejected_rows
+    FROM mig_import_batch b
+    LEFT JOIN mig_import_row r ON b.batch_id = r.batch_id
+    GROUP BY b.batch_id, b.filename, b.sheet_name, b.source_branch_id, b.status, b.total_rows;
+    """,
+    """
+    CREATE OR REPLACE VIEW kg_age_bands AS SELECT * FROM kg_age_band;
+    """,
+    """
+    CREATE OR REPLACE VIEW kg_child_books AS SELECT * FROM kg_child_book;
+    """,
+    """
+    CREATE OR REPLACE VIEW kg_daily_logs AS SELECT * FROM kg_daily_log;
+    """,
+    """
+    CREATE OR REPLACE VIEW kg_monthly_reports AS SELECT * FROM kg_monthly_report;
+    """,
+    """
+    CREATE OR REPLACE VIEW kg_incidents AS SELECT * FROM kg_incident;
+    """,
+    """
+    CREATE OR REPLACE VIEW kg_specialist_notes AS SELECT * FROM kg_specialist_note;
+    """,
+    """
+    CREATE OR REPLACE VIEW kg_child_habit_profiles AS SELECT * FROM kg_child_habit_profile;
+    """,
+    """
+    CREATE OR REPLACE VIEW kg_menu_entries AS SELECT * FROM kg_menu_entry;
+    """,
+    """
+    CREATE OR REPLACE VIEW hr_positions AS SELECT * FROM hr_position;
+    """,
+    """
+    CREATE OR REPLACE VIEW hr_staff_assignments AS SELECT * FROM hr_staff_assignment;
+    """,
+    """
+    CREATE OR REPLACE VIEW hr_staff_applications AS SELECT * FROM hr_staff_application;
+    """,
+    """
+    CREATE OR REPLACE VIEW comm_notes AS SELECT * FROM comm_note;
+    """,
+    """
+    CREATE OR REPLACE VIEW comm_note_policies AS SELECT * FROM comm_note_policy;
+    """,
+    """
+    CREATE OR REPLACE VIEW comm_notifications AS SELECT * FROM comm_notification;
+    """,
+    """
+    CREATE OR REPLACE VIEW fin_fee_plans AS SELECT * FROM fin_fee_plan;
+    """,
+    """
+    CREATE OR REPLACE VIEW fin_price_overrides AS SELECT * FROM fin_price_override;
+    """,
+    """
+    CREATE OR REPLACE VIEW fin_installments AS SELECT * FROM fin_installment;
+    """,
+    """
+    CREATE OR REPLACE VIEW mig_import_batches AS SELECT * FROM mig_import_batch;
+    """,
+    """
+    CREATE OR REPLACE VIEW mig_import_rows AS SELECT * FROM mig_import_row;
+    """,
+    """
+    CREATE OR REPLACE VIEW mig_legacy_refs AS SELECT * FROM mig_legacy_ref;
     """
 ]
 
@@ -201,5 +357,20 @@ INDEX_QUERIES = [
     "CREATE INDEX IF NOT EXISTS idx_guardians_phone ON guardians(phone_primary);",
     "CREATE INDEX IF NOT EXISTS idx_payments_receipt ON payments(receipt_number);",
     "CREATE INDEX IF NOT EXISTS idx_registers_branch_date ON daily_cash_registers(branch_id, register_date);",
-    "CREATE INDEX IF NOT EXISTS idx_audit_table_record ON audit_logs(table_name, record_id);"
+    "CREATE INDEX IF NOT EXISTS idx_audit_table_record ON audit_logs(table_name, record_id);",
+    "CREATE INDEX IF NOT EXISTS idx_kg_attendance_date ON kg_attendance(branch_id, attendance_date);",
+    "CREATE INDEX IF NOT EXISTS idx_kg_daily_logs_date ON kg_daily_log(student_id, log_date);",
+    "CREATE INDEX IF NOT EXISTS idx_kg_monthly_period ON kg_monthly_report(student_id, month_period);",
+    "CREATE INDEX IF NOT EXISTS idx_kg_incidents_student ON kg_incident(student_id, incident_date);",
+    "CREATE INDEX IF NOT EXISTS idx_kg_child_books_student ON kg_child_book(student_id);",
+    "CREATE INDEX IF NOT EXISTS idx_hr_assignments_emp ON hr_staff_assignment(employee_id, is_active);",
+    "CREATE INDEX IF NOT EXISTS idx_hr_staff_attendance ON hr_staff_attendance(employee_id, attendance_date);",
+    "CREATE INDEX IF NOT EXISTS idx_hr_applications_status ON hr_staff_application(status);",
+    "CREATE INDEX IF NOT EXISTS idx_comm_notes_student ON comm_note(student_id, status);",
+    "CREATE INDEX IF NOT EXISTS idx_comm_notif_status ON comm_notification(status, scheduled_at);",
+    "CREATE INDEX IF NOT EXISTS idx_fin_fee_plans_lookup ON fin_fee_plan(branch_id, plan_type);",
+    "CREATE INDEX IF NOT EXISTS idx_fin_price_overrides ON fin_price_override(invoice_id);",
+    "CREATE INDEX IF NOT EXISTS idx_fin_installments_inv ON fin_installment(invoice_id, status);",
+    "CREATE INDEX IF NOT EXISTS idx_mig_rows_batch_status ON mig_import_row(batch_id, match_status);",
+    "CREATE INDEX IF NOT EXISTS idx_mig_legacy_lookup ON mig_legacy_ref(entity_type, entity_id);"
 ]
