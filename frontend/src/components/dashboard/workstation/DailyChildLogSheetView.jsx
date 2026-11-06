@@ -139,7 +139,7 @@ export function DailyChildLogSheetView() {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-sm font-bold text-slate-900 leading-none">
-                  ورقة التقييم والمتابعة اليومية للطفل (Daily Child Log Sheet)
+                  ورقة التقييم والمتابعة اليومية للطفل
                 </h2>
                 <span className="text-[10px] font-mono px-1.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold">
                   تقييم سريع A / B / C

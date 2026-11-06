@@ -82,7 +82,7 @@ export function MonthlyReportApprovalCenterView() {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-sm font-bold text-slate-900 leading-none">
-                  مركز اعتماد وطباعة التقارير الشهرية (Monthly Report Approval Center)
+                  مركز اعتماد وطباعة التقارير الشهرية
                 </h2>
                 <span className="text-[10px] font-mono px-1.5 py-0.5 bg-blue-50 text-blue-900 border border-blue-200 font-bold">
                   فصل الصلاحيات الرقابي (Segregation of Duties)

@@ -248,12 +248,7 @@ export function AgeBandsNumberedBooksView() {
                         {idx + 1}
                       </td>
                       <td className="py-1.5 px-2.5 border-e border-slate-200 font-semibold text-slate-900">
-                        <div className="flex flex-col">
-                          <span>{child.fullNameAr}</span>
-                          <span className="text-[10px] font-mono text-slate-500 font-normal">
-                            {child.fullNameFr}
-                          </span>
-                        </div>
+                        <span>{child.fullNameAr}</span>
                       </td>
                       <td className="py-1.5 px-2 text-center font-mono text-slate-600 border-e border-slate-200">
                         {child.dob}
@@ -340,7 +335,7 @@ export function AgeBandsNumberedBooksView() {
                   <option value="">-- اختر الطفل من القائمة --</option>
                   {students.map((s) => (
                     <option key={s.id} value={s.id}>
-                      {s.fullNameAr} ({s.fullNameFr}) - فوج: {s.groupId}
+                      {s.fullNameAr} - فوج: {s.groupId}
                     </option>
                   ))}
                 </select>

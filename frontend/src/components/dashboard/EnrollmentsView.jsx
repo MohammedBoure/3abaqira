@@ -77,7 +77,7 @@ export function EnrollmentsView() {
             <span>سجل الاشتراكات والعقود الطلابية المعتمدة</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
-            سجل تسجيل وترسيم الطلاب (Student Enrollments)
+            سجل تسجيل وترسيم الطلاب
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
             تسجيل الطلاب في الأفواج والبرامج، توليد جداول الأقساط الآلية، تطبيق اتفاقيات الدفع، وتتبع الحالات الأكاديمية.

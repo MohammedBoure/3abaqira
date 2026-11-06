@@ -393,9 +393,7 @@ export function RawdaCashHandoverView() {
             <ArrowLeftRight className="w-4 h-4 text-blue-900" />
             سجل تسليم السيولة والعهد
           </h1>
-          <span className="text-[11px] text-slate-500 hidden md:inline font-sans">
-            (Rawda Cash Custody & Safe Handover Registry)
-          </span>
+
 
           {/* Info Modal Button */}
           <button
@@ -870,9 +868,7 @@ export function RawdaCashHandoverView() {
                   <h3 className="font-bold text-slate-900 text-sm">
                     دليل واجهة: سجل تسليم السيولة والعهد (1.7)
                   </h3>
-                  <span className="text-[11px] text-slate-500">
-                    Rawda Cash Custody & Safe Handover Registry
-                  </span>
+
                 </div>
               </div>
               <button

@@ -281,9 +281,6 @@ export function BranchesView({ selectedBranch: globalSelectedBranch, onSelectBra
                     {selectedBranchData.name_ar}
                   </h3>
                 </div>
-                <span className="text-xs text-slate-400 font-mono mt-0.5 block">
-                  {selectedBranchData.name_en}
-                </span>
               </div>
 
               <div className="flex items-center gap-2">

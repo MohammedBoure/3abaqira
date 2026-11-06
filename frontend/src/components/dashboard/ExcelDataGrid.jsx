@@ -37,7 +37,7 @@ const ALL_COLUMNS = [
   { id: 'seqNumber', labelAr: '#', labelEn: 'Seq', width: 'w-12 text-center', category: 'core', pinned: true },
   { id: 'studentCode', labelAr: 'الرمز', labelEn: 'Code', width: 'w-28 font-mono', category: 'core', pinned: true },
   { id: 'fullNameAr', labelAr: 'الاسم واللقب (عربي)', labelEn: 'Full Name (Ar)', width: 'w-44 font-bold', category: 'core', pinned: true },
-  { id: 'fullNameFr', labelAr: 'Nom et Prénom', labelEn: 'Full Name (Fr)', width: 'w-44 font-latin text-slate-600', category: 'personal' },
+  { id: 'fullNameFr', labelAr: 'الاسم الكامل باللاتينية', labelEn: 'Full Name (Fr)', width: 'w-44 font-latin text-slate-600', category: 'personal' },
   { id: 'branchNameAr', labelAr: 'المقر / الفرع', labelEn: 'Branch', width: 'w-36', category: 'academic' },
   { id: 'program', labelAr: 'البرنامج التعليمي', labelEn: 'Program', width: 'w-48 font-medium', category: 'academic' },
   { id: 'level', labelAr: 'المستوى الدراسي', labelEn: 'Level', width: 'w-40 text-slate-600', category: 'academic' },
@@ -822,7 +822,6 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch, onSelect
                         className="rounded-none border-slate-300 text-blue-900 focus:ring-0"
                       />
                       <span>{col.labelAr}</span>
-                      <span className="text-[10px] text-slate-400 ms-auto font-latin">{col.labelEn}</span>
                     </label>
                   ))}
                 </div>
@@ -937,11 +936,8 @@ export function ExcelDataGrid({ selectedBranch = 'ALL', onSelectBranch, onSelect
                         : {}
                     }
                   >
-                    <div className="flex flex-col text-start leading-tight">
+                    <div className="text-start leading-tight">
                       <span className="font-semibold text-slate-800 text-xs">{col.labelAr}</span>
-                      <span className="text-[9px] text-slate-400 font-latin font-normal">
-                        {col.labelEn}
-                      </span>
                     </div>
                   </th>
                 );

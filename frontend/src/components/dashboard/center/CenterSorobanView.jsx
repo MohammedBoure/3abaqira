@@ -446,9 +446,7 @@ export function CenterSorobanView() {
             <Award className="w-4 h-4 text-blue-900" />
             سجل السوروبان والحساب الذهني
           </h1>
-          <span className="text-[11px] text-slate-500 hidden md:inline font-sans">
-            (Soroban Mental Math Registry)
-          </span>
+
 
           <button
             onClick={() => setIsInfoModalOpen(true)}

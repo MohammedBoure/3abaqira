@@ -204,7 +204,7 @@ export function ChildHabitMenuPlannerView() {
                   ملف الرعاية: {selectedStudent.id} • {selectedStudent.bookNumber}
                 </span>
                 <h3 className="text-sm font-bold text-slate-900">
-                  {selectedStudent.fullNameAr} ({selectedStudent.fullNameFr})
+                  {selectedStudent.fullNameAr}
                 </h3>
               </div>
               <button

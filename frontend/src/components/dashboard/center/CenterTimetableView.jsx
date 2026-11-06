@@ -272,8 +272,6 @@ export function CenterTimetableView() {
               <span className="font-bold text-slate-900 text-sm">
                 جدول توقيت الأفواج والقاعات (المصفوفة التقاطعية)
               </span>
-              <span className="text-[10px] text-slate-400">|</span>
-              <span className="text-[10px] text-slate-500 font-mono">Classroom & Schedule Matrix</span>
             </div>
           </div>
         </div>
@@ -1088,7 +1086,7 @@ export function CenterTimetableView() {
               <div className="flex items-center gap-2">
                 <Info className="w-4 h-4 text-amber-600" />
                 <span className="font-bold text-slate-900 text-sm">
-                  دليل وإرشادات مصفوفة توزيع الأفواج والقاعات (Classroom Matrix)
+                  دليل وإرشادات مصفوفة توزيع الأفواج والقاعات
                 </span>
               </div>
               <button

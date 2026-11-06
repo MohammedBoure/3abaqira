@@ -260,12 +260,9 @@ export function CorePersonFamilyHub({ selectedBranchId }) {
                         {student.studentCode}
                       </td>
 
-                      {/* Bilingual Name */}
+                      {/* Student Name */}
                       <td className="p-2 border-e border-slate-200">
                         <div className="font-bold text-slate-900">{student.nameAr}</div>
-                        <div className="text-[11px] text-slate-500 font-sans tracking-wide">
-                          {student.nameLatin}
-                        </div>
                         <div className="text-[10px] text-slate-400 font-mono mt-0.5">
                           تاريخ الميلاد: {student.birthDate} ({student.gender})
                         </div>
@@ -399,8 +396,8 @@ export function CorePersonFamilyHub({ selectedBranchId }) {
                   <h3 className="font-bold text-slate-900">
                     شبكة الأولياء والوصاية القانونية — {selectedStudentForGuardians.nameAr}
                   </h3>
-                  <div className="text-[11px] text-slate-500 font-sans">
-                    {selectedStudentForGuardians.nameLatin} ({selectedStudentForGuardians.studentCode})
+                  <div className="text-[11px] text-slate-500 font-mono">
+                    كود التلميذ: {selectedStudentForGuardians.studentCode}
                   </div>
                 </div>
               </div>
@@ -432,9 +429,6 @@ export function CorePersonFamilyHub({ selectedBranchId }) {
                         </span>
                         <span className="font-bold text-slate-900 text-sm">
                           {guardian.nameAr}
-                        </span>
-                        <span className="text-slate-500 font-sans text-xs">
-                          ({guardian.nameLatin})
                         </span>
                       </div>
                       <div className="flex items-center gap-1.5">

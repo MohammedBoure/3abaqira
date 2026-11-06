@@ -44,7 +44,7 @@ export function AnalyticsDashboard({ selectedBranch = 'ALL' }) {
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 bg-blue-900" />
             <h2 className="text-base font-bold font-display text-slate-900 tracking-tight">
-              منظومة الإحصائيات والتحليلات القيادية (Executive Business Intelligence)
+              منظومة الإحصائيات والتحليلات القيادية
             </h2>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">

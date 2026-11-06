@@ -360,7 +360,6 @@ export function AcademyManagementWorkstation({ selectedBranchId }) {
                   >
                     <div>
                       <div className="font-bold text-slate-900 text-xs">{wks.titleAr}</div>
-                      <div className="text-[10px] text-slate-500 font-sans">{wks.titleEn}</div>
                       <div className="text-[10px] text-slate-400 font-mono mt-0.5">
                         {wks.levelsCount} مستويات متسلسلة • نمط التقييم: {wks.evaluationType}
                       </div>
@@ -1136,7 +1135,6 @@ export function AcademyManagementWorkstation({ selectedBranchId }) {
                   <h4 className="font-bold text-slate-900 text-xs mt-1.5 leading-snug">
                     {mat.titleAr}
                   </h4>
-                  <div className="text-[10px] text-slate-500 font-sans">{mat.titleEn}</div>
 
                   <div className="mt-2 pt-2 border-t border-slate-100 text-[11px] text-slate-600">
                     <span className="font-semibold text-slate-700">شرط الصلاحية: </span>

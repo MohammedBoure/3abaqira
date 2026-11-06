@@ -261,10 +261,7 @@ export function CenterCashHandoverView() {
               <span className="font-bold text-slate-900 text-sm">
                 سجل تسليم العهدة النقدية والسيولة (عهدة)
               </span>
-              <span className="text-[10px] text-slate-400">|</span>
-              <span className="text-[10px] text-slate-500 font-mono">
-                Safe Custody & Cash Handover
-              </span>
+
             </div>
           </div>
         </div>

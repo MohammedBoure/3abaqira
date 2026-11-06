@@ -362,9 +362,7 @@ export function CenterQuranView() {
             <BookOpen className="w-4 h-4 text-blue-900" />
             برنامج تحفيظ القرآن الكريم ({semesterConfig.semesterName})
           </h1>
-          <span className="text-[11px] text-slate-500 hidden md:inline font-sans">
-            (Quran Memorization Semester Registry)
-          </span>
+
 
           <button
             onClick={() => setIsInfoModalOpen(true)}

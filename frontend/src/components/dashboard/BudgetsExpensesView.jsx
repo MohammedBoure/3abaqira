@@ -166,10 +166,10 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL', onSelectBranch }) 
             <span>سجل النفقات التشغيلية ومراقبة الموازنات</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
-            سجل النفقات التشغيلية والموازنات التقديرية (Expenses & Budgets)
+            سجل النفقات التشغيلية والموازنات التقديرية
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            متابعة بنود الصرف اليومية، تصنيفات المشتريات والتموين الغذائي، ومقارنة الموازنة التقديرية مع المنصرف الفعلي (Variance Analysis).
+            متابعة بنود الصرف اليومية، تصنيفات المشتريات والتموين الغذائي، ومقارنة الموازنة التقديرية مع المنصرف الفعلي.
           </p>
         </div>
 
@@ -180,7 +180,7 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL', onSelectBranch }) 
               className={subTab === 'daily-ledger' ? 'active' : ''}
             >
               <TableIcon className="w-3 h-3" />
-              <span>جدول المصاريف اليومية (Excel)</span>
+              <span>جدول المصاريف اليومية</span>
             </button>
             <button
               onClick={() => setSubTab('expenses')}
@@ -194,7 +194,7 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL', onSelectBranch }) 
               className={subTab === 'budgets' ? 'active' : ''}
             >
               <PieChart className="w-3 h-3" />
-              <span>مقارنة الموازنة (Variance)</span>
+              <span>مقارنة الموازنة والانحراف</span>
             </button>
             <button
               onClick={() => setSubTab('categories')}
@@ -276,9 +276,9 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL', onSelectBranch }) 
             <table className="excel-table text-xs">
               <thead>
                 <tr>
-                  <th className="excel-th p-2 text-center w-36">رقم السند (Voucher)</th>
+                  <th className="excel-th p-2 text-center w-36">رقم السند</th>
                   <th className="excel-th p-2 text-center">المقر</th>
-                  <th className="excel-th p-2 text-start">بند المصروف (Category)</th>
+                  <th className="excel-th p-2 text-start">بند المصروف</th>
                   <th className="excel-th p-2 text-start">التعيين وتفاصيل الشراء</th>
                   <th className="excel-th p-2 text-center">المبلغ (دج)</th>
                   <th className="excel-th p-2 text-center">التاريخ</th>
@@ -342,9 +342,9 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL', onSelectBranch }) 
         <div className="bg-white border border-slate-300 shadow-xs">
           <div className="p-2.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
             <span className="font-bold text-xs text-slate-900">
-              تحليل انحرافات الموازنة التقديرية عن المنصرف الفعلي (Budget Variance Analysis)
+              تحليل انحرافات الموازنة التقديرية عن المنصرف الفعلي
             </span>
-            <span className="text-xs text-slate-500 font-mono">Month: 2026-02</span>
+            <span className="text-xs text-slate-500 font-mono">شهر: 2026-02</span>
           </div>
 
           <div className="overflow-x-auto">
@@ -352,10 +352,10 @@ export function BudgetsExpensesView({ selectedBranch = 'ALL', onSelectBranch }) 
               <thead>
                 <tr>
                   <th className="excel-th p-2 text-start">باب المصروف</th>
-                  <th className="excel-th p-2 text-center">المخصص المالي (Budget)</th>
-                  <th className="excel-th p-2 text-center">المنصرف الفعلي (Actual)</th>
-                  <th className="excel-th p-2 text-center">الانحراف (Variance)</th>
-                  <th className="excel-th p-2 text-center">المتغير (Units)</th>
+                  <th className="excel-th p-2 text-center">المخصص المالي</th>
+                  <th className="excel-th p-2 text-center">المنصرف الفعلي</th>
+                  <th className="excel-th p-2 text-center">الانحراف المالي</th>
+                  <th className="excel-th p-2 text-center">المتغير</th>
                   <th className="excel-th p-2 text-center">حالة الالتزام</th>
                 </tr>
               </thead>

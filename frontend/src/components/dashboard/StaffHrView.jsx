@@ -201,7 +201,7 @@ export function StaffHrView({ selectedBranch = 'ALL' }) {
             </div>
             <div>
               <h2 className="text-sm font-bold text-slate-900 font-display">
-                منظومة الموارد البشرية وشؤون الموظفين (Staff & HR Console)
+                منظومة الموارد البشرية وشؤون الموظفين
               </h2>
               <p className="text-[11px] text-slate-500">
                 سجل الموظفين والمربيات، الحضور اليومي، وبوابة التوظيف والمقابلات
