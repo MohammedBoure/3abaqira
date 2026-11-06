@@ -68,7 +68,7 @@ export function Sidebar({
       groupTitle: 'التمدرس وشؤون الأطفال',
       groupEn: 'STUDENT AFFAIRS',
       items: [
-        { id: 'kindergarten-workstation', labelAr: 'محطة روضة الأطفال الشاملة', icon: Baby, tag: 'M6 شاملة' },
+        { id: 'kindergarten-workstation', labelAr: 'محطة روضة الأطفال الشاملة', icon: Baby, tag: 'شاملة' },
         { id: 'rawda-students', labelAr: 'المداخيل و التسجيلات', icon: Users, tag: 'تسجيل' },
         { id: 'rawda-cohorts', labelAr: 'تقسيم الأفواج', icon: Layers, tag: 'أفواج' },
       ],
@@ -77,7 +77,7 @@ export function Sidebar({
       groupTitle: 'المالية والمصاريف التشغيلية',
       groupEn: 'OPERATING EXPENSES',
       items: [
-        { id: 'treasury-finance-desk', labelAr: 'شباك الخزينة والمالية الموحد', icon: Wallet, tag: 'M8 خزينة' },
+        { id: 'treasury-finance-desk', labelAr: 'شباك الخزينة والمالية الموحد', icon: Wallet, tag: 'خزينة' },
         { id: 'rawda-daily-expenses', labelAr: 'سجل المصاريف اليومية', icon: TrendingUp, tag: '11 شهر' },
         { id: 'rawda-budget-variance', labelAr: 'ملخص المصاريف وتحليل الموازنة', icon: Coins, tag: 'تقديري/فعلي' },
       ],
@@ -142,15 +142,15 @@ export function Sidebar({
 
   const enterpriseNavGroup = {
     groupTitle: 'الإدارة المركزية والنظام الشامل',
-    groupEn: 'ENTERPRISE 9 MODULES',
+    groupEn: 'ENTERPRISE',
     items: [
-      { id: 'core-family-hub', labelAr: 'سجل العائلات والأولياء والمفوضين', icon: Users, tag: 'M3 عائلات' },
-      { id: 'staff-hr', labelAr: 'إدارة الموظفين والتوظيف', icon: UserCheck, tag: 'M4 موظفين' },
-      { id: 'communication', labelAr: 'مركز التواصل والإشعارات', icon: Activity, tag: 'M7 تواصل' },
-      { id: 'data-migration', labelAr: 'منظومة ترحيل ومطابقة إكسل', icon: Table, tag: 'M9 ترحيل' },
-      { id: 'auth-security', labelAr: 'الصلاحيات وتفعيل الحسابات', icon: KeyRound, tag: 'M1 أمان' },
+      { id: 'core-family-hub', labelAr: 'سجل العائلات والأولياء والمفوضين', icon: Users, tag: 'عائلات' },
+      { id: 'staff-hr', labelAr: 'إدارة الموظفين والتوظيف', icon: UserCheck, tag: 'موظفين' },
+      { id: 'communication', labelAr: 'مركز التواصل والإشعارات', icon: Activity, tag: 'تواصل' },
+      { id: 'data-migration', labelAr: 'منظومة ترحيل ومطابقة إكسل', icon: Table, tag: 'ترحيل' },
+      { id: 'auth-security', labelAr: 'الصلاحيات وتفعيل الحسابات', icon: KeyRound, tag: 'أمان' },
       { id: 'audit-logs', labelAr: 'سجل الرقابة والعمليات الحساسة', icon: ShieldAlert, tag: 'رقابة' },
-      { id: 'branches', labelAr: 'الفروع الـ 13 ومرافقها', icon: Building, tag: 'M2 فروع' },
+      { id: 'branches', labelAr: 'الفروع الـ 13 ومرافقها', icon: Building, tag: 'فروع' },
       { id: 'academic-years', labelAr: 'السنوات الأكاديمية والمالية', icon: Calendar, tag: 'سنوات' },
     ],
   };
@@ -257,10 +257,10 @@ export function Sidebar({
         </button>
       </div>
 
-      {/* 2. محول السياق العلوي (Exclusive Fixed 2-State Entity Switcher - Section 1.2) */}
+      {/* 2. محول السياق العلوي */}
       <div className="p-2.5 border-b border-slate-200 bg-slate-50/80">
         <span className="text-[10px] font-bold text-slate-500 block mb-1.5 uppercase tracking-wider">
-          محول المنظومة والنشاط (CONTEXT SWITCHER)
+          محول المنظومة والنشاط
         </span>
         <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-200/80 rounded border border-slate-300">
           {/* Option 1: الروضة والحضانة */}
@@ -302,9 +302,6 @@ export function Sidebar({
             <div className="flex items-center justify-between px-2 mb-1">
               <span className="text-xs font-bold text-slate-800">
                 {group.groupTitle}
-              </span>
-              <span className="text-[9px] font-mono text-slate-400">
-                {group.groupEn}
               </span>
             </div>
             <nav className="space-y-0.5">
@@ -507,7 +504,7 @@ export function Sidebar({
               >
                 <div className="flex items-center gap-2">
                   <Table className="w-3.5 h-3.5 text-blue-600" />
-                  <span>جدول البيانات الشامل (Excel Grid)</span>
+                  <span>جدول البيانات الشامل</span>
                 </div>
                 <span className="text-[9px] font-mono px-1 py-0.2 bg-blue-50 text-blue-800">26 عمود</span>
               </button>
@@ -537,9 +534,9 @@ export function Sidebar({
               >
                 <div className="flex items-center gap-2">
                   <Receipt className="w-3.5 h-3.5 text-blue-600" />
-                  <span>مركز المراسلات والإشعارات (M7)</span>
+                  <span>مركز المراسلات والإشعارات</span>
                 </div>
-                <span className="text-[9px] font-mono px-1 py-0.2 bg-emerald-50 text-emerald-800">SMS/واتساب</span>
+                <span className="text-[9px] font-mono px-1 py-0.2 bg-emerald-50 text-emerald-800">رسائل</span>
               </button>
 
               <button
@@ -552,7 +549,7 @@ export function Sidebar({
               >
                 <div className="flex items-center gap-2">
                   <Table className="w-3.5 h-3.5 text-blue-600" />
-                  <span>ترحيل بيانات الإكسل القديمة (M9)</span>
+                  <span>ترحيل بيانات الإكسل القديمة</span>
                 </div>
                 <span className="text-[9px] font-mono px-1 py-0.2 bg-amber-50 text-amber-800">فرز/مطابقة</span>
               </button>

@@ -60,6 +60,16 @@
       "status": "completed",
       "verification": "26/26 frontend integration audit tests passed, Vite build succeeded with 0 errors",
       "merge_status": "merged_into_develop_and_main"
+    },
+    "agy151": {
+      "domain": "ux_polish",
+      "branch": "ux/agy151-arabic-ui-purification-and-deduplication",
+      "base_branch": "develop",
+      "effort": "medium",
+      "scope": "Purify all frontend UI views and workstations: remove redundant English secondary subtitles, eliminate duplicate bilingual labels and unnecessary helper clutter, and ensure all interface text is pure, clean, professional Arabic only (العربية فقط).",
+      "status": "completed",
+      "verification": "26/26 frontend integration tests passed, Vite build 0 errors, 49/49 backend tests passed",
+      "merge_status": "ready_for_merge"
     }
   }
 }

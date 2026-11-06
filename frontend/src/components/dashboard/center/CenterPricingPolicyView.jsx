@@ -308,10 +308,7 @@ export function CenterPricingPolicyView() {
               <span className="font-bold text-slate-900 text-sm">
                 دليل الأسعار وسياسة الخصومات المعتمدة (تعريفات)
               </span>
-              <span className="text-[10px] text-slate-400">|</span>
-              <span className="text-[10px] text-slate-500 font-mono">
-                Official Tariffs & Dynamic Discounts
-              </span>
+
             </div>
           </div>
         </div>

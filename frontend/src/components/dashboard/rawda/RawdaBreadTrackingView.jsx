@@ -406,9 +406,7 @@ export function RawdaBreadTrackingView() {
             <Utensils className="w-4 h-4 text-blue-900" />
             المراقبة اليومية لاستهلاك الخبز
           </h1>
-          <span className="text-[11px] text-slate-500 hidden md:inline font-sans">
-            (Rawda Daily Bread Procurement & Dietary Tracking)
-          </span>
+
 
           {/* Info Modal Button */}
           <button
@@ -1065,9 +1063,7 @@ export function RawdaBreadTrackingView() {
                   <h3 className="font-bold text-slate-900 text-sm">
                     دليل واجهة: المراقبة اليومية لاستهلاك الخبز (1.8)
                   </h3>
-                  <span className="text-[11px] text-slate-500">
-                    Rawda Daily Bread Procurement & Dietary Tracking
-                  </span>
+
                 </div>
               </div>
               <button

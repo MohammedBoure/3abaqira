@@ -584,9 +584,7 @@ export function CenterInstallmentProgramsView({ defaultProgram = 'support-classe
             <GraduationCap className="w-4 h-4 text-blue-900" />
             البرامج بنظام الدفعات (دعم، لغات، STEM، مناهج)
           </h1>
-          <span className="text-[11px] text-slate-500 hidden md:inline font-sans">
-            (Center 4-Installment Programs Management)
-          </span>
+
 
           {/* Info Modal Button */}
           <button

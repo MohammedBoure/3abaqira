@@ -253,10 +253,7 @@ export function CenterDailyExpensesView() {
               <span className="font-bold text-slate-900 text-sm">
                 سجل المصاريف اليومية للمركز (المصاريف)
               </span>
-              <span className="text-[10px] text-slate-400">|</span>
-              <span className="text-[10px] text-slate-500 font-mono">
-                Center Daily Operational Expenses
-              </span>
+
             </div>
           </div>
         </div>

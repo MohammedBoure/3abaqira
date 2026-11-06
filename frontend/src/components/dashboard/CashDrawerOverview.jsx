@@ -16,7 +16,7 @@ export function CashDrawerOverview({ onOpenVoucherModal }) {
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900 font-display">
-                حركة الصندوق والخزينة اليومية (Daily Cash Drawer)
+                حركة الصندوق والخزينة اليومية
               </h3>
               <p className="text-[11px] text-slate-500">
                 تسجيل المقبوضات والنفقات النقدية ومطابقة الرصيد

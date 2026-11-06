@@ -279,8 +279,6 @@ export function CenterSummerCampView() {
           <div>
             <div className="flex items-center gap-1.5">
               <span className="font-bold text-slate-900 text-sm">النادي والمخيم الصيفي (نظام دفعتين)</span>
-              <span className="text-[10px] text-slate-400">|</span>
-              <span className="text-[10px] text-slate-500 font-mono">Summer Camp 2-Installments</span>
             </div>
           </div>
         </div>

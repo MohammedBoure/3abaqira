@@ -64,7 +64,7 @@ export function GroupsLevelsView() {
             <span>الهيكل البيداغوجي والأفواج الدراسية المعتمدة</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold font-serif text-slate-900 mt-0.5">
-            إدارة الأفواج، المراحل والمستويات الأكاديمية (Groups & Levels)
+            إدارة الأفواج، المراحل والمستويات الأكاديمية
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
             هيكلة الأفواج الدراسية، تخصيص الأساتذة والمدربين، ربط القاعات المادية، ومتابعة نسب الإشغال الاستيعابية.

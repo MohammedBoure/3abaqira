@@ -384,9 +384,7 @@ export function CenterPreparatoryView() {
             <GraduationCap className="w-4 h-4 text-blue-900" />
             القسم التحضيري المدرسي
           </h1>
-          <span className="text-[11px] text-slate-500 hidden md:inline font-sans">
-            (Academic Preparatory School Registry)
-          </span>
+
 
           <button
             onClick={() => setIsInfoModalOpen(true)}

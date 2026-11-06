@@ -24,7 +24,7 @@ export function ArabicCashReceiptModal({ isOpen, onClose, voucherData }) {
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
             <span className="font-bold text-sm tracking-wide">
-              سند قبض مالي نقدي متسلسل (Official Cash Voucher)
+              سند قبض مالي نقدي متسلسل
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -91,7 +91,7 @@ export function ArabicCashReceiptModal({ isOpen, onClose, voucherData }) {
           {/* Title Bar */}
           <div className="text-center my-3 py-1.5 bg-slate-100 border-y border-slate-300">
             <h3 className="font-bold text-sm text-slate-900">
-              وصل سداد وقبض مالي نقدي (Cash Receipt Voucher)
+              وصل سداد وقبض مالي نقدي
             </h3>
             <span className="text-[10px] text-slate-500">
               رقم التسلسل المالي المركزي الموحد • خزينة الفرع

@@ -31,7 +31,7 @@ export function PayrollOverview() {
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 bg-blue-900" />
             <h2 className="text-base font-bold font-display text-slate-900">
-              سجل أجور ورواتب الطاقم والمدربين (HR & Payroll Master Sheet)
+              سجل أجور ورواتب الطاقم والمدربين
             </h2>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">

@@ -32,7 +32,7 @@ export function AmbiguousRowResolverModal({ row, onClose, onResolve }) {
           <div className="flex items-center gap-2">
             <GitMerge className="w-5 h-5 text-amber-700" />
             <h3 className="text-sm font-bold text-slate-900">
-              معالج وحل غموض السجل التاريخي (Ambiguous Row Resolver)
+              معالج وحل غموض السجل التاريخي
             </h3>
           </div>
           <button

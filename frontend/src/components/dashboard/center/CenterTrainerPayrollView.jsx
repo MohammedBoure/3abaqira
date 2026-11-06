@@ -388,10 +388,6 @@ export function CenterTrainerPayrollView() {
               <span className="font-bold text-slate-900 text-sm">
                 احتساب أجور المدربين (بالحصة وحجم الفوج)
               </span>
-              <span className="text-[10px] text-slate-400">|</span>
-              <span className="text-[10px] text-slate-500 font-mono">
-                Per-Session Dynamic Wages
-              </span>
             </div>
           </div>
         </div>
@@ -678,7 +674,7 @@ export function CenterTrainerPayrollView() {
                     محاكي احتساب أجرة المدرب بالحصة
                   </span>
                 </div>
-                <span className="text-[11px] font-mono text-slate-500">Live Dynamic Simulator</span>
+                
               </div>
 
               <div className="space-y-3">

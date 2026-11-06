@@ -30,7 +30,7 @@ export function KindergartenMonthlyReportCardModal({ isOpen, onClose, reportData
           <div className="flex items-center gap-2">
             <Baby className="w-5 h-5 text-pink-300" />
             <span className="font-bold text-sm tracking-wide">
-              بطاقة المتابعة الشهرية للطفل بالروضة (Kindergarten Monthly Report Card)
+              بطاقة المتابعة الشهرية للطفل بالروضة
             </span>
           </div>
           <div className="flex items-center gap-2">

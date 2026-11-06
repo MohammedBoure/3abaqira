@@ -272,11 +272,10 @@ export function StaffHrCenter({ selectedBranchId }) {
                     </td>
                     <td className="p-2 border-e border-slate-200">
                       <div className="font-bold text-slate-900">{staff.fullNameAr}</div>
-                      <div className="text-[10px] text-slate-500 font-sans">{staff.fullNameEn}</div>
                     </td>
                     <td className="p-2 border-e border-slate-200">
                       <div className="font-semibold text-slate-800">{staff.jobTitleLabelAr}</div>
-                      <div className="text-[10px] text-slate-400 font-mono">NIN: {staff.nin}</div>
+                      <div className="text-[10px] text-slate-400 font-mono">رقم التعريف: {staff.nin}</div>
                     </td>
                     <td className="p-2 border-e border-slate-200 font-medium text-slate-700">
                       {staff.primaryBranchNameAr}
@@ -358,10 +357,7 @@ export function StaffHrCenter({ selectedBranchId }) {
                         <div className="space-y-1">
                           {st.assignments.map((asg, i) => (
                             <div key={i} className="flex items-center justify-between text-xs">
-                              <span className="text-slate-800">
-                                • {asg.branchNameAr}{' '}
-                                <span className="text-slate-400 text-[10px]">({asg.role})</span>
-                              </span>
+                              <span className="text-slate-800">• {asg.branchNameAr}</span>
                               <span className="font-mono font-bold text-blue-800 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
                                 {asg.allocationPct}%
                               </span>

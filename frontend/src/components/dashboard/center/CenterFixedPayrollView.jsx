@@ -471,8 +471,6 @@ export function CenterFixedPayrollView() {
               <span className="font-bold text-slate-900 text-sm">
                 جدول الرواتب الشهرية الثابتة (مركز بجاية)
               </span>
-              <span className="text-[10px] text-slate-400">|</span>
-              <span className="text-[10px] text-slate-500 font-mono">Fixed Monthly Payroll</span>
             </div>
           </div>
         </div>

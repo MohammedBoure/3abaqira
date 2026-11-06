@@ -182,7 +182,7 @@ export function AuthLoginModal({
                                   : 'bg-amber-50 text-amber-900 border-amber-200'
                               }`}
                             >
-                              ★ كافة المقرات والفروع (ALL)
+                              ★ كافة المقرات والفروع
                             </span>
                           </div>
                         </div>
@@ -239,7 +239,7 @@ export function AuthLoginModal({
                                   : 'bg-blue-50 text-blue-950 border-blue-200'
                               }`}
                             >
-                              🔒 المركز الأكاديمي فقط (CENTER)
+                              🔒 المركز الأكاديمي فقط
                             </span>
                           </div>
                         </div>
@@ -296,7 +296,7 @@ export function AuthLoginModal({
                                   : 'bg-emerald-50 text-emerald-950 border-emerald-200'
                               }`}
                             >
-                              🔒 روضة وحضانة العباقرة فقط (RAWDA)
+                              🔒 روضة وحضانة العباقرة فقط
                             </span>
                           </div>
                         </div>
@@ -328,7 +328,7 @@ export function AuthLoginModal({
               )}
 
               <div>
-                <label className="eyebrow block mb-1 text-slate-700">اسم المستخدم (Username)</label>
+                <label className="eyebrow block mb-1 text-slate-700">اسم المستخدم</label>
                 <input
                   type="text"
                   required
@@ -340,7 +340,7 @@ export function AuthLoginModal({
               </div>
 
               <div>
-                <label className="eyebrow block mb-1 text-slate-700">كلمة المرور (Password)</label>
+                <label className="eyebrow block mb-1 text-slate-700">كلمة المرور</label>
                 <input
                   type="password"
                   required

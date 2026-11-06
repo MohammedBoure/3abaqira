@@ -239,8 +239,6 @@ export function CenterSorobanChampionshipsView() {
           <div>
             <div className="flex items-center gap-1.5">
               <span className="font-bold text-slate-900 text-sm">البطولات (السوربان والحساب الذهني)</span>
-              <span className="text-[10px] text-slate-400">|</span>
-              <span className="text-[10px] text-slate-500 font-mono">Soroban Championships</span>
             </div>
           </div>
         </div>
